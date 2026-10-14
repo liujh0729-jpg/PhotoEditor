@@ -1,0 +1,3 @@
+# Store LF in the repository and check out LF everywhere, so the editor or a
+# sync service can't quietly flip the tree to CRLF and bury real diffs.
+* text=auto eol=lf

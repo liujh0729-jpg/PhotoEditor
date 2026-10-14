@@ -302,6 +302,9 @@ struct ContentView: View {
             set: { if !$0 { session.cropError = nil } })) {
                 Button("OK") { session.cropError = nil }
             } message: { Text(session.cropError ?? "") }
+        
+        // AI feature sheets, kept in their own modifier so the body's long chain stays cheap to type-check.
+        .modifier(AISheets(session: session))
     }
     private func requestNewCanvas() {
         if let applicationDelegate { Task { await applicationDelegate.projects.newCanvas() } }
@@ -489,5 +492,38 @@ private struct WidthReader: ViewModifier {
     @Binding var width: CGFloat
     func body(content: Content) -> some View {
         content.onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
+    }
+}
+
+/// The AI feature sheets, each presented off a flag on the session. Kept out of the editor's body, whose
+/// type-checking is already near its limit.
+private struct AISheets: ViewModifier {
+    @Bindable var session: EditorSession
+    func body(content: Content) -> some View {
+        content
+        .sheet(isPresented: $session.showsImageGeneration) {
+            ImageGenerationSheet(session: session)
+        }
+        .sheet(isPresented: $session.showsImageEditing) {
+            ImageEditingSheet(session: session, sourceImage: session.activeLayer?.asset?.image, maskImage: nil)
+        }
+        .sheet(isPresented: $session.showsVideoGeneration) {
+            VideoGenerationSheet(sourceImage: session.activeLayer?.asset?.image)
+        }
+        .sheet(isPresented: $session.showsTTS) {
+            TTSSheet()
+        }
+        .sheet(isPresented: $session.showsSTTS) {
+            STTSSheet()
+        }
+        .sheet(isPresented: $session.showsNaturalLanguage) {
+            NaturalLanguageSheet(session: session)
+        }
+        .sheet(isPresented: $session.showsSemanticSelection) {
+            SemanticSelectionSheet(session: session)
+        }
+        .sheet(isPresented: $session.showsStyleTransfer) {
+            StyleTransferSheet(session: session, sourceImage: session.activeLayer?.asset?.image)
+        }
     }
 }

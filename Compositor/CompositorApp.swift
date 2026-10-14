@@ -22,6 +22,10 @@ struct CompositorApp: App {
             }
             // The project's name is already on its tab, so the toolbar doesn't repeat it as a window title.
             .windowToolbarStyle(.unifiedCompact(showsTitle: false))
+        
+        Settings {
+            GatewaySettingsView()
+        }
             .commands {
                 CommandGroup(replacing: .undoRedo) {
                     // Dialog text fields keep native text undo; document history
@@ -101,6 +105,9 @@ struct CompositorApp: App {
                 Group {
                     CommandGroup(after: .appInfo) {
                         Button("Check for Updates…") { applicationDelegate.updater.checkForUpdates() }
+                        Button("AI Gateway Settings…") {
+                            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                        }
                     }
                     CommandGroup(after: .toolbar) {
                         Button("Search Commands…") {
@@ -200,6 +207,27 @@ struct CompositorApp: App {
                             .configuredKeyboardShortcut("h", modifiers: [.command, .option])
                         Button("Show All") { NSApp.unhideAllApplications(nil) }
                     }
+                    CommandGroup(after: .pasteboard) {
+                        Divider()
+                        Button("Keyboard Shortcuts…") { ShortcutSettings.shared.show() }
+                        // Photoshop's fill shortcuts; in a text field they keep their text meaning.
+                        Button("Fill with Foreground Color") {
+                            if NSApp.keyWindow?.firstResponder is NSTextView {
+                                NSApp.sendAction(#selector(NSResponder.deleteWordBackward(_:)), to: nil, from: nil)
+                            } else { Task { await session.fillSelection(with: .foreground) } }
+                        }
+                            .configuredKeyboardShortcut(.delete, modifiers: .option).disabled(!session.canEditPixels)
+                        Button("Fill with Background Color") {
+                            if NSApp.keyWindow?.firstResponder is NSTextView {
+                                NSApp.sendAction(#selector(NSResponder.deleteToBeginningOfLine(_:)), to: nil, from: nil)
+                            } else { Task { await session.fillSelection(with: .background) } }
+                        }
+                            .configuredKeyboardShortcut(.delete, modifiers: .command).disabled(!session.canEditPixels)
+                        Button("Clear Selection Pixels") { Task { await session.clearSelectedPixels() } }
+                            .disabled(session.selection == nil || !session.canEditPixels)
+                        Button("Content-Aware Fill…") { session.beginFilter(.contentAwareFill) }
+                            .configuredKeyboardShortcut(.delete, modifiers: .shift).disabled(!session.canContentAwareFill)
+                    }
                 }
                 CommandGroup(replacing: .pasteboard) {
                     // Canvas pixels when the canvas has focus; text fields keep their own editing.
@@ -230,27 +258,6 @@ struct CompositorApp: App {
                         else { NSSound.beep() }
                     }
                         .configuredKeyboardShortcut("v")
-                }
-                CommandGroup(after: .pasteboard) {
-                    Divider()
-                    Button("Keyboard Shortcuts…") { ShortcutSettings.shared.show() }
-                    // Photoshop's fill shortcuts; in a text field they keep their text meaning.
-                    Button("Fill with Foreground Color") {
-                        if NSApp.keyWindow?.firstResponder is NSTextView {
-                            NSApp.sendAction(#selector(NSResponder.deleteWordBackward(_:)), to: nil, from: nil)
-                        } else { Task { await session.fillSelection(with: .foreground) } }
-                    }
-                        .configuredKeyboardShortcut(.delete, modifiers: .option).disabled(!session.canEditPixels)
-                    Button("Fill with Background Color") {
-                        if NSApp.keyWindow?.firstResponder is NSTextView {
-                            NSApp.sendAction(#selector(NSResponder.deleteToBeginningOfLine(_:)), to: nil, from: nil)
-                        } else { Task { await session.fillSelection(with: .background) } }
-                    }
-                        .configuredKeyboardShortcut(.delete, modifiers: .command).disabled(!session.canEditPixels)
-                    Button("Clear Selection Pixels") { Task { await session.clearSelectedPixels() } }
-                        .disabled(session.selection == nil || !session.canEditPixels)
-                    Button("Content-Aware Fill…") { session.beginFilter(.contentAwareFill) }
-                        .configuredKeyboardShortcut(.delete, modifiers: .shift).disabled(!session.canContentAwareFill)
                 }
                 CommandMenu("Select") {
                     // A field being edited keeps its own Select All: offer it to the responder chain
@@ -391,6 +398,24 @@ struct CompositorApp: App {
                         session.deleteLayerOrMask()
                     }
                         .disabled(!session.canEditLayers || session.activeLayer == nil)
+                }
+                CommandMenu("AI") {
+                    Button("Generate Image…") { session.showsImageGeneration = true }
+                        .disabled(session.document == nil)
+                    Button("Edit Image…") { session.showsImageEditing = true }
+                        .disabled(session.document == nil || session.activeLayer?.asset == nil)
+                    Divider()
+                    Button("Generate Video…") { session.showsVideoGeneration = true }
+                        .disabled(session.document == nil)
+                    Button("Text-to-Speech…") { session.showsTTS = true }
+                    Button("Speech-to-Text…") { session.showsSTTS = true }
+                    Divider()
+                    Button("Natural Language Editing…") { session.showsNaturalLanguage = true }
+                        .configuredKeyboardShortcut("k", modifiers: [.command, .shift])
+                    Button("Semantic Selection…") { session.showsSemanticSelection = true }
+                        .disabled(session.document == nil)
+                    Button("Style Transfer…") { session.showsStyleTransfer = true }
+                        .disabled(session.document == nil || session.activeLayer?.asset == nil)
                 }
             }
     }

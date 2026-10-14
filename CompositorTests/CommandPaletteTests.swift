@@ -75,4 +75,23 @@ struct CommandPaletteTests {
         grid.perform() // Put it back.
         try await Task.sleep(for: .milliseconds(300))
     }
+
+    /// The AI commands live in a menu-bar CommandMenu, so the palette lists them like any other command: searching
+    /// "ai" or "generate" finds them, and ⌘F can open every AI sheet. With no document the canvas-bound ones are
+    /// listed greyed; the ones that don't touch the canvas are runnable.
+    @Test func aiCommandsAreListedInPalette() throws {
+        let bar = try #require(NSApp.mainMenu)
+        let listed = CommandPaletteMenu.entries(in: bar, skipping: CommandPaletteController.skipped)
+        let titles = Set(listed.map(\.title))
+        for title in ["AI › Generate Image…", "AI › Edit Image…", "AI › Natural Language Editing…",
+                      "AI › Style Transfer…", "AI › Text-to-Speech…"] {
+            #expect(titles.contains(title), "\(title) should be findable in the palette")
+        }
+        // The test host has no document open, so generating an image is listed but greyed.
+        let generate = try #require(listed.first { $0.title == "AI › Generate Image…" })
+        #expect(!generate.isEnabled)
+        // Natural language editing works on the app as a whole, so it's live even without a canvas.
+        let naturalLanguage = try #require(listed.first { $0.title == "AI › Natural Language Editing…" })
+        #expect(naturalLanguage.isEnabled)
+    }
 }

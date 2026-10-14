@@ -584,6 +584,16 @@ final class EditorSession {
     var conversionRequest: PSDConversionRequest?
     /// Tests assign this to skip the conversion sheet.
     @ObservationIgnored var confirmConversions: (([PSDConversion]) async -> Bool)?
+    
+    // AI feature sheet states
+    var showsImageGeneration = false
+    var showsImageEditing = false
+    var showsVideoGeneration = false
+    var showsTTS = false
+    var showsSTTS = false
+    var showsNaturalLanguage = false
+    var showsSemanticSelection = false
+    var showsStyleTransfer = false
     /// The RAW file being developed, and the settings the sheet is editing (see RawImporter).
     var rawDevelop: (url: URL, settings: RawDevelopSettings)?
     var showsRawDevelop = false { didSet { resumeFileRequests() } }
