@@ -124,7 +124,7 @@ Compositor は 8 言語の UI に対応しています — 英語、簡体字中
 
 ## コミュニティ
 
-Compositor はオープンに開発しています。この先の形を一番速く左右できるのは議論に参加することです。WeChat に小さなグループ（ID: **raikkonenlxx**）があり、ユーザーや開発者がプロンプト交換、バグ報告、`.comp` ファイル共有、ゲートウェイ設定や AI の話をしています。Bot でないとわかるよう、申請時は「Compositor」と書いて_ADD_してください。
+AIPDD PhotoEditor（base Compositor）はオープンに開発しています。最も早く参加する方法は議論に加わることです。WeChat に小さなグループ（ID: **raikkonenlxx**）を運営しており、ユーザーや開発者がプロンプト交換、バグ報告、`.comp` ファイル共有、ゲートウェイ設定や AI ワークフローについて話しています。参加するには WeChat **raikkonenlxx** に「AIPDD」とメモして追加してください。Bot でないことがわかるよう、申請時に「Compositor」と記入してください。
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="WeChat QR — AIPDD-Agent-Claw キャンバス discuss グループ"/>

@@ -124,7 +124,7 @@ Cela nécessite, tout hors de ce dépôt :
 
 ## Communauté
 
-Compositor se développe en public, et la façon la plus rapide d'influencer la suite est de rejoindre la discussion. Je tiens un petit groupe sur WeChat (ID : **raikkonenlxx**) pour que les utilisateurs et développeurs échangent des prompts, signalent des bugs, partagent des fichiers `.comp` et parlent de la configuration des passerelles et des fonctions IA. Ajoutez-moi avec « Compositor » dans la note pour que je sache que vous n'êtes pas un robot.
+AIPDD PhotoEditor (base Compositor) est développé en public, et la façon la plus rapide d'y participer est de rejoindre la discussion. Je tiens un petit groupe WeChat (ID : **raikkonenlxx**) pour que les utilisateurs et développeurs échangent des prompts, signalent des bugs, partagent des fichiers `.comp` et parlent de la configuration des passerelles et des workflows IA. Pour rejoindre, ajoutez-moi sur WeChat **raikkonenlxx** avec la mention « AIPDD ». Veuillez inclure « Compositor » dans votre demande d'ami pour que je sache que vous n'êtes pas un robot.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="QR code WeChat — rejoindre le groupe de discussion AIPDD-Agent-Claw"/>

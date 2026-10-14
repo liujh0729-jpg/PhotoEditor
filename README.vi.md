@@ -124,7 +124,7 @@ Cần những thứ sau, tất cả nằm ngoài repo này:
 
 ## Cộng đồng
 
-Compositor được phát triển công khai, và cách nhanh nhất để định hình bước tiếp theo là tham gia thảo luận. Tôi giữ một nhóm nhỏ trên WeChat (ID: **raikkonenlxx**) cho người dùng và nhà phát triển trao đổi prompt, báo lỗi, chia sẻ tệp `.comp`, và nói về cấu hình gateway và tính năng AI — 想一起研究的朋友，加微信 **raikkonenlxx** 备注 Compositor. Kết bạn với ghi chú "Compositor" để tôi biết bạn không phải bot.
+AIPDD PhotoEditor (nền Compositor) được phát triển công khai, và cách nhanh nhất để tham gia là tham gia thảo luận. Tôi giữ một nhóm nhỏ trên WeChat (ID: **raikkonenlxx**) cho người dùng và nhà phát triển trao đổi prompt, báo lỗi, chia sẻ tệp `.comp`, và nói về cấu hình gateway và quy trình làm việc AI. Để tham gia, kết bạn WeChat **raikkonenlxx** với ghi chú "AIPDD". Vui lòng ghi "Compositor" trong lời kết bạn để tôi biết bạn không phải bot.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="Mã QR WeChat — tham gia nhóm thảo luận AIPDD-Agent-Claw"/>

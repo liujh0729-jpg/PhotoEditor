@@ -124,7 +124,7 @@ It needs, all kept outside this repository:
 
 ## Community
 
-Compositor is developed in the open, and the fastest way to shape where it goes next is to join the discussion. I keep a small group on WeChat (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI features — 想一起研究的朋友，加微信 **raikkonenlxx** 备注 Compositor。Add me with "Compositor" in the note so I know you're not a bot.
+AIPDD PhotoEditor (base Compositor) is developed in the open, and the fastest way to participate is to join the discussion. I keep a small WeChat group (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI workflows. To join, add me on WeChat at **raikkonenlxx** with the note "AIPDD". Please include "Compositor" in your friend request so I know you're not a bot.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="WeChat QR code — join the AIPDD-Agent-Claw canvas discussion group"/>

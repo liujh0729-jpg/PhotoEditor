@@ -124,7 +124,7 @@ Compositor 内置 8 种界面语言——英语、简体中文、法语、日语
 
 ## 社区
 
-Compositor 开源开发，最快的参与方式就是加入讨论。我在微信上维护了一个小群（微信号：**raikkonenlxx**），面向用户与开发者，用来交流提示词、报 bug、分享 `.comp` 文件，讨论网关配置与 AI 玩法。想一起研究的朋友，加微信 **raikkonenlxx** 备注 Compositor。请通过好友申请时写明 Compositor，让我知道你不是机器人。
+AIPDD PhotoEditor Compositor 开源开发，最快的参与方式就是加入讨论。我在微信上维护了一个小群（微信号：**raikkonenlxx**），面向用户与开发者，用来交流提示词、报 bug、分享 `.comp` 文件，讨论网关配置与 AI 玩法。想一起研究的朋友，加微信 **raikkonenlxx** 备注 AIPDD。请通过好友申请时写明 Compositor，让我知道你不是机器人。
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="微信二维码 — 加入 AIPDD-Agent-Claw 画布讨论群"/>

@@ -124,7 +124,7 @@ Necesita, todo fuera de este repositorio:
 
 ## Comunidad
 
-Compositor se desarrolla en abierto, y la forma más rápida de influir en su rumbo es sumarse a la discusión. Mantengo un grupo pequeño en WeChat (ID: **raikkonenlxx**) para que usuarios y desarrolladores intercambien prompts, reporten errores, compartan archivos `.comp` y hablen de configuraciones de pasarela y funciones de IA. Añádeme con «Compositor» en la nota para saber que no eres un bot.
+AIPDD PhotoEditor (base Compositor) se desarrolla en abierto, y la forma más rápida de participar es unirse a la discusión. Mantengo un grupo pequeño en WeChat (ID: **raikkonenlxx**) para que usuarios y desarrolladores intercambien prompts, reporten errores, compartan archivos `.comp` y hablen de configuraciones de pasarela y flujos de trabajo con IA. Para unirte, agrégame en WeChat **raikkonenlxx** con la nota "AIPDD". Incluye "Compositor" en la solicitud de amistad para saber que no eres un bot.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="Código QR de WeChat — únete al grupo de discusión AIPDD-Agent-Claw"/>
