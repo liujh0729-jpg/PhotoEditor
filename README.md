@@ -78,6 +78,18 @@ brew install --cask robbietilton-compositor
 - Drag a number's label to scrub its value, as in Photoshop
 - Automatic updates, signed and notarized
 
+### AI (bring your own gateway)
+- The AI Gateway (⌘,) points every AI feature at any OpenAI-compatible server you trust — a hosted one, a corporate proxy, or a local runner. Channels have priority, weight, timeout, optional HTTP/HTTPS/SOCKS proxy, and per-capability overrides for model, path and channel; API keys live in the macOS Keychain, never in a preferences file. A built-in AIPDD channel is pre-configured so you can start with just a key. Test Connection verifies a channel before you save it
+- Capabilities are slots, not hard-coded endpoints: Text Chat, Image Generation, Image Editing, Video, Text-to-Speech, Speech-to-Text, Embeddings and Decision Model each pick their own channel and model, so you can, for example, route image work to one provider and chat to another
+- Every AI action is a menu command, so it shows up in Search Commands (⌘F) and can be rebound in Edit › Keyboard Shortcuts
+- Generate Image: text-to-image with size, quality, style, count and negative prompt; drop results onto the canvas as new layers, or save to disk
+- Image Editing and Inpainting (image-to-image): pass the active layer's pixels to the gateway with a prompt, and either replace the layer in place (undoable, mask placement frozen to the old transform) or add the result as a new layer; when the active layer has an enabled mask, that mask is sent too, so the model edits only what you left unmasked
+- Style Transfer: hand the gateway a reference image and a strength (0–100%), match its tone onto the active layer
+- Natural Language Editing: describe an edit in plain English — "boost the saturation", "rename to sky", "deselect the subject", "group these layers" — the chat model returns a structured intent and the editor performs it through the same code paths as clicking a menu, with a keyword parser as an offline fallback. Destructive intents (delete, replace pixels) ask before acting
+- Semantic Selection: the mask-to-canvas pipeline is wired up — a segmentation mask off the gateway becomes either a layer mask (white reveals) or a live marching-ants selection traced along exact pixel edges, placed under the layer's own transform. The text-to-mask model itself is still a placeholder; the endpoints are ready for a SAM-compatible service
+- Video, Voice and Transcription run through the async task queue: submit → poll with exponential backoff → download. Polling has a deadline and honors cancellation, so a stuck gateway can't wedge the panel; a Cancel button drops a task in place
+- Nothing leaves your Mac except to the channel you configured; the app does not phone home, does not bundle an API key, and does not meter usage
+
 ### Works with AI agents
 - AI agents and scripts can build and edit projects directly: a `.comp` is a folder of PNG layers and a manifest, and an open project updates live as it's written. See [Writing Compositor projects](docs/writing-comp-files.md)
 
@@ -103,6 +115,12 @@ It needs, all kept outside this repository:
 - a **Developer ID Application** certificate in the login keychain
 - notarization credentials saved with `xcrun notarytool store-credentials "compositor-notary" …`
 - [`create-dmg`](https://github.com/create-dmg/create-dmg) (`brew install create-dmg`)
+
+## Community
+
+Compositor is developed in the open, and the fastest way to shape where it goes next is to join the discussion. I keep a small Chinese-language group on WeChat (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI features — 想一起研究的朋友，加微信 **raikkonenlxx** 备注 Compositor，欢迎加入社群。Add me with "Compositor" in the note so I know you're not a bot.
+
+For issues that should live in the record — reproducible bugs, feature requests, PRs — please still open them on GitHub so the discussion is searchable.
 
 ## License
 
