@@ -1,5 +1,7 @@
 # Compositor
 
+**English** · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
+
 Adobe Photoshop costs too much and tools like GIMP don’t feel familiar enough for me to stay in flow. That’s why I built Compositor.
 
 The goal was to create a full-featured image editor that is completely free and open source. I used to use Photoshop for compositing and post-processing, so Compositor is built around that workflow - with the tools needed to create a pixel-perfect final image.
@@ -83,7 +85,7 @@ brew install --cask robbietilton-compositor
 - Capabilities are slots, not hard-coded endpoints: Text Chat, Image Generation, Image Editing, Video, Text-to-Speech, Speech-to-Text, Embeddings and Decision Model each pick their own channel and model, so you can, for example, route image work to one provider and chat to another
 - Every AI action is a menu command, so it shows up in Search Commands (⌘F) and can be rebound in Edit › Keyboard Shortcuts
 - Generate Image: text-to-image with size, quality, style, count and negative prompt; drop results onto the canvas as new layers, or save to disk
-- Image Editing and Inpainting (image-to-image): pass the active layer's pixels to the gateway with a prompt, and either replace the layer in place (undoable, mask placement frozen to the old transform) or add the result as a new layer; when the active layer has an enabled mask, that mask is sent too, so the model edits only what you left unmasked
+- Image Editing and Inpainting (image-to-image): pass the active layer's pixels to the gateway with a prompt, and either replace the layer in place (undoable, mask preserved) or add the result as a new layer; with a live selection or a layer mask, that mask is sent too, so the model edits only what you marked
 - Style Transfer: hand the gateway a reference image and a strength (0–100%), match its tone onto the active layer
 - Natural Language Editing: describe an edit in plain English — "boost the saturation", "rename to sky", "deselect the subject", "group these layers" — the chat model returns a structured intent and the editor performs it through the same code paths as clicking a menu, with a keyword parser as an offline fallback. Destructive intents (delete, replace pixels) ask before acting
 - Semantic Selection: the mask-to-canvas pipeline is wired up — a segmentation mask off the gateway becomes either a layer mask (white reveals) or a live marching-ants selection traced along exact pixel edges, placed under the layer's own transform. The text-to-mask model itself is still a placeholder; the endpoints are ready for a SAM-compatible service
@@ -100,7 +102,9 @@ brew install --cask robbietilton-compositor
 
 ## Translations
 
-Compositor is English only for now, and translation pull requests aren't being accepted. It's maintained by one person, every new string would need translating from then on, and translations in languages I don't read can't be reviewed. I'll revisit this once the app settles; until then, please don't open localization PRs.
+Compositor ships with eight UI languages — English, Simplified Chinese, French, Japanese, Arabic, Vietnamese, Spanish and Russian — and you can pick one explicitly in AI Gateway Settings › General (or leave it on Follow System to track the language order in System Settings). The interface mirrors the locale: Arabic switches to a right-to-left layout on the next launch.
+
+The string catalog lives in `Compositor/Resources/*.lproj/Localizable.strings`, one file per locale, English literal as the key. Missing keys fall back to the English source, so a half-translated locale is still usable. Native-speaker PRs that fill the gaps or improve existing wording are welcome; if you’re picking up a locale for the first time, start with the visible surfaces (menus, AI sheets, tool headers) before the deeper tooltips.
 
 ## Building
 
@@ -118,7 +122,12 @@ It needs, all kept outside this repository:
 
 ## Community
 
-Compositor is developed in the open, and the fastest way to shape where it goes next is to join the discussion. I keep a small Chinese-language group on WeChat (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI features — 想一起研究的朋友，加微信 **raikkonenlxx** 备注 Compositor，欢迎加入社群。Add me with "Compositor" in the note so I know you're not a bot.
+Compositor is developed in the open, and the fastest way to shape where it goes next is to join the discussion. I keep a small group on WeChat (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI features — 想一起研究的朋友，加微信 **raikkonenlxx** 备注 Compositor。Add me with "Compositor" in the note so I know you're not a bot.
+
+<div align="center">
+  <img src="./docs/references/canvas-group-qr.png" width="260" alt="WeChat QR code — join the AIPDD-Agent-Claw canvas discussion group"/>
+</div>
+<br>
 
 For issues that should live in the record — reproducible bugs, feature requests, PRs — please still open them on GitHub so the discussion is searchable.
 
