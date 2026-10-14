@@ -505,7 +505,11 @@ private struct AISheets: ViewModifier {
             ImageGenerationSheet(session: session)
         }
         .sheet(isPresented: $session.showsImageEditing) {
-            ImageEditingSheet(session: session, sourceImage: session.activeLayer?.asset?.image, maskImage: nil)
+            // Pass the active layer's mask (when enabled) so an edit respects what the user has already masked out;
+            // a disabled mask is a toggle-off state and shouldn't reshape the gateway's output.
+            ImageEditingSheet(session: session,
+                              sourceImage: session.activeLayer?.asset?.image,
+                              maskImage: session.activeLayer?.mask.flatMap { $0.isEnabled ? $0.asset.image : nil })
         }
         .sheet(isPresented: $session.showsVideoGeneration) {
             VideoGenerationSheet(sourceImage: session.activeLayer?.asset?.image)

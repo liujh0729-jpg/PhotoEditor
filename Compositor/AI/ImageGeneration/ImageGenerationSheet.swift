@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 struct ImageGenerationSheet: View {
     let session: EditorSession
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var taskQueue = TaskQueue.shared
+    @ObservedObject private var taskQueue = TaskQueue.shared
     
     @State private var prompt: String = ""
     @State private var negativePrompt: String = ""
@@ -200,6 +200,10 @@ struct ImageGenerationSheet: View {
                     request.style = style
                 }
                 
+                if !negativePrompt.isEmpty {
+                    request.negative_prompt = negativePrompt
+                }
+                
                 request.response_format = "b64_json"
                 
                 let response: ImageResponse = try await GatewayClient.shared.request(
@@ -227,8 +231,11 @@ struct ImageGenerationSheet: View {
     }
     
     private func useAsLayer(_ image: CGImage) {
-        session.placeGeneratedImage(image, named: "AI Image")
-        dismiss()
+        if session.placeGeneratedImage(image, named: "AI Image") {
+            dismiss()
+        } else {
+            errorMessage = "Couldn't add the image to the canvas."
+        }
     }
     
     private func saveToDisk(_ image: CGImage) {

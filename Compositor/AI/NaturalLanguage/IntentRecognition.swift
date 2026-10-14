@@ -58,6 +58,21 @@ struct EditingIntent: Codable {
         self.requiresConfirmation = requiresConfirmation
         self.description = description
     }
+    
+    private enum CodingKeys: String, CodingKey {
+        case action, parameters, targetLayerIDs, requiresConfirmation, description
+    }
+    
+    /// Lenient decoding: a model that omits `parameters`, `description` or `requiresConfirmation` still yields a
+    /// usable intent instead of throwing (which would drop the whole response to the keyword fallback).
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        action = try container.decode(Action.self, forKey: .action)
+        parameters = (try? container.decode([String: AnyCodable].self, forKey: .parameters)) ?? [:]
+        targetLayerIDs = try? container.decode([String].self, forKey: .targetLayerIDs)
+        requiresConfirmation = (try? container.decode(Bool.self, forKey: .requiresConfirmation)) ?? false
+        description = (try? container.decode(String.self, forKey: .description)) ?? ""
+    }
 }
 
 /// Recognizes editing intents from natural language input. Runs on the main actor: it reads the
@@ -165,20 +180,23 @@ final class IntentRecognition {
             return EditingIntent(action: .adjustExposure, description: "Adjust exposure")
         } else if lower.contains("color balance") {
             return EditingIntent(action: .adjustColorBalance, description: "Adjust color balance")
+        } else if lower.contains("deselect") {
+            // Checked before "select ... subject": "deselect" itself contains "select", so the subject
+            // branch would otherwise swallow "deselect the subject".
+            return EditingIntent(action: .deselect, description: "Deselect all")
         } else if lower.contains("select") && lower.contains("subject") {
             return EditingIntent(action: .selectSubject, description: "Select subject")
-        } else if lower.contains("deselect") {
-            return EditingIntent(action: .deselect, description: "Deselect all")
         } else if lower.contains("invert") && lower.contains("selection") {
             return EditingIntent(action: .invertSelection, description: "Invert selection")
         } else if lower.contains("delete") && lower.contains("layer") {
             return EditingIntent(action: .deleteLayer, requiresConfirmation: true, description: "Delete layer")
         } else if lower.contains("duplicate") && lower.contains("layer") {
             return EditingIntent(action: .duplicateLayer, description: "Duplicate layer")
+        } else if lower.contains("ungroup") {
+            // Before "group": "ungroup" contains "group", so the group branch would otherwise win.
+            return EditingIntent(action: .ungroupLayers, description: "Ungroup layers")
         } else if lower.contains("group") {
             return EditingIntent(action: .groupLayers, description: "Group layers")
-        } else if lower.contains("ungroup") {
-            return EditingIntent(action: .ungroupLayers, description: "Ungroup layers")
         }
         
         return EditingIntent(action: .unknown, description: text)

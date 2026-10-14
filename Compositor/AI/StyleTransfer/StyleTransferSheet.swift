@@ -195,9 +195,10 @@ struct StyleTransferSheet: View {
                 parts.append(.text("prompt", "Match the color tone and style of the reference image."))
                 parts.append(.text("strength", String(format: "%.2f", strength)))
                 parts.append(.text("response_format", "b64_json"))
-                if !model.isEmpty {
-                    parts.append(.text("model", model))
-                }
+                let resolvedModel = model.isEmpty
+                    ? (GatewayConfigurationStore.shared.model(for: .imageEdits) ?? "gpt-image-1")
+                    : model
+                parts.append(.text("model", resolvedModel))
                 
                 let response: ImageResponse = try await GatewayClient.shared.uploadMultipart(
                     endpoint: .imageEdits,
@@ -226,13 +227,19 @@ struct StyleTransferSheet: View {
     
     private func applyToLayer() {
         guard let result = resultImage else { return }
-        session.replaceActiveLayer(with: result)
-        dismiss()
+        if session.replaceActiveLayer(with: result) {
+            dismiss()
+        } else {
+            errorMessage = "Couldn't apply to the active layer. Select a pixel layer first."
+        }
     }
     
     private func addAsNewLayer() {
         guard let result = resultImage else { return }
-        session.placeGeneratedImage(result, named: "Style Transfer")
-        dismiss()
+        if session.placeGeneratedImage(result, named: "Style Transfer") {
+            dismiss()
+        } else {
+            errorMessage = "Couldn't add the image to the canvas."
+        }
     }
 }

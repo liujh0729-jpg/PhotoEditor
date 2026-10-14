@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 /// Sheet for generating videos from text or images.
 struct VideoGenerationSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var taskQueue = TaskQueue.shared
+    @ObservedObject private var taskQueue = TaskQueue.shared
     
     let sourceImage: CGImage?
     

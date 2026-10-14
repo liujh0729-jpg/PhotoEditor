@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 struct ImageEditingSheet: View {
     let session: EditorSession
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var taskQueue = TaskQueue.shared
+    @ObservedObject private var taskQueue = TaskQueue.shared
     
     let sourceImage: CGImage?
     let maskImage: CGImage?
@@ -229,6 +229,13 @@ struct ImageEditingSheet: View {
                 // Add prompt
                 parts.append(.text("prompt", prompt))
                 
+                // Add model: the field's value, or the capability slot's default, so the endpoint isn't left
+                // without its required model when the user typed nothing.
+                let resolvedModel = model.isEmpty
+                    ? (GatewayConfigurationStore.shared.model(for: .imageEdits) ?? "gpt-image-1")
+                    : model
+                parts.append(.text("model", resolvedModel))
+                
                 // Add other parameters
                 if !size.isEmpty {
                     parts.append(.text("size", size))
@@ -262,13 +269,19 @@ struct ImageEditingSheet: View {
     }
     
     private func replaceLayer(_ image: CGImage) {
-        session.replaceActiveLayer(with: image)
-        dismiss()
+        if session.replaceActiveLayer(with: image) {
+            dismiss()
+        } else {
+            errorMessage = "Couldn't apply to the active layer. Select a pixel layer first."
+        }
     }
     
     private func addAsNewLayer(_ image: CGImage) {
-        session.placeGeneratedImage(image, named: "AI Edit")
-        dismiss()
+        if session.placeGeneratedImage(image, named: "AI Edit") {
+            dismiss()
+        } else {
+            errorMessage = "Couldn't add the image to the canvas."
+        }
     }
     
     private func saveToDisk(_ image: CGImage) {

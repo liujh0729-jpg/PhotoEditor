@@ -209,6 +209,21 @@ struct STTSSheet: View {
         }
     }
     
+    /// Picks the multipart Content-Type from the file's extension. Whisper and friends key their decoding off
+    /// this field; a hard-coded "audio/mpeg" mislabels a .wav or .m4a upload.
+    static func mimeType(for url: URL) -> String {
+        switch url.pathExtension.lowercased() {
+        case "wav": return "audio/wav"
+        case "mp3": return "audio/mpeg"
+        case "m4a", "mp4", "aac": return "audio/mp4"
+        case "flac": return "audio/flac"
+        case "ogg", "oga", "opus": return "audio/ogg"
+        case "webm": return "audio/webm"
+        case "aiff", "aif", "caf": return "audio/aiff"
+        default: return "application/octet-stream"
+        }
+    }
+    
     private func transcribe() {
         guard let fileURL = audioFileURL else { return }
         
@@ -222,7 +237,7 @@ struct STTSSheet: View {
                 let audioData = try Data(contentsOf: fileURL)
                 
                 var parts: [MultipartPart] = []
-                parts.append(.data("file", audioData, filename: fileURL.lastPathComponent, mimeType: "audio/mpeg"))
+                parts.append(.data("file", audioData, filename: fileURL.lastPathComponent, mimeType: Self.mimeType(for: fileURL)))
                 parts.append(.text("model", model.isEmpty ? (GatewayConfigurationStore.shared.model(for: .audioTranscriptions) ?? "whisper-1") : model))
                 
                 if !language.isEmpty {

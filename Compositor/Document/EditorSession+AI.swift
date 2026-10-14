@@ -3,25 +3,34 @@ import CoreGraphics
 
 /// The canvas side of the AI features: dropping a generated image as a layer, replacing the active
 /// layer with an edited one, and running the natural-language intents that map onto existing edits.
-/// Kept on the session so the sheets stay thin and the behaviour is unit-testable without any UI.
+/// Kept on the session so the sheets stay thin and the behavior is unit-testable without any UI.
 extension EditorSession {
     /// Places a generated image on the canvas as a new layer, named after the source of the pixels.
-    func placeGeneratedImage(_ image: CGImage, named name: String) {
-        guard let thumbnail = try? PixelAdjust.thumbnail(of: image) else { return }
+    /// Returns false when the bitmap can't be read.
+    @discardableResult
+    func placeGeneratedImage(_ image: CGImage, named name: String) -> Bool {
+        guard let thumbnail = try? PixelAdjust.thumbnail(of: image) else { return false }
         insert(ImportedImage(image: image, thumbnail: thumbnail, name: name))
+        return true
     }
 
-    /// Replaces the active (non-group) layer's pixels with an edited image, keeping its name and place
-    /// on the canvas. The undo step is folded into the history like any other pixel edit.
-    func replaceActiveLayer(with image: CGImage) {
+    /// Replaces the active (non-group) layer's pixels with an edited image, keeping its name and its place on the
+    /// canvas, and resizing its transform to the new bitmap. A mask without its own placement is frozen to the
+    /// old transform first so it doesn't stretch with the layer. The undo step folds into history like any pixel edit.
+    /// Returns false when there's no eligible active layer or the image can't be read.
+    @discardableResult
+    func replaceActiveLayer(with image: CGImage) -> Bool {
         guard let document,
               let index = document.layers.firstIndex(where: { $0.id == activeLayerID }),
               document.layers[index].isGroup != true,
-              let thumbnail = try? PixelAdjust.thumbnail(of: image) else { return }
+              let thumbnail = try? PixelAdjust.thumbnail(of: image) else { return false }
+        let layer = document.layers[index]
         beginEdit("AI Edit")
-        let name = document.layers[index].name
-        self.document?.layers[index].asset = ImportedImage(image: image, thumbnail: thumbnail, name: name)
+        if layer.mask?.placement == nil { self.document?.layers[index].mask?.placement = layer.maskTransform }
+        self.document?.layers[index].asset = ImportedImage(image: image, thumbnail: thumbnail, name: layer.name)
+        self.document?.layers[index].transform.size = CGSize(width: image.width, height: image.height)
         endEdit()
+        return true
     }
 
     /// Redraws a mask of any format (a segmentation map off the gateway is usually RGBA) into the monochrome,

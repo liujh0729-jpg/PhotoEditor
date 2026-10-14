@@ -22,10 +22,6 @@ struct CompositorApp: App {
             }
             // The project's name is already on its tab, so the toolbar doesn't repeat it as a window title.
             .windowToolbarStyle(.unifiedCompact(showsTitle: false))
-        
-        Settings {
-            GatewaySettingsView()
-        }
             .commands {
                 CommandGroup(replacing: .undoRedo) {
                     // Dialog text fields keep native text undo; document history
@@ -105,8 +101,8 @@ struct CompositorApp: App {
                 Group {
                     CommandGroup(after: .appInfo) {
                         Button("Check for Updates…") { applicationDelegate.updater.checkForUpdates() }
-                        Button("AI Gateway Settings…") {
-                            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                        SettingsLink {
+                            Text("AI Gateway Settings…")
                         }
                     }
                     CommandGroup(after: .toolbar) {
@@ -418,6 +414,12 @@ struct CompositorApp: App {
                         .disabled(session.document == nil || session.activeLayer?.asset == nil)
                 }
             }
+
+        // A sibling scene, not part of the editor window's chain: it owns the Settings window, while the
+        // .commands above stay attached to the editor Window so its menus and shortcuts target the canvas.
+        Settings {
+            GatewaySettingsView()
+        }
     }
 
     /// View › CMYK › Profile › Load Profile: a CMYK ICC profile picked from anywhere, kept and chosen.

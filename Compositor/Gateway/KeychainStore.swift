@@ -17,12 +17,22 @@ final class KeychainStore {
             kSecAttrAccount as String: channelID.uuidString
         ]
         
-        // Delete any existing item first
-        SecItemDelete(query as CFDictionary)
+        guard let data = key.data(using: .utf8) else {
+            throw KeychainError.storeFailed(errSecParam)
+        }
         
-        // Add the new key
+        // Update in place when a key already exists. Deleting first and re-adding would drop the stored key
+        // outright if the add then failed.
+        let updated = SecItemUpdate(query as CFDictionary,
+                                    [kSecValueData as String: data] as CFDictionary)
+        if updated == errSecSuccess { return }
+        guard updated == errSecItemNotFound else {
+            throw KeychainError.storeFailed(updated)
+        }
+        
+        // No existing item: add a fresh one.
         var addQuery = query
-        addQuery[kSecValueData as String] = key.data(using: .utf8)
+        addQuery[kSecValueData as String] = data
         addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
         
         let status = SecItemAdd(addQuery as CFDictionary, nil)

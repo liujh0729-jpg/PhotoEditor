@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Settings window for configuring the AI gateway.
 struct GatewaySettingsView: View {
-    @StateObject private var store = GatewayConfigurationStore.shared
+    @ObservedObject private var store = GatewayConfigurationStore.shared
     @State private var selectedTab = 0
     @State private var editingChannel: ProviderChannel?
     @State private var showingAddChannel = false
@@ -36,7 +36,7 @@ struct GatewaySettingsView: View {
 
 /// Tab for managing provider channels.
 struct ChannelsTab: View {
-    @StateObject private var store = GatewayConfigurationStore.shared
+    @ObservedObject private var store = GatewayConfigurationStore.shared
     @Binding var editingChannel: ProviderChannel?
     @Binding var showingAddChannel: Bool
     
@@ -151,7 +151,7 @@ struct ChannelEditorView: View {
     let channel: ProviderChannel?
     
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var store = GatewayConfigurationStore.shared
+    @ObservedObject private var store = GatewayConfigurationStore.shared
     
     @State private var name: String = ""
     @State private var baseURL: String = ""
@@ -164,6 +164,7 @@ struct ChannelEditorView: View {
     
     @State private var testing = false
     @State private var testResult: Bool?
+    @State private var saveError: String?
     
     var isEditing: Bool { channel != nil }
     
@@ -228,6 +229,14 @@ struct ChannelEditorView: View {
             .padding()
         }
         .frame(width: 500, height: 450)
+        .alert("Couldn't save the API key", isPresented: Binding(
+            get: { saveError != nil },
+            set: { if !$0 { saveError = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(saveError ?? "")
+        }
         .onAppear {
             if let channel = channel {
                 name = channel.name
@@ -293,9 +302,15 @@ struct ChannelEditorView: View {
             
             store.updateChannel(updated)
             
-            // Update API key
+            // Update API key. A keychain write can fail (lock denied, item corrupted); report it instead of
+            // dismissing as if the key were saved.
             if !apiKey.isEmpty {
-                try? KeychainStore.shared.store(key: apiKey, for: channel.id)
+                do {
+                    try KeychainStore.shared.store(key: apiKey, for: channel.id)
+                } catch {
+                    saveError = error.localizedDescription
+                    return
+                }
             }
         } else {
             // Add new
@@ -313,7 +328,12 @@ struct ChannelEditorView: View {
             
             // Store API key
             if !apiKey.isEmpty {
-                try? KeychainStore.shared.store(key: apiKey, for: newChannel.id)
+                do {
+                    try KeychainStore.shared.store(key: apiKey, for: newChannel.id)
+                } catch {
+                    saveError = error.localizedDescription
+                    return
+                }
             }
         }
         
@@ -323,7 +343,7 @@ struct ChannelEditorView: View {
 
 /// Tab for managing capability slots.
 struct CapabilitiesTab: View {
-    @StateObject private var store = GatewayConfigurationStore.shared
+    @ObservedObject private var store = GatewayConfigurationStore.shared
     
     var body: some View {
         List {
@@ -338,7 +358,7 @@ struct CapabilitiesTab: View {
 /// A single capability slot row.
 struct CapabilitySlotRow: View {
     let slot: CapabilitySlot
-    @StateObject private var store = GatewayConfigurationStore.shared
+    @ObservedObject private var store = GatewayConfigurationStore.shared
     
     @State private var modelOverride: String = ""
     @State private var pathOverride: String = ""

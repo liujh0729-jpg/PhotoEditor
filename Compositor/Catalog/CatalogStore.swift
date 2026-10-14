@@ -86,48 +86,30 @@ final class CatalogStore: ObservableObject {
             throw CatalogError.missingAPIKey
         }
         
-        // Try to fetch from /v1/new-api/catalog first
-        let catalogURL = channel.baseURL.appendingPathComponent("/v1/new-api/catalog")
-        
-        var request = URLRequest(url: catalogURL)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.timeoutInterval = 30
-        
+        // Try /v1/new-api/catalog first (an AIPDD extension); fall back to OpenAI-style /v1/models on any
+        // failure (missing endpoint, non-2xx, undecodable body). GatewayClient's fetchRaw checks the status
+        // code and honors the channel's proxy, so a 4xx never masquerades as a valid catalog.
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                // Fallback to /v1/models
-                try await syncFallback(channel: channel, apiKey: apiKey)
-                return
-            }
-            
+            let data = try await GatewayClient.shared.fetchRaw(
+                channel: channel, apiKey: apiKey, path: "/v1/new-api/catalog"
+            )
             let catalogResponse = try JSONDecoder().decode(CatalogResponse.self, from: data)
             
             capabilities = catalogResponse.capabilities
             models = catalogResponse.models
             lastSynced = Date()
             
-            // Cache the response
             saveCache(baseURL: channel.baseURL.absoluteString, data: data)
         } catch {
-            // Fallback to /v1/models
             try await syncFallback(channel: channel, apiKey: apiKey)
         }
     }
     
     /// Fallback sync using /v1/models endpoint.
     private func syncFallback(channel: ProviderChannel, apiKey: String) async throws {
-        let modelsURL = channel.baseURL.appendingPathComponent("/v1/models")
-        
-        var request = URLRequest(url: modelsURL)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.timeoutInterval = 30
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
+        let data = try await GatewayClient.shared.fetchRaw(
+            channel: channel, apiKey: apiKey, path: "/v1/models"
+        )
         
         struct ModelsResponse: Codable {
             let data: [ModelInfo]
@@ -177,9 +159,13 @@ final class CatalogStore: ObservableObject {
         UserDefaults.standard.set(baseURL, forKey: baseURLKey)
     }
     
-    /// Loads the catalog from cache.
+    /// Loads the catalog from cache, but only if it was saved for the currently-active channel — a catalog
+    /// cached under one gateway would otherwise silently shape model choices for another.
     private func loadCache() {
-        guard let data = UserDefaults.standard.data(forKey: cacheKey),
+        let currentBase = GatewayConfigurationStore.shared.configuration.activeChannel?.baseURL.absoluteString
+        guard let cachedBase = UserDefaults.standard.string(forKey: baseURLKey),
+              cachedBase == currentBase,
+              let data = UserDefaults.standard.data(forKey: cacheKey),
               let response = try? JSONDecoder().decode(CatalogResponse.self, from: data) else {
             return
         }

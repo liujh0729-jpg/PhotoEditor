@@ -4,6 +4,7 @@ import Foundation
 struct ImageGenerationRequest: Codable {
     let model: String
     let prompt: String
+    var negative_prompt: String?
     var n: Int?
     var size: String?
     var quality: String?

@@ -71,6 +71,9 @@ final class TaskQueue: ObservableObject {
     
     private var pollingTasks: [String: Task<Void, Never>] = [:]
     private let maxConcurrentTasks = 3
+    /// How long a single task is polled before giving up, so a gateway that never reports completion can't
+    /// spin forever with the panel stuck on "processing".
+    private let pollingTimeout: TimeInterval = 600
     
     private init() {}
     
@@ -114,14 +117,28 @@ final class TaskQueue: ObservableObject {
         return taskID
     }
     
-    /// Polls a task until completion or failure.
+    /// Polls a task until completion, failure, cancellation or the polling deadline.
     private func startPolling(for taskID: String, endpoint: EndpointType) {
         let task = Task {
             var delay: UInt64 = 1_000_000_000  // 1 second
             let maxDelay: UInt64 = 30_000_000_000  // 30 seconds
+            let deadline = Date().addingTimeInterval(pollingTimeout)
             
             while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: delay)
+                // A thrown sleep means the task was cancelled while waiting; stop instead of spinning.
+                if Task.isCancelled { break }
+                do {
+                    try await Task.sleep(nanoseconds: delay)
+                } catch {
+                    break
+                }
+                
+                if Date() >= deadline {
+                    await MainActor.run {
+                        failTask(taskID, error: "Timed out waiting for the gateway.")
+                    }
+                    break
+                }
                 
                 do {
                     let status: TaskStatusResponse = try await pollTask(taskID: taskID, endpoint: endpoint)
@@ -134,7 +151,8 @@ final class TaskQueue: ObservableObject {
                         break
                     }
                     
-                    // Exponential backoff
+                    // Exponential backoff. An absent or unrecognized status keeps polling but is bounded by
+                    // the deadline above, so it can't loop forever.
                     delay = min(delay * 2, maxDelay)
                 } catch {
                     await MainActor.run {
@@ -153,20 +171,9 @@ final class TaskQueue: ObservableObject {
         pollingTasks[taskID] = task
     }
     
-    /// Polls a task status.
+    /// Polls a task status through the gateway client, so the HTTP status is checked and the channel's proxy and
+    /// credentials are applied the same way as every other request.
     private func pollTask(taskID: String, endpoint: EndpointType) async throws -> TaskStatusResponse {
-        let store = GatewayConfigurationStore.shared
-        let config = store.configuration
-        
-        guard let channel = config.channel(for: endpoint) else {
-            throw GatewayClientError.noChannelAvailable
-        }
-        
-        guard let apiKey = try KeychainStore.shared.retrieve(for: channel.id) else {
-            throw GatewayClientError.missingAPIKey(channel.name)
-        }
-        
-        // Construct polling URL
         let pollPath: String
         switch endpoint {
         case .video:
@@ -176,16 +183,7 @@ final class TaskQueue: ObservableObject {
         default:
             pollPath = "/v1/tasks/\(taskID)"
         }
-        
-        let url = channel.baseURL.appendingPathComponent(pollPath)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.timeoutInterval = channel.timeout
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        return try JSONDecoder().decode(TaskStatusResponse.self, from: data)
+        return try await GatewayClient.shared.get(endpoint: endpoint, path: pollPath, as: TaskStatusResponse.self)
     }
     
     /// Updates a task with new status.
