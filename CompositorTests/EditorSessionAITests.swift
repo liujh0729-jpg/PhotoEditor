@@ -3,7 +3,7 @@ import Testing
 @testable import Compositor
 
 /// The canvas side of the AI features: dropping a generated image, replacing the active layer, and running
-/// natural-language intents through the session's own edits. Kept out of the sheets so the behaviour is testable
+/// natural-language intents through the session's own edits. Kept out of the sheets so the behavior is testable
 /// without any UI or gateway.
 @MainActor
 struct EditorSessionAITests {
@@ -39,9 +39,23 @@ struct EditorSessionAITests {
         #expect(layer.name == "Original")
         #expect(session.document?.layers.count == 1)
         #expect(layer.asset?.image.width == 100)
+        // The layer's transform resizes to the new bitmap so the pixels aren't stretched back to the old box.
+        #expect(layer.transform.size == CGSize(width: 100, height: 50))
         // The swap folds into history like any other pixel edit, so it undoes back to the old pixels.
         session.undo()
         #expect(session.activeLayer?.asset?.image.width == 200)
+    }
+
+    @Test func replaceActiveLayerFreezesAnUnplacedMask() throws {
+        let session = try session(withLayerNamed: "Layer")
+        let id = try #require(session.activeLayerID)
+        session.selectedLayerIDs = [id]
+        session.addLayerMask(revealing: true)
+        // The mask has no placement of its own, so it follows the layer transform until the swap pins it.
+        #expect(session.activeLayer?.mask?.placement == nil)
+        session.replaceActiveLayer(with: try solidImage(width: 120, height: 90))
+        let frozen = try #require(session.activeLayer?.mask?.placement)
+        #expect(frozen.size == CGSize(width: 200, height: 200))
     }
 
     @Test func renameIntentTargetsTheActiveLayer() throws {

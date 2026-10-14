@@ -16,6 +16,9 @@ struct AIDomainTests {
         #expect(recognizer.parseFallback("raise the exposure").action == .adjustExposure)
         #expect(recognizer.parseFallback("select the subject").action == .selectSubject)
         #expect(recognizer.parseFallback("deselect everything").action == .deselect, "'deselect' is checked before the plain 'select' path")
+        #expect(recognizer.parseFallback("deselect the subject").action == .deselect, "'deselect' outranks 'select the subject'")
+        #expect(recognizer.parseFallback("ungroup the layers").action == .ungroupLayers, "'ungroup' is checked before 'group'")
+        #expect(recognizer.parseFallback("group these layers").action == .groupLayers)
         #expect(recognizer.parseFallback("invert the selection").action == .invertSelection)
     }
 
@@ -72,5 +75,64 @@ struct AIDomainTests {
         let decoded = try JSONDecoder().decode(EditingIntent.self, from: try JSONEncoder().encode(intent))
         #expect(decoded.action == .renameLayer)
         #expect(decoded.parameters["name"]?.value as? String == "Ground")
+    }
+
+    @Test func editingIntentDecodesLenientlyWhenFieldsAreMissing() throws {
+        // A chat model that omits parameters / targetLayerIDs / requiresConfirmation / description still decodes
+        // to a usable intent instead of throwing and dropping to the keyword fallback.
+        let json = #"{"action":"deselect"}"#
+        let intent = try JSONDecoder().decode(EditingIntent.self, from: Data(json.utf8))
+        #expect(intent.action == .deselect)
+        #expect(intent.parameters.isEmpty)
+        #expect(intent.targetLayerIDs == nil)
+        #expect(!intent.requiresConfirmation)
+        #expect(intent.description.isEmpty)
+    }
+
+    // MARK: Multipart body assembly
+
+    @Test func multipartBodyMatchesWireFormat() {
+        // The off-main-actor builder keeps the exact same wire format as the previous inline loop: fields
+        // separated by the boundary, binary parts carry Content-Disposition + Content-Type, terminator is
+        // "--<boundary>--".
+        let bytes = Data([0x00, 0x01, 0x02])
+        let parts: [MultipartPart] = [
+            .text("prompt", "sunny sky"),
+            .data("image", bytes, filename: "a.png", mimeType: "image/png"),
+        ]
+        let body = GatewayClient.buildMultipartBody(parts: parts, boundary: "BOUND")
+        let text = String(decoding: body, as: UTF8.self)
+        #expect(text.hasPrefix("--BOUND\r\n"))
+        #expect(text.contains("Content-Disposition: form-data; name=\"prompt\"\r\n\r\nsunny sky\r\n"))
+        #expect(text.contains("Content-Disposition: form-data; name=\"image\"; filename=\"a.png\"\r\n"))
+        #expect(text.contains("Content-Type: image/png\r\n\r\n"))
+        #expect(text.hasSuffix("--BOUND--\r\n"))
+        #expect(body.range(of: bytes) != nil, "the raw bytes are spliced in, not base64-encoded")
+    }
+
+    // MARK: Speech-to-text Content-Type
+
+    @Test func sttsPicksMIMEFromExtension() {
+        // Whisper-style gateways key their decoder off the file part's Content-Type; a hard-coded "audio/mpeg"
+        // would mislabel anything else.
+        #expect(STTSSheet.mimeType(for: URL(fileURLWithPath: "/x/clip.mp3")) == "audio/mpeg")
+        #expect(STTSSheet.mimeType(for: URL(fileURLWithPath: "/x/clip.wav")) == "audio/wav")
+        #expect(STTSSheet.mimeType(for: URL(fileURLWithPath: "/x/clip.m4a")) == "audio/mp4")
+        #expect(STTSSheet.mimeType(for: URL(fileURLWithPath: "/x/clip.flac")) == "audio/flac")
+        #expect(STTSSheet.mimeType(for: URL(fileURLWithPath: "/x/clip.OGG")) == "audio/ogg", "case doesn't matter")
+        #expect(STTSSheet.mimeType(for: URL(fileURLWithPath: "/x/clip.unknown")) == "application/octet-stream")
+    }
+
+    // MARK: Gateway error decoding
+
+    @Test func gatewayErrorToleratesNumericAndStringCodes() throws {
+        // The `code` field is string on OpenAI but numeric on some proxies; either way the message must survive.
+        let asString = #"{"error":{"message":"rate limited","type":"rate_limit","code":"429"}}"#
+        let asNumber = #"{"error":{"message":"rate limited","type":"rate_limit","code":429}}"#
+        struct Wrapper: Decodable { let error: GatewayError }
+        let a = try JSONDecoder().decode(Wrapper.self, from: Data(asString.utf8)).error
+        let b = try JSONDecoder().decode(Wrapper.self, from: Data(asNumber.utf8)).error
+        #expect(a.errorDescription == "rate limited")
+        #expect(b.errorDescription == "rate limited")
     }
 }
