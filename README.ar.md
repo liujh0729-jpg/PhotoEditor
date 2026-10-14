@@ -2,6 +2,8 @@
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · **العربية** · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
+![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
+
 Adobe Photoshop باهظ الثمن، وأدوات مثل GIMP ليست مألوفة بما يكفي لأبقى في حالة تركيز. لهذا بنيت Compositor.
 
 كان الهدف إنشاء محرر صور كامل المزايا، مجاني ومفتوح المصدر تمامًا. كنت أستخدم Photoshop للتركيب وما بعد الإنتاج، لذلك بُني Compositor حول سير العمل هذا، بكل الأدوات اللازمة لإخراج صورة نهائية متقنة على مستوى البكسل.

@@ -2,6 +2,8 @@
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · **Français** · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
+![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
+
 Adobe Photoshop coûte trop cher et des outils comme GIMP ne me semblent pas assez familiers pour rester dans le flux. C'est pour cela que j'ai écrit Compositor.
 
 L'objectif était de créer un éditeur d'images complet, entièrement gratuit et open source. J'utilisais Photoshop pour la composition et la post-production ; Compositor est donc construit autour de ce flux de travail, avec les outils nécessaires pour produire une image finale au pixel près.

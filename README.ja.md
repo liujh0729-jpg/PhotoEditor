@@ -2,6 +2,8 @@
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · **日本語** · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
+![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
+
 Adobe Photoshop は高すぎるし、GIMP のようなツールは馴染めなくて集中が続かない。それで Compositor を作りました。
 
 目指したのは、完全無料でオープンソースの多機能画像エディタです。以前コンポジットやレタッチに Photoshop を使っていたので、Compositor はそのワークフローを中心に設計してあります。最終的にピクセル単位で詰められるだけのツールが揃っています。

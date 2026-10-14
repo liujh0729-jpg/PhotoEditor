@@ -2,6 +2,8 @@
 
 [English](README.md) · **简体中文** · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
+![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
+
 Photoshop 太贵，GIMP 之类的工具又不够顺手，我没法在上面长时间专注，于是自己写了 Compositor。
 
 目标是一个功能完整、完全免费开源的图像编辑器。过去我用 Photoshop 做合成和后期，Compositor 就是围绕这套工作流构建的——做出一张像素级到位的成图所需的所有工具。

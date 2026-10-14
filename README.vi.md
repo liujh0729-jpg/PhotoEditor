@@ -2,6 +2,8 @@
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · **Tiếng Việt** · [Español](README.es.md) · [Русский](README.ru.md)
 
+![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
+
 Adobe Photoshop quá đắt, còn những công cụ như GIMP lại không đủ quen thuộc để tôi duy trì dòng chảy sáng tạo. Vì vậy tôi tạo ra Compositor.
 
 Mục tiêu là tạo ra một trình chỉnh sửa ảnh đầy đủ tính năng, hoàn toàn miễn phí và mã nguồn mở. Trước đây tôi dùng Photoshop để ghép ảnh và hậu kỳ, nên Compositor được xây quanh quy trình đó — với các công cụ cần thiết để tạo một bức ảnh cuối cùng chuẩn đến từng điểm ảnh.
