@@ -23,6 +23,12 @@ struct GatewaySettingsView: View {
                     Label("Capabilities", systemImage: "puzzlepiece.extension")
                 }
                 .tag(1)
+
+            GeneralTab()
+                .tabItem {
+                    Label("General", systemImage: "gearshape")
+                }
+                .tag(2)
         }
         .frame(width: 600, height: 500)
         .sheet(item: $editingChannel) { channel in
@@ -422,5 +428,61 @@ struct CapabilitySlotRow: View {
             updated.channelIDOverride = newValue
             store.updateSlot(updated)
         }
+    }
+}
+
+/// Tab for app-wide preferences that aren't gateway-specific. Right now the
+/// only entry is the UI language, which the user can pin to one of eight
+/// shipped locales instead of following the system setting.
+struct GeneralTab: View {
+    @ObservedObject private var languageStore = LanguageStore.shared
+    @State private var pending: LanguageStore.AppLanguage?
+
+    var body: some View {
+        Form {
+            Picker("Language", selection: $languageStore.selection) {
+                ForEach(LanguageStore.AppLanguage.allCases) { language in
+                    if language == .system {
+                        // "Follow System" should read in the current UI
+                        // language, so it goes through LocalizedStringKey.
+                        Text("Follow System").tag(language)
+                    } else {
+                        // Native language names stay in their own script so
+                        // a user can pick their language regardless of the
+                        // currently displayed UI.
+                        Text(verbatim: language.nativeName).tag(language)
+                    }
+                }
+            }
+            .pickerStyle(.menu)
+            .onChange(of: languageStore.selection) { _, newValue in
+                languageStore.apply(newValue)
+                pending = newValue
+            }
+
+            if let pending {
+                Text("Restart Compositor to apply the new language.")
+                    .foregroundStyle(.secondary)
+                HStack {
+                    Button("Restart to Apply") {
+                        LanguageStore.shared.relaunch()
+                    }
+                    Button("Later", role: .cancel) {
+                        self.pending = nil
+                    }
+                }
+                if pending.isRightToLeft {
+                    Label("Arabic lays out right-to-left on the next launch.",
+                          systemImage: "text.alignright")
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                Text("Follow System uses the language order set in System Settings › General › Language & Region.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
