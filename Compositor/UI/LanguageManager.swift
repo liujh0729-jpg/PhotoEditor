@@ -91,9 +91,16 @@ final class LanguageStore: ObservableObject {
         let url = Bundle.main.bundleURL
         let config = NSWorkspace.OpenConfiguration()
         config.activates = true
-        NSWorkspace.shared.openApplication(at: url, configuration: config) { _, _ in
+        // The language is read once, at launch, from `AppleLanguages`. Without a
+        // new instance, `openApplication` just brings the already-running copy
+        // forward, so the language never reloads and it looks like nothing happened.
+        config.createsNewApplicationInstance = true
+        NSWorkspace.shared.openApplication(at: url, configuration: config) { application, error in
             DispatchQueue.main.async {
-                NSApp.terminate(nil)
+                // Only quit this copy once a fresh one is actually up; if the re-open
+                // failed (a translocated or read-only bundle, say), leave the running
+                // window so the user isn't suddenly left with nothing.
+                if error == nil, application != nil { NSApp.terminate(nil) }
             }
         }
     }
