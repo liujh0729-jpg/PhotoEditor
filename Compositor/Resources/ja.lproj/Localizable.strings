@@ -1,5 +1,5 @@
 /* Localizable.strings — 日本語 (ja)
-   Proper nouns (Camera Raw, Compositor, Photoshop…) are not translated. */
+   Proper nouns (Camera Raw, PhotoCompositor, Photoshop…) are not translated. */
 
 /* ─── Menus ─── */
 "File" = "ファイル";
@@ -50,7 +50,7 @@
 "No commands match" = "一致するコマンドなし";
 "AI Gateway Settings…" = "AI ゲートウェイ設定…";
 "Check for Updates…" = "更新を確認…";
-"Compositor Help" = "Compositor ヘルプ";
+"PhotoCompositor Help" = "PhotoCompositor ヘルプ";
 "Keyboard Shortcuts…" = "キーボードショートカット…";
 "Execute" = "実行";
 "Confirm Action" = "操作を確認";
@@ -60,7 +60,7 @@
 "Contextual keys & mouse gestures" = "コンテキストキー＆マウスジェスチャ";
 
 /* ─── App ─── */
-"Hide Compositor" = "Compositor を隠す";
+"Hide PhotoCompositor" = "PhotoCompositor を隠す";
 "Hide Others" = "他を隠す";
 "Show All" = "すべて表示";
 "Minimize" = "最小化";
@@ -411,7 +411,7 @@
 "System" = "システムに従う";
 "Follow System" = "システムに従う";
 "Restart to Apply" = "再起動して適用";
-"Restart Compositor to apply the new language." = "新しい言語を適用するには Compositor を再起動してください。";
+"Restart PhotoCompositor to apply the new language." = "新しい言語を適用するには PhotoCompositor を再起動してください。";
 "Arabic lays out right-to-left on the next launch." = "アラビア語は次回起動時に右から左のレイアウトになります。";
 "Follow System uses the language order set in System Settings › General › Language & Region." = "「システムに従う」は、システム環境設定 › 一般 › 言語と地域 で設定した言語の優先順を使用します。";
 

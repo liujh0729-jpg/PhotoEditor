@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Builds a signed, notarized Compositor DMG that opens without warnings on any Mac.
+# Builds a signed, notarized PhotoCompositor DMG that opens without warnings on any Mac.
 #
 # Needs, all kept out of this repository:
 #   - a "Developer ID Application" certificate in the login keychain
@@ -12,6 +12,7 @@ set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP=Compositor
+PRODUCT=PhotoCompositor
 TEAM=3W42B7G26D
 IDENTITY="Developer ID Application"
 NOTARY_PROFILE=compositor-notary
@@ -22,7 +23,7 @@ DIST="$PROJECT_DIR/dist"
 settings=$(xcodebuild -project "$PROJECT_DIR/$APP.xcodeproj" -scheme "$APP" -configuration Release -showBuildSettings 2>/dev/null)
 VERSION=$(print -r -- "$settings" | awk -F' = ' '/ MARKETING_VERSION = /{print $2; exit}')
 BUILD=$(print -r -- "$settings" | awk -F' = ' '/ CURRENT_PROJECT_VERSION = /{print $2; exit}')
-echo "==> $APP $VERSION ($BUILD)"
+echo "==> $PRODUCT $VERSION ($BUILD)"
 
 rm -rf "$WORK"
 mkdir -p "$WORK" "$DIST"
@@ -39,19 +40,19 @@ xcodebuild -exportArchive -quiet \
   -archivePath "$WORK/$APP.xcarchive" \
   -exportOptionsPlist "$PROJECT_DIR/scripts/ExportOptions.plist" \
   -exportPath "$WORK/export"
-APP_PATH="$WORK/export/$APP.app"
+APP_PATH="$WORK/export/$PRODUCT.app"
 codesign --verify --deep --strict --verbose=2 "$APP_PATH"
 
 echo "==> Notarizing the app"
-ditto -c -k --keepParent "$APP_PATH" "$WORK/$APP.zip"
-xcrun notarytool submit "$WORK/$APP.zip" --keychain-profile "$NOTARY_PROFILE" --wait
+ditto -c -k --keepParent "$APP_PATH" "$WORK/$PRODUCT.zip"
+xcrun notarytool submit "$WORK/$PRODUCT.zip" --keychain-profile "$NOTARY_PROFILE" --wait
 xcrun stapler staple "$APP_PATH"
 
 echo "==> Building the DMG window"
 STAGE="$WORK/dmg"
 mkdir -p "$STAGE"
 cp -R "$APP_PATH" "$STAGE/"
-DMG="$DIST/$APP-$VERSION.dmg"
+DMG="$DIST/$PRODUCT-$VERSION.dmg"
 rm -f "$DMG"
 # Icon centers in the DMG window, in points from its top-left.
 APP_X=160
@@ -70,10 +71,10 @@ elif [[ -f "$LOW" ]]; then
   background=(--background "$LOW")
 fi
 create-dmg \
-  --volname "$APP" \
+  --volname "$PRODUCT" \
   --window-pos 200 120 --window-size 600 380 \
   --icon-size 128 --text-size 13 \
-  --icon "$APP.app" "$APP_X" "$ICON_Y" --hide-extension "$APP.app" \
+  --icon "$PRODUCT.app" "$APP_X" "$ICON_Y" --hide-extension "$PRODUCT.app" \
   --app-drop-link "$APPLICATIONS_X" "$ICON_Y" \
   "${background[@]}" \
   "$DMG" "$STAGE"

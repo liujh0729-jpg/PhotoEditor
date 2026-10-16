@@ -63,7 +63,7 @@ final class ScreenshotTests: XCTestCase {
         // This bundle is …/Products/Debug/CompositorUITests-Runner.app/Contents/PlugIns/CompositorUITests.xctest.
         var products = Bundle(for: Self.self).bundleURL
         for _ in 0..<4 { products.deleteLastPathComponent() }
-        let compositor = products.appendingPathComponent("Compositor.app")
+        let compositor = products.appendingPathComponent("PhotoCompositor.app")
         let opened = expectation(description: "opened")
         NSWorkspace.shared.open([file], withApplicationAt: compositor, configuration: NSWorkspace.OpenConfiguration()) { _, error in
             XCTAssertNil(error)

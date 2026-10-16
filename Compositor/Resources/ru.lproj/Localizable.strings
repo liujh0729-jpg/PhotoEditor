@@ -1,5 +1,5 @@
 /* Localizable.strings — Русский (ru)
-   Имена собственные (Camera Raw, Compositor, Photoshop…) не переводятся. */
+   Имена собственные (Camera Raw, PhotoCompositor, Photoshop…) не переводятся. */
 
 /* ─── Меню ─── */
 "File" = "Файл";
@@ -50,7 +50,7 @@
 "No commands match" = "Нет подходящих команд";
 "AI Gateway Settings…" = "Настройки AI Gateway…";
 "Check for Updates…" = "Проверить обновления…";
-"Compositor Help" = "Справка Compositor";
+"PhotoCompositor Help" = "Справка PhotoCompositor";
 "Keyboard Shortcuts…" = "Горячие клавиши…";
 "Execute" = "Выполнить";
 "Confirm Action" = "Подтвердить действие";
@@ -60,7 +60,7 @@
 "Contextual keys & mouse gestures" = "Контекстные клавиши и жесты мыши";
 
 /* ─── Приложение ─── */
-"Hide Compositor" = "Скрыть Compositor";
+"Hide PhotoCompositor" = "Скрыть PhotoCompositor";
 "Hide Others" = "Скрыть другие";
 "Show All" = "Показать все";
 "Minimize" = "Свернуть";
@@ -411,7 +411,7 @@
 "System" = "Системный";
 "Follow System" = "Как в системе";
 "Restart to Apply" = "Перезапустить для применения";
-"Restart Compositor to apply the new language." = "Перезапустите Compositor для применения нового языка.";
+"Restart PhotoCompositor to apply the new language." = "Перезапустите PhotoCompositor для применения нового языка.";
 "Arabic lays out right-to-left on the next launch." = "Арабский будет отображаться справа налево при следующем запуске.";
 "Follow System uses the language order set in System Settings › General › Language & Region." = "«Как в системе» использует порядок языков из Системных настроек › Основные › Язык и регион.";
 

@@ -16,7 +16,7 @@ import Sparkle
         }
         // Closes Sparkle's Checking… window, which it would close itself when showing its own alert.
         standard.dismissUpdateInstallation()
-        let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "Compositor"
+        let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "PhotoCompositor"
         let current = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         let downloaded = state.stage != .notDownloaded
         let alert = NSAlert()

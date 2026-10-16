@@ -25,7 +25,7 @@ struct PSDConversionSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             Text(request.title).font(.title2.bold())
             Text(request.isReading ? "Reading the file to see what needs converting."
-                 : "Compositor will convert these Photoshop features. Nothing is applied until you continue.")
+                 : "PhotoCompositor will convert these Photoshop features. Nothing is applied until you continue.")
                 .foregroundStyle(.secondary)
             if request.isReading {
                 HStack(spacing: 10) {

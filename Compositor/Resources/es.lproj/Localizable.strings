@@ -1,5 +1,5 @@
 /* Localizable.strings — Español (es)
-   Los nombres propios (Camera Raw, Compositor, Photoshop…) se mantienen en inglés. */
+   Los nombres propios (Camera Raw, PhotoCompositor, Photoshop…) se mantienen en inglés. */
 
 /* ─── Menús ─── */
 "File" = "Archivo";
@@ -50,7 +50,7 @@
 "No commands match" = "Ningún comando coincide";
 "AI Gateway Settings…" = "Ajustes de IA Gateway…";
 "Check for Updates…" = "Buscar actualizaciones…";
-"Compositor Help" = "Ayuda de Compositor";
+"PhotoCompositor Help" = "Ayuda de PhotoCompositor";
 "Keyboard Shortcuts…" = "Atajos de teclado…";
 "Execute" = "Ejecutar";
 "Confirm Action" = "Confirmar acción";
@@ -60,7 +60,7 @@
 "Contextual keys & mouse gestures" = "Teclas contextuales y gestos del ratón";
 
 /* ─── Aplicación ─── */
-"Hide Compositor" = "Ocultar Compositor";
+"Hide PhotoCompositor" = "Ocultar PhotoCompositor";
 "Hide Others" = "Ocultar otros";
 "Show All" = "Mostrar todos";
 "Minimize" = "Minimizar";
@@ -411,7 +411,7 @@
 "System" = "Sistema";
 "Follow System" = "Seguir sistema";
 "Restart to Apply" = "Reiniciar para aplicar";
-"Restart Compositor to apply the new language." = "Reinicia Compositor para aplicar el nuevo idioma.";
+"Restart PhotoCompositor to apply the new language." = "Reinicia PhotoCompositor para aplicar el nuevo idioma.";
 "Arabic lays out right-to-left on the next launch." = "El árabe se mostrará de derecha a izquierda en el próximo inicio.";
 "Follow System uses the language order set in System Settings › General › Language & Region." = "«Seguir sistema» usa el orden de idiomas de Ajustes del Sistema › General › Idioma y región.";
 

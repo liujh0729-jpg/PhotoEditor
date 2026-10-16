@@ -92,7 +92,7 @@ struct ShortcutDefinition: Identifiable {
             entry("Close Project", "w", 1, menu: true), entry("Fit Canvas", "0", 1, menu: true), entry("Search Commands", "f", 1, menu: true),
             entry("Actual Pixels", "1", 1, menu: true), entry("Zoom In", "=", 1, menu: true),
             entry("Zoom Out", "-", 1, menu: true), entry("Show Transform Controls", "h", 1, menu: true),
-            entry("Hide Compositor", "h", 3, menu: true), entry("Cut", "x", 1, menu: true),
+            entry("Hide PhotoCompositor", "h", 3, menu: true), entry("Cut", "x", 1, menu: true),
             entry("Copy", "c", 1, menu: true), entry("Copy Merged", "c", 9, menu: true),
             entry("Paste", "v", 1, menu: true), entry("Fill with Foreground", "\u{7f}", 2, menu: true),
             entry("Fill with Background", "\u{7f}", 1, menu: true), entry("Content-Aware Fill", "\u{7f}", 8, menu: true),

@@ -1,5 +1,5 @@
 /* Localizable.strings — العربية (ar)
-   الأسماء العلمية (Camera Raw، Compositor، Photoshop…) لا تُترجم. */
+   الأسماء العلمية (Camera Raw، PhotoCompositor، Photoshop…) لا تُترجم. */
 
 /* ─── القوائم ─── */
 "File" = "ملف";
@@ -50,7 +50,7 @@
 "No commands match" = "لا توجد أوامر مطابقة";
 "AI Gateway Settings…" = "إعدادات بوابة الذكاء الاصطناعي…";
 "Check for Updates…" = "التحقق من التحديثات…";
-"Compositor Help" = "مساعدة Compositor";
+"PhotoCompositor Help" = "مساعدة PhotoCompositor";
 "Keyboard Shortcuts…" = "اختصارات لوحة المفاتيح…";
 "Execute" = "تنفيذ";
 "Confirm Action" = "تأكيد الإجراء";
@@ -60,7 +60,7 @@
 "Contextual keys & mouse gestures" = "المفاتيح السياقية وإيماءات الفأرة";
 
 /* ─── التطبيق ─── */
-"Hide Compositor" = "إخفاء Compositor";
+"Hide PhotoCompositor" = "إخفاء PhotoCompositor";
 "Hide Others" = "إخفاء الأخرى";
 "Show All" = "عرض الكل";
 "Minimize" = "تصغير";
@@ -411,7 +411,7 @@
 "System" = "النظام";
 "Follow System" = "اتباع النظام";
 "Restart to Apply" = "إعادة التشغيل للتطبيق";
-"Restart Compositor to apply the new language." = "أعد تشغيل Compositor لتطبيق اللغة الجديدة.";
+"Restart PhotoCompositor to apply the new language." = "أعد تشغيل PhotoCompositor لتطبيق اللغة الجديدة.";
 "Arabic lays out right-to-left on the next launch." = "العربية تُعرض من اليمين إلى اليسار عند التشغيل التالي.";
 "Follow System uses the language order set in System Settings › General › Language & Region." = "«اتباع النظام» يستخدم ترتيب اللغات المحدد في إعدادات النظام › عام › اللغة والمنطقة.";
 

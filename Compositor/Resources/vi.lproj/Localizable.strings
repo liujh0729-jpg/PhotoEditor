@@ -1,5 +1,5 @@
 /* Localizable.strings — Tiếng Việt (vi)
-   Tên riêng (Camera Raw, Compositor, Photoshop…) giữ nguyên. */
+   Tên riêng (Camera Raw, PhotoCompositor, Photoshop…) giữ nguyên. */
 
 /* ─── Menu ─── */
 "File" = "Tệp";
@@ -50,7 +50,7 @@
 "No commands match" = "Không có lệnh phù hợp";
 "AI Gateway Settings…" = "Cài đặt AI Gateway…";
 "Check for Updates…" = "Kiểm tra cập nhật…";
-"Compositor Help" = "Trợ giúp Compositor";
+"PhotoCompositor Help" = "Trợ giúp PhotoCompositor";
 "Keyboard Shortcuts…" = "Phím tắt…";
 "Execute" = "Thực thi";
 "Confirm Action" = "Xác nhận hành động";
@@ -60,7 +60,7 @@
 "Contextual keys & mouse gestures" = "Phím ngữ cảnh & cử chỉ chuột";
 
 /* ─── Ứng dụng ─── */
-"Hide Compositor" = "Ẩn Compositor";
+"Hide PhotoCompositor" = "Ẩn PhotoCompositor";
 "Hide Others" = "Ẩn các ứng dụng khác";
 "Show All" = "Hiện tất cả";
 "Minimize" = "Thu nhỏ";
@@ -411,7 +411,7 @@
 "System" = "Hệ thống";
 "Follow System" = "Theo hệ thống";
 "Restart to Apply" = "Khởi động lại để áp dụng";
-"Restart Compositor to apply the new language." = "Khởi động lại Compositor để áp dụng ngôn ngữ mới.";
+"Restart PhotoCompositor to apply the new language." = "Khởi động lại PhotoCompositor để áp dụng ngôn ngữ mới.";
 "Arabic lays out right-to-left on the next launch." = "Tiếng Ả Rập sẽ hiển thị từ phải sang trái ở lần khởi động sau.";
 "Follow System uses the language order set in System Settings › General › Language & Region." = "«Theo hệ thống» dùng thứ tự ngôn ngữ đặt trong Cài đặt hệ thống › Chung › Ngôn ngữ & Khu vực.";
 

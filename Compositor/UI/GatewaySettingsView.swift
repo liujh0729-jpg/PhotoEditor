@@ -461,7 +461,7 @@ struct GeneralTab: View {
             }
 
             if let pending {
-                Text("Restart Compositor to apply the new language.")
+                Text("Restart PhotoCompositor to apply the new language.")
                     .foregroundStyle(.secondary)
                 HStack {
                     Button("Restart to Apply") {
