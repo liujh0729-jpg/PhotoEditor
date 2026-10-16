@@ -1,12 +1,12 @@
-# AIPDD PhotoEditor（base Compositor）
+# AIPDD PhotoEditor（base PhotoCompositor）
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · **日本語** · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
-Adobe Photoshop は高すぎるし、GIMP のようなツールは馴染めなくて集中が続かない。それで Compositor を作りました。
+Adobe Photoshop は高すぎるし、GIMP のようなツールは馴染めなくて集中が続かない。それで PhotoCompositor を作りました。
 
-目指したのは、完全無料でオープンソースの多機能画像エディタです。以前コンポジットやレタッチに Photoshop を使っていたので、Compositor はそのワークフローを中心に設計してあります。最終的にピクセル単位で詰められるだけのツールが揃っています。
+目指したのは、完全無料でオープンソースの多機能画像エディタです。以前コンポジットやレタッチに Photoshop を使っていたので、PhotoCompositor はそのワークフローを中心に設計してあります。最終的にピクセル単位で詰められるだけのツールが揃っています。
 
 オープンソースなので、Xcode プロジェクトをダウンロードして、自分のワークフローに合わせて機能を追加・削除・変更できます。
 
@@ -95,7 +95,7 @@ brew install --cask robbietilton-compositor
 - 設定したチャネル以外はあなたの Mac から何も出ません。アプリはホームコールせず、API キーをバンドルせず、使用量を計測しません
 
 ### AI エージェント対応
-- AI エージェントやスクリプトがプロジェクトを直接構築・編集できます：`.comp` は PNG レイヤーとマニフェストのフォルダで、開いているプロジェクトは書き込まれるたびにキャンバスがライブで更新されます。[Compositor プロジェクトの書き方](docs/writing-comp-files.md) を参照
+- AI エージェントやスクリプトがプロジェクトを直接構築・編集できます：`.comp` は PNG レイヤーとマニフェストのフォルダで、開いているプロジェクトは書き込まれるたびにキャンバスがライブで更新されます。[PhotoCompositor プロジェクトの書き方](docs/writing-comp-files.md) を参照
 
 ## 動作要件
 
@@ -104,7 +104,7 @@ brew install --cask robbietilton-compositor
 
 ## 翻訳
 
-Compositor は 8 言語の UI に対応しています — 英語、簡体字中国語、フランス語、日本語、アラビア語、ベトナム語、スペイン語、ロシア語。AI ゲートウェイ設定 › 一般 で明示的に選ぶこともできます（「システムに従う」にすればシステム環境設定の言語順序に従います）。UI はロケールに追従し、アラビア語は次回起動時に右から左のレイアウトに切り替わります。
+PhotoCompositor は 8 言語の UI に対応しています — 英語、簡体字中国語、フランス語、日本語、アラビア語、ベトナム語、スペイン語、ロシア語。AI ゲートウェイ設定 › 一般 で明示的に選ぶこともできます（「システムに従う」にすればシステム環境設定の言語順序に従います）。UI はロケールに追従し、アラビア語は次回起動時に右から左のレイアウトに切り替わります。
 
 文字列カタログは `Compositor/Resources/*.lproj/Localizable.strings` にあります。ロケールごとに 1 ファイル、英語リテラルがキーです。欠落キーは英語ソースに戻るため、半翻訳の状態でも使えます。穴埋めや既存文言の改善の PR は母語話者からのものを歓迎します。新しいロケールを引き受ける場合は、ツールチップなど奥深い場所より、可視面（メニュー、AI シート、ツールヘッダー）から埋めていくのがおすすめです。
 
@@ -114,7 +114,7 @@ Compositor は 8 言語の UI に対応しています — 英語、簡体字中
 
 ## リリース
 
-`scripts/release.sh` は Release ビルドを作り、Developer ID で署名し、公証・ステープルし、`dist/Compositor-<version>.dmg` に固めます。
+`scripts/release.sh` は Release ビルドを作り、Developer ID で署名し、公証・ステープルし、`dist/PhotoCompositor-<version>.dmg` に固めます。
 
 次に挙げるものが必要で、いずれもこのリポジトリ外で管理してください：
 
@@ -124,7 +124,7 @@ Compositor は 8 言語の UI に対応しています — 英語、簡体字中
 
 ## コミュニティ
 
-AIPDD PhotoEditor（base Compositor）はオープンに開発しています。最も早く参加する方法は議論に加わることです。WeChat に小さなグループ（ID: **raikkonenlxx**）を運営しており、ユーザーや開発者がプロンプト交換、バグ報告、`.comp` ファイル共有、ゲートウェイ設定や AI ワークフローについて話しています。参加するには WeChat **raikkonenlxx** に「AIPDD」とメモして追加してください。Bot でないことがわかるよう、申請時に「Compositor」と記入してください。
+AIPDD PhotoEditor（base PhotoCompositor）はオープンに開発しています。最も早く参加する方法は議論に加わることです。WeChat に小さなグループ（ID: **raikkonenlxx**）を運営しており、ユーザーや開発者がプロンプト交換、バグ報告、`.comp` ファイル共有、ゲートウェイ設定や AI ワークフローについて話しています。参加するには WeChat **raikkonenlxx** に「AIPDD」とメモして追加してください。Bot でないことがわかるよう、申請時に「PhotoCompositor」と記入してください。
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="WeChat QR — AIPDD-Agent-Claw キャンバス discuss グループ"/>

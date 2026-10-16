@@ -1,19 +1,19 @@
-# AIPDD PhotoEditor（base Compositor）
+# AIPDD PhotoEditor（base PhotoCompositor）
 
 **English** · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
-Adobe Photoshop costs too much and tools like GIMP don’t feel familiar enough for me to stay in flow. That’s why I built Compositor.
+Adobe Photoshop costs too much and tools like GIMP don’t feel familiar enough for me to stay in flow. That’s why I built PhotoCompositor.
 
-The goal was to create a full-featured image editor that is completely free and open source. I used to use Photoshop for compositing and post-processing, so Compositor is built around that workflow - with the tools needed to create a pixel-perfect final image.
+The goal was to create a full-featured image editor that is completely free and open source. I used to use Photoshop for compositing and post-processing, so PhotoCompositor is built around that workflow - with the tools needed to create a pixel-perfect final image.
 
 Because it’s open source, you can download the Xcode project and add, remove, or modify any feature to fit your workflow.
 
 ## Installation
 
 ### Download
-Get Compositor from [robbietilton.com/compositor](https://robbietilton.com/compositor), or download the latest release directly from [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
+Get PhotoCompositor from [robbietilton.com/compositor](https://robbietilton.com/compositor), or download the latest release directly from [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
 
 ### Homebrew
 
@@ -95,7 +95,7 @@ brew install --cask robbietilton-compositor
 - Nothing leaves your Mac except to the channel you configured; the app does not phone home, does not bundle an API key, and does not meter usage
 
 ### Works with AI agents
-- AI agents and scripts can build and edit projects directly: a `.comp` is a folder of PNG layers and a manifest, and an open project updates live as it's written. See [Writing Compositor projects](docs/writing-comp-files.md)
+- AI agents and scripts can build and edit projects directly: a `.comp` is a folder of PNG layers and a manifest, and an open project updates live as it's written. See [Writing PhotoCompositor projects](docs/writing-comp-files.md)
 
 ## Requirements
 
@@ -104,7 +104,7 @@ brew install --cask robbietilton-compositor
 
 ## Translations
 
-Compositor ships with eight UI languages — English, Simplified Chinese, French, Japanese, Arabic, Vietnamese, Spanish and Russian — and you can pick one explicitly in AI Gateway Settings › General (or leave it on Follow System to track the language order in System Settings). The interface mirrors the locale: Arabic switches to a right-to-left layout on the next launch.
+PhotoCompositor ships with eight UI languages — English, Simplified Chinese, French, Japanese, Arabic, Vietnamese, Spanish and Russian — and you can pick one explicitly in AI Gateway Settings › General (or leave it on Follow System to track the language order in System Settings). The interface mirrors the locale: Arabic switches to a right-to-left layout on the next launch.
 
 The string catalog lives in `Compositor/Resources/*.lproj/Localizable.strings`, one file per locale, English literal as the key. Missing keys fall back to the English source, so a half-translated locale is still usable. Native-speaker PRs that fill the gaps or improve existing wording are welcome; if you’re picking up a locale for the first time, start with the visible surfaces (menus, AI sheets, tool headers) before the deeper tooltips.
 
@@ -114,7 +114,7 @@ Open `Compositor.xcodeproj` and run the **Compositor** scheme.
 
 ## Releasing
 
-`scripts/release.sh` builds a Release version, signs it with Developer ID, notarizes and staples it, and packages it into `dist/Compositor-<version>.dmg`.
+`scripts/release.sh` builds a Release version, signs it with Developer ID, notarizes and staples it, and packages it into `dist/PhotoCompositor-<version>.dmg`.
 
 It needs, all kept outside this repository:
 
@@ -124,7 +124,7 @@ It needs, all kept outside this repository:
 
 ## Community
 
-AIPDD PhotoEditor (base Compositor) is developed in the open, and the fastest way to participate is to join the discussion. I keep a small WeChat group (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI workflows. To join, add me on WeChat at **raikkonenlxx** with the note "AIPDD". Please include "Compositor" in your friend request so I know you're not a bot.
+AIPDD PhotoEditor (base PhotoCompositor) is developed in the open, and the fastest way to participate is to join the discussion. I keep a small WeChat group (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI workflows. To join, add me on WeChat at **raikkonenlxx** with the note "AIPDD". Please include "PhotoCompositor" in your friend request so I know you're not a bot.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="WeChat QR code — join the AIPDD-Agent-Claw canvas discussion group"/>

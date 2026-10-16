@@ -1,19 +1,19 @@
-# AIPDD PhotoEditor（base Compositor）
+# AIPDD PhotoEditor（base PhotoCompositor）
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · **Tiếng Việt** · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
-Adobe Photoshop quá đắt, còn những công cụ như GIMP lại không đủ quen thuộc để tôi duy trì dòng chảy sáng tạo. Vì vậy tôi tạo ra Compositor.
+Adobe Photoshop quá đắt, còn những công cụ như GIMP lại không đủ quen thuộc để tôi duy trì dòng chảy sáng tạo. Vì vậy tôi tạo ra PhotoCompositor.
 
-Mục tiêu là tạo ra một trình chỉnh sửa ảnh đầy đủ tính năng, hoàn toàn miễn phí và mã nguồn mở. Trước đây tôi dùng Photoshop để ghép ảnh và hậu kỳ, nên Compositor được xây quanh quy trình đó — với các công cụ cần thiết để tạo một bức ảnh cuối cùng chuẩn đến từng điểm ảnh.
+Mục tiêu là tạo ra một trình chỉnh sửa ảnh đầy đủ tính năng, hoàn toàn miễn phí và mã nguồn mở. Trước đây tôi dùng Photoshop để ghép ảnh và hậu kỳ, nên PhotoCompositor được xây quanh quy trình đó — với các công cụ cần thiết để tạo một bức ảnh cuối cùng chuẩn đến từng điểm ảnh.
 
 Vì mã nguồn mở, bạn có thể tải dự án Xcode về và thêm, xóa hoặc sửa bất cứ tính năng nào cho vừa với quy trình của mình.
 
 ## Cài đặt
 
 ### Tải về
-Tải Compositor từ [robbietilton.com/compositor](https://robbietilton.com/compositor), hoặc tải bản phát hành mới nhất trực tiếp từ [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
+Tải PhotoCompositor từ [robbietilton.com/compositor](https://robbietilton.com/compositor), hoặc tải bản phát hành mới nhất trực tiếp từ [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
 
 ### Homebrew
 
@@ -95,7 +95,7 @@ brew install --cask robbietilton-compositor
 - Không có gì rời khỏi Mac của bạn trừ khi tới kênh bạn đã cấu hình; ứng dụng không gọi về nhà, không kèm theo API key, và không đo lường sử dụng
 
 ### Hoạt động với AI agent
-- Agent AI và script có thể trực tiếp tạo và sửa dự án: `.comp` là một thư mục gồm các lớp PNG và một manifest, và dự án đang mở sẽ cập nhật trực tiếp khi được ghi. Xem [Viết dự án Compositor](docs/writing-comp-files.md)
+- Agent AI và script có thể trực tiếp tạo và sửa dự án: `.comp` là một thư mục gồm các lớp PNG và một manifest, và dự án đang mở sẽ cập nhật trực tiếp khi được ghi. Xem [Viết dự án PhotoCompositor](docs/writing-comp-files.md)
 
 ## Yêu cầu
 
@@ -104,7 +104,7 @@ brew install --cask robbietilton-compositor
 
 ## Dịch
 
-Compositor có sẵn tám ngôn ngữ giao diện — Anh, Giản thể Trung, Pháp, Nhật, Ả Rập, Việt, Tây Ban Nha và Nga — và bạn có thể chọn một ngôn ngữ rõ ràng trong AI Gateway Settings › Chung (hoặc để Follow System để theo thứ tự ngôn ngữ trong System Settings). Giao diện phản ánh locale: tiếng Ả Rập chuyển sang bố cục phải-sang-trái ở lần khởi động tới.
+PhotoCompositor có sẵn tám ngôn ngữ giao diện — Anh, Giản thể Trung, Pháp, Nhật, Ả Rập, Việt, Tây Ban Nha và Nga — và bạn có thể chọn một ngôn ngữ rõ ràng trong AI Gateway Settings › Chung (hoặc để Follow System để theo thứ tự ngôn ngữ trong System Settings). Giao diện phản ánh locale: tiếng Ả Rập chuyển sang bố cục phải-sang-trái ở lần khởi động tới.
 
 Kho chuỗi nằm ở `Compositor/Resources/*.lproj/Localizable.strings`, mỗi locale một tệp, khóa chính là chuỗi tiếng Anh gốc. Khóa thiếu rơi về bản gốc tiếng Anh, nên dịch dở vẫn dùng được. Sẵn sàng chào đón các PR từ người bản ngữ để lấp khoảng trống hoặc cải thiện cách diễn đạt hiện có; nếu bạn nhận một locale lần đầu, bắt đầu từ các bề mặt hay thấy (menu, sheet AI, đầu công cụ) trước khi vào tooltip sâu hơn.
 
@@ -114,7 +114,7 @@ Mở `Compositor.xcodeproj` và chạy scheme **Compositor**.
 
 ## Phát hành
 
-`scripts/release.sh` build bản Release, ký bằng Developer ID, notarize và staple, rồi gói thành `dist/Compositor-<version>.dmg`.
+`scripts/release.sh` build bản Release, ký bằng Developer ID, notarize và staple, rồi gói thành `dist/PhotoCompositor-<version>.dmg`.
 
 Cần những thứ sau, tất cả nằm ngoài repo này:
 
@@ -124,7 +124,7 @@ Cần những thứ sau, tất cả nằm ngoài repo này:
 
 ## Cộng đồng
 
-AIPDD PhotoEditor (nền Compositor) được phát triển công khai, và cách nhanh nhất để tham gia là tham gia thảo luận. Tôi giữ một nhóm nhỏ trên WeChat (ID: **raikkonenlxx**) cho người dùng và nhà phát triển trao đổi prompt, báo lỗi, chia sẻ tệp `.comp`, và nói về cấu hình gateway và quy trình làm việc AI. Để tham gia, kết bạn WeChat **raikkonenlxx** với ghi chú "AIPDD". Vui lòng ghi "Compositor" trong lời kết bạn để tôi biết bạn không phải bot.
+AIPDD PhotoEditor (nền PhotoCompositor) được phát triển công khai, và cách nhanh nhất để tham gia là tham gia thảo luận. Tôi giữ một nhóm nhỏ trên WeChat (ID: **raikkonenlxx**) cho người dùng và nhà phát triển trao đổi prompt, báo lỗi, chia sẻ tệp `.comp`, và nói về cấu hình gateway và quy trình làm việc AI. Để tham gia, kết bạn WeChat **raikkonenlxx** với ghi chú "AIPDD". Vui lòng ghi "PhotoCompositor" trong lời kết bạn để tôi biết bạn không phải bot.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="Mã QR WeChat — tham gia nhóm thảo luận AIPDD-Agent-Claw"/>

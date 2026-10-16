@@ -1,12 +1,12 @@
-# AIPDD PhotoEditor（base Compositor）
+# AIPDD PhotoEditor（base PhotoCompositor）
 
 [English](README.md) · **简体中文** · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
-Photoshop 太贵，GIMP 之类的工具又不够顺手，我没法在上面长时间专注，于是自己写了 Compositor。
+Photoshop 太贵，GIMP 之类的工具又不够顺手，我没法在上面长时间专注，于是自己写了 PhotoCompositor。
 
-目标是一个功能完整、完全免费开源的图像编辑器。过去我用 Photoshop 做合成和后期，Compositor 就是围绕这套工作流构建的——做出一张像素级到位的成图所需的所有工具。
+目标是一个功能完整、完全免费开源的图像编辑器。过去我用 Photoshop 做合成和后期，PhotoCompositor 就是围绕这套工作流构建的——做出一张像素级到位的成图所需的所有工具。
 
 因为开源，你可以直接把 Xcode 工程下下来，按自己的流程加、删、改任何功能。
 
@@ -95,7 +95,7 @@ brew install --cask robbietilton-compositor
 - 除了你配置的通道以外，没有任何数据会离开你的 Mac；App 不打电话回家、不打包任何 API 密钥、不做用量计量
 
 ### 与 AI 协作
-- AI 智能体和脚本可以直接构造、修改工程：`.comp` 就是一堆 PNG 图层加一份 manifest；打开着的项目被写入时，画布会实时刷新。参见 [编写 Compositor 工程](docs/writing-comp-files.md)
+- AI 智能体和脚本可以直接构造、修改工程：`.comp` 就是一堆 PNG 图层加一份 manifest；打开着的项目被写入时，画布会实时刷新。参见 [编写 PhotoCompositor 工程](docs/writing-comp-files.md)
 
 ## 系统要求
 
@@ -104,7 +104,7 @@ brew install --cask robbietilton-compositor
 
 ## 翻译
 
-Compositor 内置 8 种界面语言——英语、简体中文、法语、日语、阿拉伯语、越南语、西班牙语、俄语——可以在 AI 网关设置 › 通用 中手动指定（也可以保持"跟随系统"，按系统设置里的语言顺序走）。界面会跟随所选语言：阿拉伯语在下次启动时切换到从右到左布局。
+PhotoCompositor 内置 8 种界面语言——英语、简体中文、法语、日语、阿拉伯语、越南语、西班牙语、俄语——可以在 AI 网关设置 › 通用 中手动指定（也可以保持"跟随系统"，按系统设置里的语言顺序走）。界面会跟随所选语言：阿拉伯语在下次启动时切换到从右到左布局。
 
 字符串目录在 `Compositor/Resources/*.lproj/Localizable.strings`，一种语言一个文件，键就是英文原字符串。缺失的键会回落到英文源，所以半翻译状态也照样能用。欢迎母语者 PR 补齐空缺或润色已有文案；如果你要接管一门新语言，建议先把最可见的表面（菜单、AI 面板、工具栏头部）翻完，再深入提示气泡。
 
@@ -114,7 +114,7 @@ Compositor 内置 8 种界面语言——英语、简体中文、法语、日语
 
 ## 发布
 
-`scripts/release.sh` 会构建 Release 版本，用 Developer ID 签名、公证并装订，最后打包为 `dist/Compositor-<version>.dmg`。
+`scripts/release.sh` 会构建 Release 版本，用 Developer ID 签名、公证并装订，最后打包为 `dist/PhotoCompositor-<version>.dmg`。
 
 需要以下三项，均不存放在本仓库：
 
@@ -124,7 +124,7 @@ Compositor 内置 8 种界面语言——英语、简体中文、法语、日语
 
 ## 社区
 
-AIPDD PhotoEditor Compositor 开源开发，最快的参与方式就是加入讨论。我在微信上维护了一个小群（微信号：**raikkonenlxx**），面向用户与开发者，用来交流提示词、报 bug、分享 `.comp` 文件，讨论网关配置与 AI 玩法。想一起研究的朋友，加微信 **raikkonenlxx** 备注 AIPDD。请通过好友申请时写明 Compositor，让我知道你不是机器人。
+AIPDD PhotoEditor PhotoCompositor 开源开发，最快的参与方式就是加入讨论。我在微信上维护了一个小群（微信号：**raikkonenlxx**），面向用户与开发者，用来交流提示词、报 bug、分享 `.comp` 文件，讨论网关配置与 AI 玩法。想一起研究的朋友，加微信 **raikkonenlxx** 备注 AIPDD。请通过好友申请时写明 PhotoCompositor，让我知道你不是机器人。
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="微信二维码 — 加入 AIPDD-Agent-Claw 画布讨论群"/>

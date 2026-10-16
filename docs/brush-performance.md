@@ -29,7 +29,7 @@ Run performance tests alone, so other main-actor tests do not contend with the b
 
 ```sh
 TEST_RUNNER_BRUSH_BENCHMARK=1 xcodebuild \
-  -project Compositor.xcodeproj -scheme Compositor -configuration Debug \
+  -project Compositor.xcodeproj -scheme PhotoCompositor -configuration Debug \
   -derivedDataPath /tmp/CompositorBrush -destination 'platform=macOS' \
   CODE_SIGNING_ALLOWED=NO ENABLE_DEBUG_DYLIB=NO \
   -parallel-testing-enabled NO \

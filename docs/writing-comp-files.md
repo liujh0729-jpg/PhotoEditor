@@ -1,15 +1,15 @@
-# Writing Compositor projects (for AI agents and scripts)
+# Writing PhotoCompositor projects (for AI agents and scripts)
 
-A Compositor project (`.comp`) is a folder of PNG layer images plus a `manifest.json`. Anything that can write files can build or edit one, and Compositor updates the open canvas as the files change. No plugin or API is involved.
+A PhotoCompositor project (`.comp`) is a folder of PNG layer images plus a `manifest.json`. Anything that can write files can build or edit one, and PhotoCompositor updates the open canvas as the files change. No plugin or API is involved.
 
 ## Try it
 
-1. Open a project in Compositor 1.3 or later (save a new canvas somewhere, e.g. `~/Desktop/demo.comp`), and keep it open.
+1. Open a project in PhotoCompositor 1.3 or later (save a new canvas somewhere, e.g. `~/Desktop/demo.comp`), and keep it open.
 2. Ask an AI agent that can edit files on your Mac (Claude Code, Codex and the like):
 
    > Read docs/writing-comp-files.md in github.com/robbietilton/Compositor, then design a moody night scene in ~/Desktop/demo.comp. Work in steps, one or two layers at a time.
 
-3. Watch the canvas. Each time the agent writes the project, Compositor reloads it, usually within half a second.
+3. Watch the canvas. Each time the agent writes the project, PhotoCompositor reloads it, usually within half a second.
 
 What you get are ordinary layers: select them, change their opacity or blend mode, paint on their masks, save.
 
@@ -65,31 +65,31 @@ A minimal manifest with one full-canvas image layer:
 
 ## Rules that matter
 
-Break one of these and Compositor refuses the whole file **without any message**: the open canvas just stays as it was. If nothing updates, check these first.
+Break one of these and PhotoCompositor refuses the whole file **without any message**: the open canvas just stays as it was. If nothing updates, check these first.
 
 - **Image files are named after their layer.** A layer with `"id": "6F1D…"` must use `"imageFile": "6F1D….png"`, and a mask `"maskFile": "6F1D….mask.png"`, with the ID in uppercase as written in the manifest. One ID per layer, unique in the project.
 - **Images are 8-bit PNGs** in `images/`. Layer images are RGBA; masks are 8-bit grayscale (white shows the layer, black hides it).
-- **Blend modes are spelled exactly** as Compositor names them: `Normal`, `Darken`, `Multiply`, `Color Burn`, `Linear Burn`, `Lighten`, `Screen`, `Color Dodge`, `Linear Dodge (Add)`, `Overlay`, `Soft Light`, `Hard Light`, `Vivid Light`, `Linear Light`, `Pin Light`, `Hard Mix`, `Difference`, `Exclusion`, `Subtract`, `Divide`, `Hue`, `Saturation`, `Color`, `Luminosity`.
+- **Blend modes are spelled exactly** as PhotoCompositor names them: `Normal`, `Darken`, `Multiply`, `Color Burn`, `Linear Burn`, `Lighten`, `Screen`, `Color Dodge`, `Linear Dodge (Add)`, `Overlay`, `Soft Light`, `Hard Light`, `Vivid Light`, `Linear Light`, `Pin Light`, `Hard Mix`, `Difference`, `Exclusion`, `Subtract`, `Divide`, `Hue`, `Saturation`, `Color`, `Luminosity`.
 - **Every layer the manifest names has its image in place**, and the manifest is valid JSON.
 
 ## Writing safely while the project is open
 
-Compositor reads the project as soon as it changes, so never leave it half written:
+PhotoCompositor reads the project as soon as it changes, so never leave it half written:
 
 1. Write any new or changed PNGs into `images/` first.
-2. Then write the manifest to a temporary file inside the package (for example `.manifest.json.tmp`) and rename it over `manifest.json`. A rename is atomic: Compositor sees either the old manifest or the new one, never part of one.
+2. Then write the manifest to a temporary file inside the package (for example `.manifest.json.tmp`) and rename it over `manifest.json`. A rename is atomic: PhotoCompositor sees either the old manifest or the new one, never part of one.
 
 To change an existing layer, keep its `id` and overwrite its PNG, then rewrite the manifest. The layer updates in place, in the same spot in the stack.
 
 Remove images you no longer reference once the manifest no longer lists them.
 
-A project Compositor saved also has a `QuickLook` folder (`Preview.jpg`), which Finder shows as its Space-bar preview. When you change a project, delete that folder, so Finder doesn't preview an out-of-date picture; Compositor writes it again the next time it saves.
+A project PhotoCompositor saved also has a `QuickLook` folder (`Preview.jpg`), which Finder shows as its Space-bar preview. When you change a project, delete that folder, so Finder doesn't preview an out-of-date picture; PhotoCompositor writes it again the next time it saves.
 
 ## What the open app does
 
 - It reloads about a third of a second after writes stop. Several writes in quick succession arrive as one update, so pause briefly between steps if a viewer should see each one.
 - A reload keeps the zoom, scroll and selection, but clears undo, as reopening a file does.
-- If the person has unsaved changes of their own, Compositor asks them to revert to your version or keep theirs, and never replaces their work silently.
+- If the person has unsaved changes of their own, PhotoCompositor asks them to revert to your version or keep theirs, and never replaces their work silently.
 - A write that fails to load is ignored until the next change, so a mistake you then fix will still show up.
 - Changes are noticed from the manifest's contents and from each image's name and size, not from when files were written. Rewriting a PNG with different pixels changes its size in practice. If you replace an image with one of exactly the same byte size, also make a change to the manifest, such as renaming the layer; writing identical manifest bytes back isn't enough.
 
@@ -130,7 +130,7 @@ An adjustment layer has an `adjustment` object and no `imageFile`, and it affect
 - `ranges` and `channels` run RGB, then red, green, blue. Curve points run from x 0 to x 255, in increasing x.
 - `kind` is one of `Hue/Saturation`, `Levels`, `Curves`, `Exposure`, `Gradient Map`, `Grain`, `Invert`, `Black & White`, `Color Balance`, `Gaussian Blur`, `Motion Blur`, `Add Noise`.
 - For Hue/Saturation, set `hue`, `saturation` and `lightness` on the adjustment itself. Color Balance takes a `colorBalanceSettings` object (`shadowCyanRed`, `shadowMagentaGreen`, `shadowYellowBlue`, and the same for `mid` and `highlight`, each −100 to 100, plus `preserveLuminosity`).
-- For the other kinds, the easiest way to get the exact shape is to add one in Compositor, save, and copy it from that project's manifest.
+- For the other kinds, the easiest way to get the exact shape is to add one in PhotoCompositor, save, and copy it from that project's manifest.
 
 ## More
 

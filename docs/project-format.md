@@ -1,4 +1,4 @@
-# Compositor project format, versions 1–13
+# PhotoCompositor project format, versions 1–13
 
 A `.comp` file is a macOS document package containing `manifest.json` and an `images/` directory of `<layer UUID>.png` assets.
 

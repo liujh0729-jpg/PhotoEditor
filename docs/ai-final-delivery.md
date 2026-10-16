@@ -1,4 +1,4 @@
-# Compositor AI 能力实现 — 最终交付清单
+# PhotoCompositor AI 能力实现 — 最终交付清单
 
 ## ✅ 已完成（Windows 端）
 
@@ -69,7 +69,7 @@ open Compositor.xcodeproj
 
 ### 2. 测试 M1 网关配置
 1. 运行 App
-2. 菜单：Compositor › AI Gateway Settings…
+2. 菜单：PhotoCompositor › AI Gateway Settings…
 3. 验证：
    - AIPDD 内置渠道置顶，显示「Built-in」和「Default」徽章
    - 点击「Add Channel」，填写表单

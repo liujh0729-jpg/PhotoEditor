@@ -1,8 +1,8 @@
-# Compositor AI 能力技术方案
+# PhotoCompositor AI 能力技术方案
 
 ## 0. 架构判定
 
-- **不嵌入 newapi-sc 服务**，照搬它的配置契约：`Channel（渠道）+ EndpointType（能力槽位）+ priority/weight（优先级/权重）+ 多 Key 轮换 + 失败降级 + 连续失败自动禁用 + error.message 错误结构`。Compositor 作为客户端**直连 OpenAI 兼容上游**。
+- **不嵌入 newapi-sc 服务**，照搬它的配置契约：`Channel（渠道）+ EndpointType（能力槽位）+ priority/weight（优先级/权重）+ 多 Key 轮换 + 失败降级 + 连续失败自动禁用 + error.message 错误结构`。PhotoCompositor 作为客户端**直连 OpenAI 兼容上游**。
 - 你给的 8 个地址是**同一 base_url + 8 条路径**，所以配置模型是「一个渠道，8 个能力槽位」，每槽位可独立覆盖 model 名与路径。
 - 关键红利：AIPDD 上游有 `GET {base}/v1/new-api/catalog`（`pkg/aipddcatalog/atomic.go:17`），返回每个能力的 `inputModalities/outputModalities/params 约束/execution.protocol+path/pricing`。**客户端 UI 应由目录驱动**，而不是把模型名和参数硬编码进 Swift。
 - 分层：`GatewayCore`（纯 Swift、无 UI、可单测）→ `CatalogStore` → `ImageBridge`（CGImage ↔ base64/multipart）→ `AI 功能面板`。

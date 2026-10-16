@@ -1,8 +1,8 @@
-# Compositor AI 能力需求方案
+# PhotoCompositor AI 能力需求方案
 
 ## 0. 架构判定
 
-- **不嵌入 newapi-sc 服务**，照搬它的配置契约：`Channel（渠道）+ EndpointType（能力槽位）+ priority/weight（优先级/权重）+ 多 Key 轮换 + 失败降级 + 连续失败自动禁用 + error.message 错误结构`。Compositor 作为客户端**直连 OpenAI 兼容上游**。
+- **不嵌入 newapi-sc 服务**，照搬它的配置契约：`Channel（渠道）+ EndpointType（能力槽位）+ priority/weight（优先级/权重）+ 多 Key 轮换 + 失败降级 + 连续失败自动禁用 + error.message 错误结构`。PhotoCompositor 作为客户端**直连 OpenAI 兼容上游**。
 - 你给的 8 个地址是**同一 base_url + 8 条路径**，所以配置模型是「一个渠道，8 个能力槽位」，每槽位可独立覆盖 model 名与路径。
 - 关键红利：AIPDD 上游有 `GET {base}/v1/new-api/catalog`，返回每个能力的 `inputModalities/outputModalities/params 约束/execution.protocol+path/pricing`。**客户端 UI 应由目录驱动**，而不是把模型名和参数硬编码进 Swift。
 - 分层：`GatewayCore`（纯 Swift、无 UI、可单测）→ `CatalogStore` → `ImageBridge`（CGImage ↔ base64/multipart）→ `AI 功能面板`。
@@ -19,7 +19,7 @@
 | A6 | 连通性自检：逐能力「测试」按钮，显示 HTTP 状态 + `error.message`/`error.type` | `types/error.go:13-19` |
 | A7 | 目录同步：拉 catalog 缓存到本地，失败时用上次快照（快照绑定 base_url，不匹配则拒绝）；无 catalog 时回落 `GET /v1/models` | `model/aipdd_catalog_sync.go:44-81` |
 | A8 | **多渠道管理**：用户可添加多个渠道（任意 OpenAI 兼容网关 / 自建 newapi-sc），使用时选一个；可设默认，但 AIPDD 优先级最高、置顶 | 用户口径 |
-| A9 | 设置入口：新增 Settings 分区（Compositor 目前无偏好窗口，需新建一个 sheet/scene），并按既有约定做美式拼写、注释风格 | 现状 `ContentView.swift:6-7` |
+| A9 | 设置入口：新增 Settings 分区（PhotoCompositor 目前无偏好窗口，需新建一个 sheet/scene），并按既有约定做美式拼写、注释风格 | 现状 `ContentView.swift:6-7` |
 
 ## 2. 模块 B：AI 出图 / 修图（P0）
 
@@ -39,7 +39,7 @@
 
 ## 3. 模块 C：自然语言修图（P0，核心交互变革）
 
-这是把 Compositor 从「图像编辑器」变成「会听人话的编辑器」的最大杠杆点。
+这是把 PhotoCompositor 从「图像编辑器」变成「会听人话的编辑器」的最大杠杆点。
 
 - **C1 意图识别**：`/v1/chat/completions` 用结构化工具调用输出「操作意图 JSON」（调 Levels/Curves、加调整层、改图层顺序、建蒙版…）。
 - **C2 执行引擎**：把意图 JSON 映射到现有 `CommandPaletteEntry` + 滤镜参数体系，在 `EditorSession` 上执行。

@@ -1,19 +1,19 @@
-# AIPDD PhotoEditor（base Compositor）
+# AIPDD PhotoEditor（base PhotoCompositor）
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · **Français** · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
-Adobe Photoshop coûte trop cher et des outils comme GIMP ne me semblent pas assez familiers pour rester dans le flux. C'est pour cela que j'ai écrit Compositor.
+Adobe Photoshop coûte trop cher et des outils comme GIMP ne me semblent pas assez familiers pour rester dans le flux. C'est pour cela que j'ai écrit PhotoCompositor.
 
-L'objectif était de créer un éditeur d'images complet, entièrement gratuit et open source. J'utilisais Photoshop pour la composition et la post-production ; Compositor est donc construit autour de ce flux de travail, avec les outils nécessaires pour produire une image finale au pixel près.
+L'objectif était de créer un éditeur d'images complet, entièrement gratuit et open source. J'utilisais Photoshop pour la composition et la post-production ; PhotoCompositor est donc construit autour de ce flux de travail, avec les outils nécessaires pour produire une image finale au pixel près.
 
 Comme il est open source, vous pouvez télécharger le projet Xcode et ajouter, retirer ou modifier n'importe quelle fonction pour l'adapter à votre façon de travailler.
 
 ## Installation
 
 ### Téléchargement
-Téléchargez Compositor depuis [robbietilton.com/compositor](https://robbietilton.com/compositor), ou directement depuis la dernière version sur [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
+Téléchargez PhotoCompositor depuis [robbietilton.com/compositor](https://robbietilton.com/compositor), ou directement depuis la dernière version sur [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
 
 ### Homebrew
 
@@ -95,7 +95,7 @@ brew install --cask robbietilton-compositor
 - Rien ne quitte votre Mac hormis vers le canal que vous avez configuré ; l'app n'appelle pas à la maison, n'inclut aucune clé d'API et ne mesure aucune consommation
 
 ### Fonctionne avec des agents IA
-- Les agents IA et les scripts peuvent construire et éditer des projets directement : un `.comp` est un dossier de calques PNG et un manifeste, et un projet ouvert se met à jour en direct pendant qu'on y écrit. Voir [Écrire des projets Compositor](docs/writing-comp-files.md)
+- Les agents IA et les scripts peuvent construire et éditer des projets directement : un `.comp` est un dossier de calques PNG et un manifeste, et un projet ouvert se met à jour en direct pendant qu'on y écrit. Voir [Écrire des projets PhotoCompositor](docs/writing-comp-files.md)
 
 ## Configuration requise
 
@@ -104,7 +104,7 @@ brew install --cask robbietilton-compositor
 
 ## Traductions
 
-Compositor est livré avec huit langues d'interface — anglais, chinois simplifié, français, japonais, arabe, vietnamien, espagnol et russe — et vous pouvez en choisir une explicitement dans Réglages de la passerelle IA › Général (ou la laisser sur « Suivre le système » pour suivre l'ordre défini dans Réglages Système). L'interface suit la locale : l'arabe passe en mise en page de droite à gauche au prochain lancement.
+PhotoCompositor est livré avec huit langues d'interface — anglais, chinois simplifié, français, japonais, arabe, vietnamien, espagnol et russe — et vous pouvez en choisir une explicitement dans Réglages de la passerelle IA › Général (ou la laisser sur « Suivre le système » pour suivre l'ordre défini dans Réglages Système). L'interface suit la locale : l'arabe passe en mise en page de droite à gauche au prochain lancement.
 
 Le catalogue de chaînes vit dans `Compositor/Resources/*.lproj/Localizable.strings`, un fichier par locale, la chaîne anglaise littérale servant de clé. Les clés manquantes retombent sur l'anglais, donc une locale à moitié traduite reste utilisable. Les PR de locuteurs natifs qui comblent les trous ou améliorent les libellés existants sont les bienvenues ; si vous prenez en main une locale pour la première fois, commencez par les surfaces visibles (menus, feuilles IA, en-têtes d'outil) avant les infobulles les plus profondes.
 
@@ -114,7 +114,7 @@ Ouvrez `Compositor.xcodeproj` et lancez le schéma **Compositor**.
 
 ## Publication
 
-`scripts/release.sh` compile une version Release, la signe avec un Developer ID, la fait notariser et agréger, et l'emballage dans `dist/Compositor-<version>.dmg`.
+`scripts/release.sh` compile une version Release, la signe avec un Developer ID, la fait notariser et agréger, et l'emballage dans `dist/PhotoCompositor-<version>.dmg`.
 
 Cela nécessite, tout hors de ce dépôt :
 
@@ -124,7 +124,7 @@ Cela nécessite, tout hors de ce dépôt :
 
 ## Communauté
 
-AIPDD PhotoEditor (base Compositor) est développé en public, et la façon la plus rapide d'y participer est de rejoindre la discussion. Je tiens un petit groupe WeChat (ID : **raikkonenlxx**) pour que les utilisateurs et développeurs échangent des prompts, signalent des bugs, partagent des fichiers `.comp` et parlent de la configuration des passerelles et des workflows IA. Pour rejoindre, ajoutez-moi sur WeChat **raikkonenlxx** avec la mention « AIPDD ». Veuillez inclure « Compositor » dans votre demande d'ami pour que je sache que vous n'êtes pas un robot.
+AIPDD PhotoEditor (base PhotoCompositor) est développé en public, et la façon la plus rapide d'y participer est de rejoindre la discussion. Je tiens un petit groupe WeChat (ID : **raikkonenlxx**) pour que les utilisateurs et développeurs échangent des prompts, signalent des bugs, partagent des fichiers `.comp` et parlent de la configuration des passerelles et des workflows IA. Pour rejoindre, ajoutez-moi sur WeChat **raikkonenlxx** avec la mention « AIPDD ». Veuillez inclure « PhotoCompositor » dans votre demande d'ami pour que je sache que vous n'êtes pas un robot.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="QR code WeChat — rejoindre le groupe de discussion AIPDD-Agent-Claw"/>

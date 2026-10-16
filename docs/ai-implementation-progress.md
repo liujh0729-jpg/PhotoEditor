@@ -1,4 +1,4 @@
-# Compositor AI 能力实现进度
+# PhotoCompositor AI 能力实现进度
 
 ## M1 网关配置中心 ✅ 已完成
 
@@ -37,7 +37,7 @@
 #### App 入口（`Compositor/CompositorApp.swift`）
 5. **Settings Scene** — 设置窗口
    - 新增 `Settings { GatewaySettingsView() }`
-   - 菜单项：Compositor › AI Gateway Settings…
+   - 菜单项：PhotoCompositor › AI Gateway Settings…
 
 ### 技术要点
 - ✅ Keychain 存储 API Key（非 UserDefaults）
@@ -46,7 +46,7 @@
 - ✅ 多渠道管理（添加/编辑/删除/设为默认）
 - ✅ 能力槽位覆盖（model/path/channel）
 - ✅ 连接测试功能
-- ✅ 深色主题 UI（匹配 Compositor 风格）
+- ✅ 深色主题 UI（匹配 PhotoCompositor 风格）
 - ✅ Xcode 自动发现（PBXFileSystemSynchronizedRootGroup）
 
 ### 验收标准

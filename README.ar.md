@@ -1,19 +1,19 @@
-# AIPDD PhotoEditor（base Compositor）
+# AIPDD PhotoEditor（base PhotoCompositor）
 
 [English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · **العربية** · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
-Adobe Photoshop باهظ الثمن، وأدوات مثل GIMP ليست مألوفة بما يكفي لأبقى في حالة تركيز. لهذا بنيت Compositor.
+Adobe Photoshop باهظ الثمن، وأدوات مثل GIMP ليست مألوفة بما يكفي لأبقى في حالة تركيز. لهذا بنيت PhotoCompositor.
 
-كان الهدف إنشاء محرر صور كامل المزايا، مجاني ومفتوح المصدر تمامًا. كنت أستخدم Photoshop للتركيب وما بعد الإنتاج، لذلك بُني Compositor حول سير العمل هذا، بكل الأدوات اللازمة لإخراج صورة نهائية متقنة على مستوى البكسل.
+كان الهدف إنشاء محرر صور كامل المزايا، مجاني ومفتوح المصدر تمامًا. كنت أستخدم Photoshop للتركيب وما بعد الإنتاج، لذلك بُني PhotoCompositor حول سير العمل هذا، بكل الأدوات اللازمة لإخراج صورة نهائية متقنة على مستوى البكسل.
 
 وبما أنه مفتوح المصدر، يمكنك تنزيل مشروع Xcode وإضافة أي ميزة أو إزالتها أو تعديلها لتناسب طريقة عملك.
 
 ## التثبيت
 
 ### التنزيل
-احصل على Compositor من [robbietilton.com/compositor](https://robbietilton.com/compositor)، أو نزّل أحدث إصدار مباشرة من [إصدارات GitHub](https://github.com/robbietilton/Compositor/releases/latest).
+احصل على PhotoCompositor من [robbietilton.com/compositor](https://robbietilton.com/compositor)، أو نزّل أحدث إصدار مباشرة من [إصدارات GitHub](https://github.com/robbietilton/Compositor/releases/latest).
 
 ### Homebrew
 
@@ -95,7 +95,7 @@ brew install --cask robbietilton-compositor
 - لا يغادر جهازك أي شيء سوى إلى القناة التي حددتها؛ التطبيق لا يتصل بالبيت، ولا يضمِّن أي مفتاح API، ولا يقيس الاستخدام
 
 ### يعمل مع وكلاء الذكاء الاصطناعي
-- يمكن لوكلاء الذكاء الاصطناعي والبرمجيات النصية بناء وتعديل المشاريع مباشرة: ملف `.comp` هو مجلد من طبقات PNG وبيان، والمشروع المفتوح يتحدث مباشرة أثناء كتابته. انظر [كتابة مشاريع Compositor](docs/writing-comp-files.md)
+- يمكن لوكلاء الذكاء الاصطناعي والبرمجيات النصية بناء وتعديل المشاريع مباشرة: ملف `.comp` هو مجلد من طبقات PNG وبيان، والمشروع المفتوح يتحدث مباشرة أثناء كتابته. انظر [كتابة مشاريع PhotoCompositor](docs/writing-comp-files.md)
 
 ## المتطلبات
 
@@ -104,7 +104,7 @@ brew install --cask robbietilton-compositor
 
 ## الترجمة
 
-يأتي Compositor بثماني لغات للواجهة — الإنجليزية، الصينية المبسطة، الفرنسية، اليابانية، العربية، الفيتنامية، الإسبانية، والروسية — ويمكنك اختيار أي منها صراحة في إعدادات بوابة الذكاء الاصطناعي ← عام (أو اتركه على «اتباع النظام» ليحترم ترتيب اللغات في إعدادات النظام). الواجهة تحاكي اللغة: العربية تتحول إلى تخطيط من اليمين إلى اليسار في التشغيل التالي.
+يأتي PhotoCompositor بثماني لغات للواجهة — الإنجليزية، الصينية المبسطة، الفرنسية، اليابانية، العربية، الفيتنامية، الإسبانية، والروسية — ويمكنك اختيار أي منها صراحة في إعدادات بوابة الذكاء الاصطناعي ← عام (أو اتركه على «اتباع النظام» ليحترم ترتيب اللغات في إعدادات النظام). الواجهة تحاكي اللغة: العربية تتحول إلى تخطيط من اليمين إلى اليسار في التشغيل التالي.
 
 فهرس النصوص في `Compositor/Resources/*.lproj/Localizable.strings`، ملف لكل لغة، والنص الإنجليزي الحرفي هو المفتاح. المفاتيح الناقصة تعود إلى الإنجليزية، لذا نصف مترجم يبقى صالحًا للاستخدام. مرحبًا بـ PRات الناطقين بالأصل لسد الفراغات أو تحسين الصياغة؛ إذا كنت تتولى لغة لأول مرة، ابدأ بالأسطح الظاهرة (القوائم، أوراق الذكاء الاصطناعي، رؤوس الأدوات) قبل التلميحات العميقة.
 
@@ -114,7 +114,7 @@ brew install --cask robbietilton-compositor
 
 ## الإصدار
 
-`scripts/release.sh` يبني نسخة Release، يوقعها بمعرَّف المطوِّر، يوثِّقها ويشبكها، ويحزمها في `dist/Compositor-<version>.dmg`.
+`scripts/release.sh` يبني نسخة Release، يوقعها بمعرَّف المطوِّر، يوثِّقها ويشبكها، ويحزمها في `dist/PhotoCompositor-<version>.dmg`.
 
 يحتاج، وكلها خارج هذا المستودع:
 
@@ -124,7 +124,7 @@ brew install --cask robbietilton-compositor
 
 ## المجتمع
 
-يُطوَّر AIPDD PhotoEditor (استنادًا إلى Compositor) على الملأ، وأسرع طريق للمشاركة هو الانضمام إلى النقاش. أدير مجموعة صغيرة على WeChat (المعرّف: **raikkonenlxx**) للمستخدمين والمطورين لتبادل الموجِّهات، والإبلاغ عن الأخطاء، ومشاركة ملفات `.comp`، والتحدث عن إعدادات البوابات وسير عمل الذكاء الاصطناعي. للانضمام، أضفني على WeChat **raikkonenlxx** مع ملاحظة "AIPDD". يُرجى كتابة "Compositor" في طلب الصداقة لأعرف أنك لست روبوتًا.
+يُطوَّر AIPDD PhotoEditor (استنادًا إلى PhotoCompositor) على الملأ، وأسرع طريق للمشاركة هو الانضمام إلى النقاش. أدير مجموعة صغيرة على WeChat (المعرّف: **raikkonenlxx**) للمستخدمين والمطورين لتبادل الموجِّهات، والإبلاغ عن الأخطاء، ومشاركة ملفات `.comp`، والتحدث عن إعدادات البوابات وسير عمل الذكاء الاصطناعي. للانضمام، أضفني على WeChat **raikkonenlxx** مع ملاحظة "AIPDD". يُرجى كتابة "PhotoCompositor" في طلب الصداقة لأعرف أنك لست روبوتًا.
 
 <div align="center">
   <img src="./docs/references/canvas-group-qr.png" width="260" alt="رمز WeChat QR — انضم إلى مجموعة نقاش AIPDD-Agent-Claw"/>

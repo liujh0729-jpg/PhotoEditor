@@ -1,4 +1,4 @@
-# Compositor AI 能力实现完成总结
+# PhotoCompositor AI 能力实现完成总结
 
 ## 已完成模块
 
@@ -154,7 +154,7 @@ CommandMenu("AI") {
 3. **运行 App**（⌘R）
 
 4. **测试 M1 网关配置**
-   - 菜单：Compositor › AI Gateway Settings…
+   - 菜单：PhotoCompositor › AI Gateway Settings…
    - 验证：AIPDD 内置渠道置顶，显示「Built-in」和「Default」徽章
    - 点击「Add Channel」，填写表单，测试连接
    - 验证 Keychain：`security find-generic-password -s "com.compositor.gateway"`
