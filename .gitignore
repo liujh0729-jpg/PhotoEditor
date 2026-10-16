@@ -4,6 +4,7 @@ build/
 DerivedData/
 *.xcarchive
 *.dmg
+*.profraw
 
 # Xcode per-user state
 xcuserdata/

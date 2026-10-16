@@ -1,6 +1,16 @@
 # Notes for AI agents
 
-Compositor is a macOS image editor for compositing and photo work, written in Swift (SwiftUI and AppKit, with some C for pixel work).
+PhotoCompositor is a macOS image editor for compositing and photo work, written in Swift (SwiftUI and AppKit, with some C for pixel work).
+
+## Naming
+
+The product is **PhotoCompositor**: use it for everything a user sees or downloads — the window title, the app menu ("Hide PhotoCompositor"), the about box, the DMG and the GitHub Release asset, the Sparkle feed, and the document type labels in `Config/Info.plist`.
+
+These stay **Compositor** on purpose, so existing installs, file associations and update feeds keep working — do not rename them:
+
+- The Xcode project and scheme (`Compositor.xcodeproj`, scheme `Compositor`) and the `Compositor/` source folder.
+- The bundle id `com.wonderassembly.compositor` and the type identifiers `com.compositor.*`.
+- The GitHub repo path (`robbietilton/Compositor`) and the `SUFeedURL` that points at it.
 
 ## Designing or editing a Compositor project
 
