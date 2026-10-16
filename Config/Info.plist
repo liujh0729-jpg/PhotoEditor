@@ -42,7 +42,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>Compositor Project</string>
+			<string>PhotoCompositor Project</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
@@ -83,7 +83,7 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Compositor Layer</string>
+			<string>PhotoCompositor Layer</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.compositor.layer-row</string>
 		</dict>
@@ -93,7 +93,7 @@
 				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Compositor Project</string>
+			<string>PhotoCompositor Project</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.compositor.project</string>
 			<key>UTTypeTagSpecification</key>
