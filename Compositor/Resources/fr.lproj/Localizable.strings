@@ -627,3 +627,9 @@
 "Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "Agrandissez le canevas et laissez le modèle peindre uniquement les nouveaux bords. L'image elle-même reste inchangée.";
 "Extend" = "Étendre";
 "Couldn't extend the image. Check the prompt and try again." = "Impossible d'étendre l'image. Vérifiez l'invite et réessayez.";
+"Prompt Assistant…" = "Assistant de prompt…";
+"What do you want to do?" = "Que voulez-vous faire ?";
+"Use the picture on the canvas" = "Utiliser l'image du canevas";
+"Suggest a prompt" = "Suggérer un prompt";
+"No prompt yet" = "Aucun prompt pour l'instant";
+"The layer's name and the picture on the canvas go to the chat model the slot names." = "Le nom du calque et l'image du canevas sont envoyés au modèle de conversation indiqué par l'emplacement.";

@@ -626,3 +626,9 @@
 "Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "وسّع اللوحة ودع النموذج يرسم الحواف الجديدة فقط. تبقى الصورة كما هي.";
 "Extend" = "تمديد";
 "Couldn't extend the image. Check the prompt and try again." = "تعذّر تمديد الصورة. تحقق من المطالبة وحاول مرة أخرى.";
+"Prompt Assistant…" = "مساعد المطالبة…";
+"What do you want to do?" = "ماذا تريد أن تفعل؟";
+"Use the picture on the canvas" = "استخدم الصورة على اللوحة";
+"Suggest a prompt" = "اقتراح مطالبة";
+"No prompt yet" = "لا توجد مطالبة بعد";
+"The layer's name and the picture on the canvas go to the chat model the slot names." = "يُرسل اسم الطبقة والصورة الموجودة على اللوحة إلى نموذج المحادثة الذي تحدده الفتحة.";

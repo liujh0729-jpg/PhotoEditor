@@ -603,6 +603,8 @@ final class EditorSession {
     var showsAutoTidy = false
     /// Extend Image…: outpainting — the canvas grows and the model paints only the new border.
     var showsOutpaint = false
+    /// Prompt Assistant…: the chat model drafts an editable prompt from the layer name and the picture.
+    var showsPromptHelper = false
     /// What the AI said about the picture, filed with the project (manifest version 14).
     var aiDescription: String?
     /// The RAW file being developed, and the settings the sheet is editing (see RawImporter).

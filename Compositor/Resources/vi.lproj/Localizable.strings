@@ -626,3 +626,9 @@
 "Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "Phóng to canvas và để model vẽ riêng phần viền mới. Bản thân ảnh vẫn giữ nguyên.";
 "Extend" = "Mở rộng";
 "Couldn't extend the image. Check the prompt and try again." = "Không thể mở rộng ảnh. Hãy kiểm tra câu lệnh và thử lại.";
+"Prompt Assistant…" = "Trợ lý câu lệnh…";
+"What do you want to do?" = "Bạn muốn làm gì?";
+"Use the picture on the canvas" = "Dùng ảnh trên canvas";
+"Suggest a prompt" = "Đề xuất câu lệnh";
+"No prompt yet" = "Chưa có câu lệnh";
+"The layer's name and the picture on the canvas go to the chat model the slot names." = "Tên lớp và ảnh trên canvas sẽ được gửi tới model chat mà khe chỉ định.";

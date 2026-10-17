@@ -626,3 +626,9 @@
 "Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "Расширьте холст, и модель дорисует только новые края. Само изображение останется без изменений.";
 "Extend" = "Расширить";
 "Couldn't extend the image. Check the prompt and try again." = "Не удалось расширить изображение. Проверьте запрос и повторите попытку.";
+"Prompt Assistant…" = "Помощник по запросам…";
+"What do you want to do?" = "Что вы хотите сделать?";
+"Use the picture on the canvas" = "Использовать изображение на холсте";
+"Suggest a prompt" = "Предложить запрос";
+"No prompt yet" = "Запроса пока нет";
+"The layer's name and the picture on the canvas go to the chat model the slot names." = "Имя слоя и изображение на холсте отправляются чат-модели, указанной в слоте.";

@@ -711,3 +711,9 @@
 "Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "扩大画布并让模型只绘制新增的边缘，画面本身保持不变。";
 "Extend" = "扩展";
 "Couldn't extend the image. Check the prompt and try again." = "无法扩展图像。请检查提示词后重试。";
+"Prompt Assistant…" = "提示词助手…";
+"What do you want to do?" = "你想做什么？";
+"Use the picture on the canvas" = "使用画布上的图片";
+"Suggest a prompt" = "生成提示词";
+"No prompt yet" = "尚无提示词";
+"The layer's name and the picture on the canvas go to the chat model the slot names." = "图层名称和画布上的图片会发送到该槽位指定的聊天模型。";

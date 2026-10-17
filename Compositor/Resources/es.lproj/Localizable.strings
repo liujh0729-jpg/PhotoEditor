@@ -626,3 +626,9 @@
 "Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "Amplía el lienzo y deja que el modelo pinte solo los nuevos bordes. La imagen en sí permanece igual.";
 "Extend" = "Ampliar";
 "Couldn't extend the image. Check the prompt and try again." = "No se pudo ampliar la imagen. Revisa el indicador e inténtalo de nuevo.";
+"Prompt Assistant…" = "Asistente de prompt…";
+"What do you want to do?" = "¿Qué quieres hacer?";
+"Use the picture on the canvas" = "Usar la imagen del lienzo";
+"Suggest a prompt" = "Sugerir un prompt";
+"No prompt yet" = "Aún no hay prompt";
+"The layer's name and the picture on the canvas go to the chat model the slot names." = "El nombre de la capa y la imagen del lienzo se envían al modelo de chat que indica el espacio.";

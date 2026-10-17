@@ -459,6 +459,9 @@ struct CompositorApp: App {
                     Button("Image Description…") { session.showsImageDescription = true }
                         .disabled(session.document == nil || privacyMode)
                         .help(privacyMode ? privacyHelp : "")
+                    Button("Prompt Assistant…") { session.showsPromptHelper = true }
+                        .disabled(session.document == nil || privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Button("Search Assets…") { session.showsAssetSearch = true }
                         .disabled(privacyMode)
                         .help(privacyMode ? privacyHelp : "")

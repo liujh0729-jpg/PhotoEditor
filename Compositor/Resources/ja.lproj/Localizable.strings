@@ -626,3 +626,9 @@
 "Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "キャンバスを広げ、モデルは新しい縁のみを描画します。画像自体はそのままです。";
 "Extend" = "拡張";
 "Couldn't extend the image. Check the prompt and try again." = "画像を拡張できませんでした。プロンプトを確認して再試行してください。";
+"Prompt Assistant…" = "プロンプトアシスタント…";
+"What do you want to do?" = "何を行いたいですか？";
+"Use the picture on the canvas" = "キャンバス上の画像を使用";
+"Suggest a prompt" = "プロンプトを提案";
+"No prompt yet" = "まだプロンプトがありません";
+"The layer's name and the picture on the canvas go to the chat model the slot names." = "レイヤー名とキャンバス上の画像は、スロットが指定するチャットモデルに送信されます。";
