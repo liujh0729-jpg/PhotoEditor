@@ -517,3 +517,29 @@
 "Fill the selection using surrounding pixels from this layer." = "使用此图层周围的像素填充选区。";
 "Fill with Background Color" = "用背景色填充";
 "Fill with Foreground Color" = "用前景色填充";
+
+/* Tool options bar */
+"Marquee" = "选框";
+"Magic" = "魔棒";
+"Rectangle" = "矩形";
+"Ellipse" = "椭圆";
+"Freehand" = "自由绘制";
+"Polygonal" = "多边形";
+"Line" = "直线";
+"Wand" = "魔棒";
+"Object" = "对象";
+"Add" = "添加到选区";
+"Subtract" = "从选区减去";
+"Expand" = "扩展";
+"Contract" = "收缩";
+"Point Sample" = "点取样";
+"3 by 3 Average" = "3×3 平均";
+"5 by 5 Average" = "5×5 平均";
+"Width" = "宽度";
+"Transform" = "变换";
+"Transform Mask" = "变换蒙版";
+"Show Controls" = "显示控件";
+"Scale" = "缩放";
+"Nearest" = "邻近";
+"Smooth" = "平滑";
+"High quality" = "高质量";

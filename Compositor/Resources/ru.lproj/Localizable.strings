@@ -432,3 +432,29 @@
 "Drop into new canvas" = "Перетащить на новый холст";
 "Drop to open in a new canvas" = "Отпустите, чтобы открыть на новом холсте";
 "Couldn't save the API key" = "Не удалось сохранить API-ключ";
+
+/* Tool options bar */
+"Marquee" = "Область";
+"Magic" = "Волшебная";
+"Rectangle" = "Прямоугольник";
+"Ellipse" = "Эллипс";
+"Freehand" = "Свободная";
+"Polygonal" = "Полигональная";
+"Line" = "Линия";
+"Wand" = "Палочка";
+"Object" = "Объект";
+"Add" = "Добавить";
+"Subtract" = "Вычесть";
+"Expand" = "Расширить";
+"Contract" = "Сжать";
+"Point Sample" = "Точка";
+"3 by 3 Average" = "Среднее 3×3";
+"5 by 5 Average" = "Среднее 5×5";
+"Width" = "Ширина";
+"Transform" = "Трансформация";
+"Transform Mask" = "Трансформировать маску";
+"Show Controls" = "Показать маркеры";
+"Scale" = "Масштаб";
+"Nearest" = "Ближайший";
+"Smooth" = "Плавный";
+"High quality" = "Высокое качество";

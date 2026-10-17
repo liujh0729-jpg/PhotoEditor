@@ -432,3 +432,29 @@
 "Drop into new canvas" = "إفلات في لوحة رسم جديدة";
 "Drop to open in a new canvas" = "أفلت للفتح في لوحة جديدة";
 "Couldn't save the API key" = "تعذّر حفظ مفتاح API";
+
+/* Tool options bar */
+"Marquee" = "التحديد";
+"Magic" = "سحري";
+"Rectangle" = "مستطيل";
+"Ellipse" = "ناتج";
+"Freehand" = "رسم حر";
+"Polygonal" = "مضلّع";
+"Line" = "خط";
+"Wand" = "عصا";
+"Object" = "كائن";
+"Add" = "إضافة";
+"Subtract" = "طرح";
+"Expand" = "توسيع";
+"Contract" = "تقليص";
+"Point Sample" = "نقطة";
+"3 by 3 Average" = "متوسط 3×3";
+"5 by 5 Average" = "متوسط 5×5";
+"Width" = "العرض";
+"Transform" = "تحويل";
+"Transform Mask" = "تحويل القناع";
+"Show Controls" = "إظهار عناصر التحكم";
+"Scale" = "مقياس";
+"Nearest" = "الأقرب";
+"Smooth" = "تنعيم";
+"High quality" = "جودة عالية";

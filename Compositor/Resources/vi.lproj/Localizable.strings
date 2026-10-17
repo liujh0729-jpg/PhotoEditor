@@ -432,3 +432,29 @@
 "Drop into new canvas" = "Thả vào canvas mới";
 "Drop to open in a new canvas" = "Thả để mở trong canvas mới";
 "Couldn't save the API key" = "Không lưu được khóa API";
+
+/* Tool options bar */
+"Marquee" = "Khung chọn";
+"Magic" = "Đũa thần";
+"Rectangle" = "Hình chữ nhật";
+"Ellipse" = "Hình ê-lip";
+"Freehand" = "Vẽ tự do";
+"Polygonal" = "Đa giác";
+"Line" = "Đường thẳng";
+"Wand" = "Đũa thần";
+"Object" = "Đối tượng";
+"Add" = "Thêm";
+"Subtract" = "Trừ";
+"Expand" = "Mở rộng";
+"Contract" = "Thu hẹp";
+"Point Sample" = "Điểm";
+"3 by 3 Average" = "Trung bình 3×3";
+"5 by 5 Average" = "Trung bình 5×5";
+"Width" = "Chiều rộng";
+"Transform" = "Biến đổi";
+"Transform Mask" = "Biến đổi mặt nạ";
+"Show Controls" = "Hiện điều khiển";
+"Scale" = "Tỉ lệ";
+"Nearest" = "Gần nhất";
+"Smooth" = "Làm mượt";
+"High quality" = "Chất lượng cao";

@@ -432,3 +432,29 @@
 "Drop into new canvas" = "新規キャンバスにドロップ";
 "Drop to open in a new canvas" = "ドロップして新規キャンバスで開く";
 "Couldn't save the API key" = "API キーを保存できませんでした";
+
+/* Tool options bar */
+"Marquee" = "選択範囲";
+"Magic" = "マジック";
+"Rectangle" = "長方形";
+"Ellipse" = "楕円";
+"Freehand" = "フリーハンド";
+"Polygonal" = "ポリゴナル";
+"Line" = "直線";
+"Wand" = "ワンド";
+"Object" = "オブジェクト";
+"Add" = "加算";
+"Subtract" = "減算";
+"Expand" = "拡張";
+"Contract" = "収縮";
+"Point Sample" = "ポイント";
+"3 by 3 Average" = "3×3 平均";
+"5 by 5 Average" = "5×5 平均";
+"Width" = "幅";
+"Transform" = "変形";
+"Transform Mask" = "マスクを変形";
+"Show Controls" = "コントロールを表示";
+"Scale" = "拡大縮小";
+"Nearest" = "最近傍";
+"Smooth" = "スムーズ";
+"High quality" = "高品質";

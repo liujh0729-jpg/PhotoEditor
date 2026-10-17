@@ -432,3 +432,29 @@
 "Drop into new canvas" = "Soltar en lienzo nuevo";
 "Drop to open in a new canvas" = "Soltar para abrir en un lienzo nuevo";
 "Couldn't save the API key" = "No se pudo guardar la clave API";
+
+/* Tool options bar */
+"Marquee" = "Marco";
+"Magic" = "Mágico";
+"Rectangle" = "Rectángulo";
+"Ellipse" = "Elipse";
+"Freehand" = "A mano alzada";
+"Polygonal" = "Poligonal";
+"Line" = "Línea";
+"Wand" = "Varita";
+"Object" = "Objeto";
+"Add" = "Añadir";
+"Subtract" = "Restar";
+"Expand" = "Ampliar";
+"Contract" = "Contraer";
+"Point Sample" = "Punto";
+"3 by 3 Average" = "Promedio 3×3";
+"5 by 5 Average" = "Promedio 5×5";
+"Width" = "Anchura";
+"Transform" = "Transformar";
+"Transform Mask" = "Transformar máscara";
+"Show Controls" = "Mostrar controles";
+"Scale" = "Escala";
+"Nearest" = "Más cercano";
+"Smooth" = "Suave";
+"High quality" = "Alta calidad";
