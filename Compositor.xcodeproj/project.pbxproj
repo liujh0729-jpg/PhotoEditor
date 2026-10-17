@@ -440,6 +440,7 @@
 				);
 				MARKETING_VERSION = 1.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wonderassembly.compositor;
+				PRODUCT_MODULE_NAME = Compositor;
 				PRODUCT_NAME = PhotoCompositor;
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -480,6 +481,7 @@
 				);
 				MARKETING_VERSION = 1.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wonderassembly.compositor;
+				PRODUCT_MODULE_NAME = Compositor;
 				PRODUCT_NAME = PhotoCompositor;
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -510,7 +512,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Compositor.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Compositor";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoCompositor.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoCompositor";
 			};
 			name = Debug;
 		};
@@ -532,7 +534,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Compositor.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Compositor";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoCompositor.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoCompositor";
 			};
 			name = Release;
 		};
