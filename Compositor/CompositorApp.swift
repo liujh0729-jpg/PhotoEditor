@@ -321,6 +321,9 @@ struct CompositorApp: App {
                         .disabled(session.document == nil || !applicationDelegate.projects.canStart)
                     Button("Trim…") { Task { await applicationDelegate.projects.trim() } }
                         .disabled(session.document == nil || !applicationDelegate.projects.canStart)
+                    // Vision works the composition out on this Mac, so Privacy Mode leaves it enabled.
+                    Button("Auto Crop") { Task { await session.autoCrop() } }
+                        .disabled(session.document == nil || !applicationDelegate.projects.canStart)
                     Group {
                         Divider()
                         Button("Rotate Canvas 90° Clockwise") { session.rotateCanvas(clockwise: true) }

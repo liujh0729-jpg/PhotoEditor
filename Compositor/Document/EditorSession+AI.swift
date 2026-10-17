@@ -81,6 +81,29 @@ extension EditorSession {
         return applyText(draft)
     }
 
+    /// Auto Crop: Vision's saliency picks the composition and the canvas becomes the suggested box, through the
+    /// same resizer the Crop tool commits with — so it lands in history like a hand-drawn crop. The reading is
+    /// local work, so it keeps working in Privacy Mode.
+    func autoCrop() async {
+        guard let document, canStartProjectOperation,
+              let sample = selectionSample(document, sampleAllLayers: true) else { return }
+        guard let rect = await SmartCrop.suggestRect(in: sample) else {
+            cropError = "No clear subject was found to crop to. Try a picture with a distinct subject."
+            return
+        }
+        await applyAutoCrop(rect: rect)
+    }
+
+    /// Crops the canvas to Auto Crop's suggested box. A box that is the whole canvas says "leave it as it is".
+    func applyAutoCrop(rect: CGRect) async {
+        guard let document else { return }
+        let width = Int(rect.width.rounded()), height = Int(rect.height.rounded())
+        guard width > 0, height > 0, width < document.width || height < document.height else { return }
+        _ = await resizeCanvas(toWidth: width, height: height,
+                               offset: CGPoint(x: -rect.minX.rounded(), y: -rect.minY.rounded()),
+                               actionName: "Auto Crop")
+    }
+
     /// Runs an editing intent against the canvas through the session's own edits, so it lands in history
     /// exactly like doing it by hand. Returns false for the intents the editor can't carry out — the ones
     /// it has no feature for (a selection border stroke, sampling a color range by hand), or those that

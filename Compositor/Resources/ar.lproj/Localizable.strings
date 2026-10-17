@@ -530,3 +530,7 @@
 "Move / Transform (V)" = "تحريك / تحويل (V)";
 "Hand (H)" = "يد (H)";
 "Zoom (Z)" = "تكبير (Z)";
+
+/* Auto Crop. */
+"Auto Crop" = "اقتصاص تلقائي";
+"No clear subject was found to crop to. Try a picture with a distinct subject." = "لم يتم العثور على موضوع واضح للاقتصاص حوله. جرّب صورة ذات موضوع مميز.";

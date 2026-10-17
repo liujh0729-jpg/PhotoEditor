@@ -615,3 +615,7 @@
 "Move / Transform (V)" = "移动 / 变换 (V)";
 "Hand (H)" = "抓手 (H)";
 "Zoom (Z)" = "缩放 (Z)";
+
+/* Auto Crop. */
+"Auto Crop" = "自动裁剪";
+"No clear subject was found to crop to. Try a picture with a distinct subject." = "未找到明确的主体，无法裁切。换一张主体突出的图片试试。";

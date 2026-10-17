@@ -530,3 +530,7 @@
 "Move / Transform (V)" = "移動 / 変形 (V)";
 "Hand (H)" = "ハンド (H)";
 "Zoom (Z)" = "ズーム (Z)";
+
+/* Auto Crop. */
+"Auto Crop" = "自動トリミング";
+"No clear subject was found to crop to. Try a picture with a distinct subject." = "切り抜きの対象となる明確な主体が見つかりませんでした。主体がはっきりした写真でお試しください。";

@@ -530,3 +530,7 @@
 "Move / Transform (V)" = "Mover / Transformar (V)";
 "Hand (H)" = "Mano (H)";
 "Zoom (Z)" = "Zoom (Z)";
+
+/* Auto Crop. */
+"Auto Crop" = "Recorte automático";
+"No clear subject was found to crop to. Try a picture with a distinct subject." = "No se encontró un sujeto claro para recortar. Prueba con una foto con un sujeto bien definido.";

@@ -530,3 +530,7 @@
 "Move / Transform (V)" = "Di chuyển / Biến đổi (V)";
 "Hand (H)" = "Bàn tay (H)";
 "Zoom (Z)" = "Thu phóng (Z)";
+
+/* Auto Crop. */
+"Auto Crop" = "Cắt tự động";
+"No clear subject was found to crop to. Try a picture with a distinct subject." = "Không tìm thấy chủ thể rõ ràng để cắt. Hãy thử ảnh có chủ thể nổi bật.";

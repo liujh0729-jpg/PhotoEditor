@@ -371,4 +371,70 @@ struct EditorSessionAITests {
         session.undo()
         #expect(session.document?.layers.isEmpty == true)
     }
+
+    // MARK: - Auto Crop
+
+    /// The saliency scan is honest about what it found: an off-center blob gets its box, a flat picture and
+    /// a salt-and-pepper field ("everything is the subject") get nothing to crop to.
+    @Test func smartCropSubjectBoxReadsTheSalientPixels() {
+        let width = 90, height = 90
+        var levels = [UInt8](repeating: 0, count: width * height)
+        for y in 55...75 { for x in 10...30 { levels[y * width + x] = 200 } }
+        #expect(SmartCrop.subjectBox(levels, width: width, height: height) == CGRect(x: 10, y: 55, width: 21, height: 21))
+        #expect(SmartCrop.subjectBox([UInt8](repeating: 0, count: width * height), width: width, height: height) == nil)
+        #expect(SmartCrop.subjectBox([UInt8](repeating: 255, count: width * height), width: width, height: height) == nil)
+        var noise = [UInt8](repeating: 0, count: width * height)
+        var state = UInt32(0x9E3779B9)
+        for i in noise.indices {
+            state = state &* 1664525 &+ 1013904223
+            noise[i] = UInt8(truncatingIfNeeded: state >> 24)
+        }
+        #expect(SmartCrop.subjectBox(noise, width: width, height: height) == nil, "noise spreads over the whole frame")
+    }
+
+    /// Edges that fall near a thirds line or the border move onto it; the subject never leaves the box.
+    @Test func smartCropSuggestSnapsEdgesToTheThirds() {
+        let rect = SmartCrop.suggestRect(subject: CGRect(x: 105, y: 105, width: 60, height: 60),
+                                         in: CGSize(width: 300, height: 300))
+        #expect(rect == CGRect(x: 100, y: 100, width: 100, height: 100), "both pairs of edges step onto the thirds")
+        let subject = CGRect(x: 5, y: 5, width: 20, height: 20)
+        let corner = SmartCrop.suggestRect(subject: subject, in: CGSize(width: 100, height: 100))
+        #expect(corner?.contains(subject) == true, "a subject near the border stays inside")
+        #expect(corner?.minX == 0 && corner?.minY == 0, "the border pulls the far edges flush")
+    }
+
+    /// The suggested box lands through the Crop tool's own resizer: history names it, undo takes it back.
+    @Test func autoCropCutsTheCanvasAndUndoes() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        await session.applyAutoCrop(rect: CGRect(x: 20, y: 30, width: 120, height: 90))
+        #expect(session.document?.size == CGSize(width: 120, height: 90))
+        #expect(session.history.undoName == "Auto Crop")
+        session.undo()
+        #expect(session.document?.size == CGSize(width: 200, height: 200))
+        // A box that is the whole canvas changes nothing and files no edit.
+        await session.applyAutoCrop(rect: CGRect(x: 0, y: 0, width: 200, height: 200))
+        #expect(session.document?.size == CGSize(width: 200, height: 200))
+    }
+
+    /// The whole command on a real picture: Vision either finds a composition to cut to — and it lands in
+    /// history — or it honestly reports nothing to crop.
+    @Test func autoCropRunsVisionOnAScene() async throws {
+        let session = EditorSession()
+        session.createDocument(width: 200, height: 200)
+        let context = try BrushRaster.context(width: 200, height: 200, mask: false)
+        context.setFillColor(gray: 0.2, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: 200, height: 200))
+        context.setFillColor(NSColor.white.cgColor)
+        context.fillEllipse(in: CGRect(x: 20, y: 120, width: 70, height: 70))
+        let picture = try #require(context.makeImage())
+        session.insert(ImportedImage(image: picture, thumbnail: try solidImage(width: 20, height: 20), name: "Scene"))
+        await session.autoCrop()
+        if session.document?.size == CGSize(width: 200, height: 200) {
+            #expect(session.cropError != nil, "no suggestion comes with a reason the user can read")
+        } else {
+            #expect(session.history.undoName == "Auto Crop")
+            session.undo()
+            #expect(session.document?.size == CGSize(width: 200, height: 200))
+        }
+    }
 }

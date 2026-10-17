@@ -530,3 +530,7 @@
 "Move / Transform (V)" = "Перемещение / Трансформация (V)";
 "Hand (H)" = "Рука (H)";
 "Zoom (Z)" = "Масштаб (Z)";
+
+/* Auto Crop. */
+"Auto Crop" = "Автоматическая обрезка";
+"No clear subject was found to crop to. Try a picture with a distinct subject." = "Не найдена чёткая главная тема для обрезки. Попробуйте снимок с хорошо различимым объектом.";
