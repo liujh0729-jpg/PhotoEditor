@@ -697,3 +697,8 @@
 "The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "模型只学习每个项目图层的名称；只有文字会发送到网关，图片不会。";
 "There are no recent projects to index." = "没有可索引的最近项目。";
 "Nothing new to index." = "没有需要新索引的内容。";
+"Auto-Tidy…" = "自动整理…";
+"Deciding…" = "正在决策…";
+"There are no layers to tidy." = "没有可整理的图层。";
+"The model sees nothing worth renaming or grouping." = "模型没有发现值得重命名或分组的内容。";
+"Only the layer names and their place in the tree go to the model, never the pictures." = "只有图层名称及其在层级中的位置会发送到模型，图片不会。";

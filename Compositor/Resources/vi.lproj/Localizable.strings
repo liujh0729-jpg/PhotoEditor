@@ -612,3 +612,8 @@
 "The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "Mô hình học tên các lớp của từng dự án; chỉ có chữ gửi tới cổng, không bao giờ gửi ảnh.";
 "There are no recent projects to index." = "Không có dự án gần đây để chỉ mục.";
 "Nothing new to index." = "Không có gì mới để chỉ mục.";
+"Auto-Tidy…" = "Tự dọn dẹp…";
+"Deciding…" = "Đang quyết định…";
+"There are no layers to tidy." = "Không có lớp để dọn dẹp.";
+"The model sees nothing worth renaming or grouping." = "Mô hình không thấy gì đáng đổi tên hoặc gộp nhóm.";
+"Only the layer names and their place in the tree go to the model, never the pictures." = "Chỉ tên lớp và vị trí của chúng trong cây gửi tới mô hình, không bao giờ gửi ảnh.";

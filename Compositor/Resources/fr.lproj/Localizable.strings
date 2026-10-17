@@ -613,3 +613,8 @@
 "The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "Le modèle apprend le nom des calques de chaque projet ; seuls les mots sont envoyés à la passerelle, jamais les images.";
 "There are no recent projects to index." = "Aucun projet récent à indexer.";
 "Nothing new to index." = "Rien de nouveau à indexer.";
+"Auto-Tidy…" = "Rangement auto…";
+"Deciding…" = "Décision…";
+"There are no layers to tidy." = "Aucun calque à ranger.";
+"The model sees nothing worth renaming or grouping." = "Le modèle ne voit rien qui mérite d'être renommé ou groupé.";
+"Only the layer names and their place in the tree go to the model, never the pictures." = "Seuls les noms des calques et leur place dans l'arborescence vont au modèle, jamais les images.";

@@ -612,3 +612,8 @@
 "The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "يتعرف النموذج على أسماء طبقات كل مشروع؛ تذهب الكلمات فقط إلى البوابة، وليس الصور أبدًا.";
 "There are no recent projects to index." = "لا توجد مشاريع أخيرة لفهرستها.";
 "Nothing new to index." = "لا يوجد جديد لفهرسته.";
+"Auto-Tidy…" = "ترتيب تلقائي…";
+"Deciding…" = "جارٍ القرار…";
+"There are no layers to tidy." = "لا توجد طبقات لترتيبها.";
+"The model sees nothing worth renaming or grouping." = "لا يرى النموذج ما يستحق إعادة التسمية أو التجميع.";
+"Only the layer names and their place in the tree go to the model, never the pictures." = "تذهب أسماء الطبقات وموضعها في الشجرة إلى النموذج فقط، وليس الصور أبدًا.";

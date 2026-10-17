@@ -612,3 +612,8 @@
 "The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "モデルは各プロジェクトのレイヤー名を学習します。ゲートウェイに送られるのは文字だけで、画像は送られません。";
 "There are no recent projects to index." = "インデックスできる最近のプロジェクトがありません。";
 "Nothing new to index." = "新しくインデックスするものはありません。";
+"Auto-Tidy…" = "自動整理…";
+"Deciding…" = "判断中…";
+"There are no layers to tidy." = "整理できるレイヤーがありません。";
+"The model sees nothing worth renaming or grouping." = "モデルは名前変更やグループ化に値するものを見つけていません。";
+"Only the layer names and their place in the tree go to the model, never the pictures." = "送られるのはレイヤー名とツリー上の位置だけで、画像は送られません。";

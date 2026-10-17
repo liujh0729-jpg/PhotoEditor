@@ -612,3 +612,8 @@
 "The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "Модель запоминает названия слоёв каждого проекта; на шлюз уходят только слова, никогда не изображения.";
 "There are no recent projects to index." = "Нет недавних проектов для индексации.";
 "Nothing new to index." = "Нового для индексации нет.";
+"Auto-Tidy…" = "Автоупорядочивание…";
+"Deciding…" = "Принятие решения…";
+"There are no layers to tidy." = "Нет слоёв для упорядочивания.";
+"The model sees nothing worth renaming or grouping." = "Модель не нашла ничего, что стоит переименовать или сгруппировать.";
+"Only the layer names and their place in the tree go to the model, never the pictures." = "Модель получает только имена слоёв и их место в дереве, никогда не изображения.";

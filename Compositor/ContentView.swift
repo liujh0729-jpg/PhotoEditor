@@ -547,5 +547,8 @@ private struct AISheets: ViewModifier {
         .sheet(isPresented: $session.showsAssetSearch) {
             AssetSearchSheet(open: { url in Task { await applicationDelegate?.projects.open(url) } })
         }
+        .sheet(isPresented: $session.showsAutoTidy) {
+            AutoTidySheet(session: session)
+        }
     }
 }
