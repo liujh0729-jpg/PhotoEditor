@@ -505,3 +505,11 @@
 "Privacy Mode" = "Chế độ riêng tư";
 "Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "Khi Chế độ riêng tư đang bật, không gì được gửi đến gateway — không ảnh, câu nhắc hay âm thanh. Các công cụ trên máy như Chọn ngữ nghĩa vẫn dùng được.";
 "Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "Chế độ riêng tư đang bật nên không gì được gửi đến gateway. Tắt nó trong Cài đặt › Chung.";
+
+/* Recognize Text sheet */
+"Recognize Text…" = "Nhận diện văn bản…";
+"Recognize Text" = "Nhận diện văn bản";
+"Reading the text…" = "Đang đọc văn bản…";
+"Copy All" = "Sao chép tất cả";
+"Insert as Text Layer" = "Chèn dưới dạng lớp văn bản";
+"Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision đọc chữ ngay trên máy Mac này — vẫn dùng được khi ngoại tuyến và trong Chế độ riêng tư.";

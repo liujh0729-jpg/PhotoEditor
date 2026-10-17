@@ -70,6 +70,17 @@ extension EditorSession {
         return selection != nil
     }
 
+    /// Puts text off the OCR sheet onto the canvas as a new live-text layer, through the Type tool's own path:
+    /// it lands in history exactly like it had been typed. Returns false when the canvas can't take an edit.
+    @discardableResult
+    func insertRecognizedText(_ text: String) -> Bool {
+        guard let document, textDraft == nil else { return false }
+        beginText(at: CGPoint(x: document.size.width / 2, y: document.size.height / 2), newLayer: true)
+        guard var draft = textDraft else { return false }
+        draft.style.content = text
+        return applyText(draft)
+    }
+
     /// Runs an editing intent against the canvas through the session's own edits, so it lands in history
     /// exactly like doing it by hand. Returns false for the intents the editor can't carry out — the ones
     /// it has no feature for (a selection border stroke, sampling a color range by hand), or those that

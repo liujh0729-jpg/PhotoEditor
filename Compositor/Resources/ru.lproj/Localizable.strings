@@ -505,3 +505,11 @@
 "Privacy Mode" = "Режим конфиденциальности";
 "Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "Пока включён режим конфиденциальности, на шлюз ничего не отправляется — ни изображения, ни запросы, ни аудио. Локальные инструменты, такие как «Семантическое выделение», продолжают работать.";
 "Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "Режим конфиденциальности включён — на шлюз ничего не отправляется. Отключите его в «Настройки › Общие».";
+
+/* Recognize Text sheet */
+"Recognize Text…" = "Распознать текст…";
+"Recognize Text" = "Распознать текст";
+"Reading the text…" = "Чтение текста…";
+"Copy All" = "Копировать всё";
+"Insert as Text Layer" = "Вставить как текстовый слой";
+"Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision считывает текст на этом Mac — работает офлайн и в режиме конфиденциальности.";

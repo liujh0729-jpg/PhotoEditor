@@ -506,3 +506,11 @@
 "Privacy Mode" = "Mode Confidentialité";
 "Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "Tant que le Mode Confidentialité est activé, rien n'est envoyé à la passerelle — ni images, ni instructions, ni audio. Les outils locaux comme la Sélection sémantique restent disponibles.";
 "Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "Le Mode Confidentialité est activé, rien n'est envoyé à la passerelle. Désactivez-le dans Réglages › Général.";
+
+/* Recognize Text sheet */
+"Recognize Text…" = "Reconnaître le texte…";
+"Recognize Text" = "Reconnaître le texte";
+"Reading the text…" = "Lecture du texte…";
+"Copy All" = "Tout copier";
+"Insert as Text Layer" = "Insérer comme couche de texte";
+"Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision lit les mots sur ce Mac — cela fonctionne hors ligne et en Mode Confidentialité.";

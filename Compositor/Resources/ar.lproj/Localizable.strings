@@ -505,3 +505,11 @@
 "Privacy Mode" = "وضع الخصوصية";
 "Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "طالما وضع الخصوصية مفعّل، لا يُرسل أي شيء إلى البوابة — لا صور ولا أوامر ولا صوت. أدوات الجهاز مثل التحديد الدلالي تواصل العمل.";
 "Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "وضع الخصوصية مفعّل، لذا لا يُرسل شيء إلى البوابة. عطّله من الإعدادات › عام.";
+
+/* Recognize Text sheet */
+"Recognize Text…" = "التعرف على النص…";
+"Recognize Text" = "التعرف على النص";
+"Reading the text…" = "جارٍ قراءة النص…";
+"Copy All" = "نسخ الكل";
+"Insert as Text Layer" = "إدراج كطبقة نص";
+"Vision reads the words on this Mac — it works offline and in Privacy Mode." = "يقرأ Vision النص على هذا الجهاز — يعمل دون اتصال وفي وضع الخصوصية.";

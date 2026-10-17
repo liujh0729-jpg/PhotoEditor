@@ -593,6 +593,7 @@ final class EditorSession {
     var showsSTTS = false
     var showsNaturalLanguage = false
     var showsSemanticSelection = false
+    var showsRecognizeText = false
     var showsStyleTransfer = false
     /// The RAW file being developed, and the settings the sheet is editing (see RawImporter).
     var rawDevelop: (url: URL, settings: RawDevelopSettings)?

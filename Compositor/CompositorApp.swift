@@ -424,6 +424,9 @@ struct CompositorApp: App {
                     // Semantic Selection is Vision on this Mac: it keeps working with Privacy Mode on.
                     Button("Semantic Selection…") { session.showsSemanticSelection = true }
                         .disabled(session.document == nil)
+                    // OCR is Vision on this Mac too — nothing is uploaded to read the words.
+                    Button("Recognize Text…") { session.showsRecognizeText = true }
+                        .disabled(session.document == nil)
                     Button("Style Transfer…") { session.showsStyleTransfer = true }
                         .disabled(session.document == nil || session.activeLayer?.asset == nil || privacyMode)
                         .help(privacyMode ? privacyHelp : "")

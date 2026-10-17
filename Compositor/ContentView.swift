@@ -529,6 +529,9 @@ private struct AISheets: ViewModifier {
         .sheet(isPresented: $session.showsSemanticSelection) {
             SemanticSelectionSheet(session: session)
         }
+        .sheet(isPresented: $session.showsRecognizeText) {
+            RecognizeTextSheet(session: session)
+        }
         .sheet(isPresented: $session.showsStyleTransfer) {
             StyleTransferSheet(session: session, sourceImage: session.activeLayer?.asset?.image)
         }

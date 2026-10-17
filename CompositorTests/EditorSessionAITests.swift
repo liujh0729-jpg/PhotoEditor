@@ -336,4 +336,39 @@ struct EditorSessionAITests {
         #expect(session.applySemanticMask(half))
         #expect(session.history.undoName == "AI Mask")
     }
+
+    // MARK: - Recognize Text
+
+    /// Vision's OCR reads the words back out of a rendered page, Chinese included.
+    @Test func textRecognitionReadsTheRenderedWords() async throws {
+        var style = LayerTextStyle()
+        style.content = "Hello 世界"
+        let text = try EditorSession.textImage(style)
+        let width = text.width + 40, height = text.height + 40
+        // A plain bottom-up context: an ordinary `draw` there keeps a CGImage upright, which the editor's
+        // top-left raster contexts don't.
+        let context = try #require(CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                                             space: CGColorSpaceCreateDeviceRGB(),
+                                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        context.draw(text, in: CGRect(x: 20, y: 20, width: CGFloat(text.width), height: CGFloat(text.height)))
+        let picture = try #require(context.makeImage())
+        let lines = try await TextRecognition.recognize(in: picture)
+        let joined = lines.map(\.text).joined(separator: " ")
+        #expect(joined.contains("Hello") && joined.contains("世界"), "the words come back out: \(lines.map(\.text))")
+    }
+
+    /// The sheet's "Insert as Text Layer" path lays the words back on the canvas as live type, through history.
+    @Test func recognizedTextBecomesALiveTextLayer() throws {
+        let session = EditorSession()
+        session.createDocument(width: 200, height: 200)
+        #expect(session.insertRecognizedText("Hello 世界"))
+        #expect(session.document?.layers.count == 1)
+        let layer = try #require(session.activeLayer)
+        #expect(layer.liveText?.style.content == "Hello 世界")
+        // It's a normal edit: undo takes the layer away again.
+        session.undo()
+        #expect(session.document?.layers.isEmpty == true)
+    }
 }
