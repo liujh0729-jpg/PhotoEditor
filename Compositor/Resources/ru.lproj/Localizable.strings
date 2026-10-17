@@ -534,3 +534,43 @@
 /* Auto Crop. */
 "Auto Crop" = "Автоматическая обрезка";
 "No clear subject was found to crop to. Try a picture with a distinct subject." = "Не найдена чёткая главная тема для обрезки. Попробуйте снимок с хорошо различимым объектом.";
+
+/* AI Retouch & Enhance panel: presets and UI. */
+"Remove Watermark" = "Удалить водяной знак";
+"Remove Blur" = "Удалить размытие";
+"Remove Fog" = "Удалить туман";
+"Remove Haze" = "Удалить дымку";
+"Remove Purple Fringe" = "Удалить фиолетовые контуры";
+"Remove Compression Artifacts" = "Удалить артефакты сжатия";
+"Remove Mosaic" = "Удалить мозаику";
+"Remove Glare" = "Удалить блики";
+"Remove Reflection" = "Удалить отражения";
+"Remove Shadows" = "Удалить тени";
+"Remove Highlights" = "Удалить засветки";
+"Remove Noise" = "Удалить шум";
+"Remove Grain" = "Удалить зерно";
+"Remove Dust Spots" = "Удалить пыльные точки";
+"Remove Rain" = "Удалить дождь";
+"Remove Snow" = "Удалить снег";
+"Remove Hot Spots" = "Удалить яркие точки";
+"Remove Text" = "Удалить текст";
+"Remove Objects" = "Удалить объекты";
+"Remove People" = "Удалить людей";
+"Remove Animals" = "Удалить животных";
+"Remove Vehicles" = "Удалить транспорт";
+"Remove Buildings" = "Удалить здания";
+"Remove Scenery" = "Удалить пейзаж";
+"Remove Food" = "Удалить еду";
+"Remove Plants" = "Удалить растения";
+"Smart Color Match" = "Интеллектуальное согласование цвета";
+"Super Resolution" = "Суперразрешение";
+"HD Restore" = "Восстановление в HD";
+"General Retouch" = "Общая ретушь";
+"AI Retouch & Enhance…" = "Ретушь и улучшение ИИ…";
+"Retouching…" = "Ретушь…";
+"Retouched" = "Ретушировано";
+"Slot default" = "По умолчанию для слота";
+"No pixel layer to retouch. Select a layer first." = "Нет пиксельного слоя для ретуши. Сначала выберите слой.";
+"The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "Изображение отправляется модели шлюза, назначенной слоту. Выделение или включённая маска ограничивают область обработки.";
+"Couldn't apply to the active layer. Select a pixel layer first." = "Не удалось применить к активному слою. Сначала выберите пиксельный слой.";
+"Old Photo Restore" = "Восстановление старых фотографий"; // Restore panel preset

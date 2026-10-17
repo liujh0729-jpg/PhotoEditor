@@ -534,3 +534,43 @@
 /* Auto Crop. */
 "Auto Crop" = "Recorte automático";
 "No clear subject was found to crop to. Try a picture with a distinct subject." = "No se encontró un sujeto claro para recortar. Prueba con una foto con un sujeto bien definido.";
+
+/* AI Retouch & Enhance panel: presets and UI. */
+"Remove Watermark" = "Eliminar marca de agua";
+"Remove Blur" = "Eliminar el desenfoque";
+"Remove Fog" = "Eliminar la niebla";
+"Remove Haze" = "Eliminar la bruma";
+"Remove Purple Fringe" = "Eliminar el borde púrpura";
+"Remove Compression Artifacts" = "Eliminar artefactos de compresión";
+"Remove Mosaic" = "Eliminar el mosaico";
+"Remove Glare" = "Eliminar el deslumbramiento";
+"Remove Reflection" = "Eliminar los reflejos";
+"Remove Shadows" = "Eliminar las sombras";
+"Remove Highlights" = "Eliminar las altas luces";
+"Remove Noise" = "Eliminar el ruido";
+"Remove Grain" = "Eliminar el grano";
+"Remove Dust Spots" = "Eliminar las manchas de polvo";
+"Remove Rain" = "Eliminar la lluvia";
+"Remove Snow" = "Eliminar la nieve";
+"Remove Hot Spots" = "Eliminar los puntos de luz";
+"Remove Text" = "Eliminar el texto";
+"Remove Objects" = "Eliminar los objetos";
+"Remove People" = "Eliminar las personas";
+"Remove Animals" = "Eliminar los animales";
+"Remove Vehicles" = "Eliminar los vehículos";
+"Remove Buildings" = "Eliminar los edificios";
+"Remove Scenery" = "Eliminar el paisaje";
+"Remove Food" = "Eliminar la comida";
+"Remove Plants" = "Eliminar las plantas";
+"Smart Color Match" = "Concordancia de color inteligente";
+"Super Resolution" = "Súper resolución";
+"HD Restore" = "Restauración HD";
+"General Retouch" = "Retoque general";
+"AI Retouch & Enhance…" = "Retoque y realce con IA…";
+"Retouching…" = "Retocando…";
+"Retouched" = "Retocado";
+"Slot default" = "Valor predeterminado de la ranura";
+"No pixel layer to retouch. Select a layer first." = "No hay una capa de píxeles que retocar. Selecciona primero una capa.";
+"The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "La imagen se envía al modelo de la pasarela asignado a la ranura. Una selección o máscara activada limita la zona afectada.";
+"Couldn't apply to the active layer. Select a pixel layer first." = "No se puede aplicar a la capa activa. Selecciona primero una capa de píxeles.";
+"Old Photo Restore" = "Restauración de fotos antiguas"; // Restore panel preset

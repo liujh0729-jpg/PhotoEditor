@@ -537,5 +537,8 @@ private struct AISheets: ViewModifier {
         .sheet(isPresented: $session.showsStyleTransfer) {
             StyleTransferSheet(session: session, sourceImage: session.activeLayer?.asset?.image)
         }
+        .sheet(isPresented: $session.showsRestore) {
+            RestoreSheet(session: session)
+        }
     }
 }

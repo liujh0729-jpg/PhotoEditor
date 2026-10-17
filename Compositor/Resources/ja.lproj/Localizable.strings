@@ -534,3 +534,43 @@
 /* Auto Crop. */
 "Auto Crop" = "自動トリミング";
 "No clear subject was found to crop to. Try a picture with a distinct subject." = "切り抜きの対象となる明確な主体が見つかりませんでした。主体がはっきりした写真でお試しください。";
+
+/* AI Retouch & Enhance panel: presets and UI. */
+"Remove Watermark" = "透かし除去";
+"Remove Blur" = "ぼかし除去";
+"Remove Fog" = "霧除去";
+"Remove Haze" = "もや除去";
+"Remove Purple Fringe" = "紫フリンジ除去";
+"Remove Compression Artifacts" = "圧縮アーチファクト除去";
+"Remove Mosaic" = "モザイク除去";
+"Remove Glare" = "強い光除去";
+"Remove Reflection" = "写り込み除去";
+"Remove Shadows" = "影除去";
+"Remove Highlights" = "ハイライト除去";
+"Remove Noise" = "ノイズ除去";
+"Remove Grain" = "粒子除去";
+"Remove Dust Spots" = "ホコリの斑点除去";
+"Remove Rain" = "雨除去";
+"Remove Snow" = "雪除去";
+"Remove Hot Spots" = "光斑除去";
+"Remove Text" = "テキスト除去";
+"Remove Objects" = "物体除去";
+"Remove People" = "人物除去";
+"Remove Animals" = "動物除去";
+"Remove Vehicles" = "車両除去";
+"Remove Buildings" = "建物除去";
+"Remove Scenery" = "風景除去";
+"Remove Food" = "食べ物除去";
+"Remove Plants" = "植物除去";
+"Smart Color Match" = "カラーマッチ";
+"Super Resolution" = "スーパー解像度";
+"HD Restore" = "修復 HD";
+"General Retouch" = "一般レタッチ";
+"AI Retouch & Enhance…" = "AI レタッチ＆強化…";
+"Retouching…" = "レタッチ中…";
+"Retouched" = "レタッチ後";
+"Slot default" = "スロットのデフォルト";
+"No pixel layer to retouch. Select a layer first." = "レタッチできるピクセルレイヤーがありません。まずレイヤーを選択してください。";
+"The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "画像はスロットに指定されたゲートウェイモデルに送信されます。選択範囲または有効なマスクがある場合、その内側のみ処理されます。";
+"Couldn't apply to the active layer. Select a pixel layer first." = "アクティブなレイヤーに適用できませんでした。まずピクセルレイヤーを選択してください。";
+"Old Photo Restore" = "古い写真の修復"; // Restore panel preset

@@ -595,6 +595,7 @@ final class EditorSession {
     var showsSemanticSelection = false
     var showsRecognizeText = false
     var showsStyleTransfer = false
+    var showsRestore = false
     /// The RAW file being developed, and the settings the sheet is editing (see RawImporter).
     var rawDevelop: (url: URL, settings: RawDevelopSettings)?
     var showsRawDevelop = false { didSet { resumeFileRequests() } }

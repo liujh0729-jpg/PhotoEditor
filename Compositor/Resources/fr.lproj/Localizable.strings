@@ -535,3 +535,43 @@
 /* Auto Crop. */
 "Auto Crop" = "Recadrage automatique";
 "No clear subject was found to crop to. Try a picture with a distinct subject." = "Aucun sujet net trouvé pour recadrer. Essayez une photo avec un sujet bien distinct.";
+
+/* AI Retouch & Enhance panel: presets and UI. */
+"Remove Watermark" = "Supprimer le filigrane";
+"Remove Blur" = "Supprimer le flou";
+"Remove Fog" = "Supprimer le brouillard";
+"Remove Haze" = "Supprimer la brume";
+"Remove Purple Fringe" = "Supprimer les franges violettes";
+"Remove Compression Artifacts" = "Supprimer les artefacts de compression";
+"Remove Mosaic" = "Supprimer la mosaïque";
+"Remove Glare" = "Supprimer l'éblouissement";
+"Remove Reflection" = "Supprimer les reflets";
+"Remove Shadows" = "Supprimer les ombres";
+"Remove Highlights" = "Supprimer les hautes lumières";
+"Remove Noise" = "Supprimer le bruit";
+"Remove Grain" = "Supprimer le grain";
+"Remove Dust Spots" = "Supprimer les taches de poussière";
+"Remove Rain" = "Supprimer la pluie";
+"Remove Snow" = "Supprimer la neige";
+"Remove Hot Spots" = "Supprimer les taches lumineuses";
+"Remove Text" = "Supprimer le texte";
+"Remove Objects" = "Supprimer les objets";
+"Remove People" = "Supprimer les personnes";
+"Remove Animals" = "Supprimer les animaux";
+"Remove Vehicles" = "Supprimer les véhicules";
+"Remove Buildings" = "Supprimer les bâtiments";
+"Remove Scenery" = "Supprimer le paysage";
+"Remove Food" = "Supprimer la nourriture";
+"Remove Plants" = "Supprimer les plantes";
+"Smart Color Match" = "Correspondance de couleur intelligente";
+"Super Resolution" = "Super-résolution";
+"HD Restore" = "Restauration HD";
+"General Retouch" = "Retouche générale";
+"AI Retouch & Enhance…" = "Retouche et amélioration IA…";
+"Retouching…" = "Retouche en cours…";
+"Retouched" = "Retouchée";
+"Slot default" = "Valeur par défaut du slot";
+"No pixel layer to retouch. Select a layer first." = "Aucune couche de pixels à retoucher. Sélectionnez d'abord un calque.";
+"The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "L'image est envoyée au modèle de la passerelle assigné à l'emplacement. Une sélection ou un masque actif limite la zone traitée.";
+"Couldn't apply to the active layer. Select a pixel layer first." = "Impossible d'appliquer au calque actif. Sélectionnez d'abord un calque de pixels.";
+"Old Photo Restore" = "Restauration de photo ancienne"; // Restore panel preset

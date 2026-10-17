@@ -1,0 +1,225 @@
+import SwiftUI
+import UniformTypeIdentifiers
+
+/// The AI Retouch & Enhance panel: a table of preset instructions (remove watermark, de-noise, upscale…) run
+/// against the active layer through the gateway. The request pipeline is the Image Editing sheet's: the picture
+/// and a mask, when one applies, go multipart to the preset's capability slot; the answer lands on a layer
+/// through the session's own edits, so it folds into history like any other change.
+struct RestoreSheet: View {
+    let session: EditorSession
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var selectedID: String? = RestorePresets.all[0].id
+    @State private var model: String = ""
+    @State private var isProcessing = false
+    @State private var errorMessage: String?
+    @State private var result: CGImage?
+
+    private var preset: RestorePreset { RestorePresets.all.first { $0.id == selectedID } ?? RestorePresets.all[0] }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                Text("AI Retouch & Enhance…")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Spacer()
+                Button(action: { dismiss() }) {
+                    Image(systemName: "xmark")
+                        .font(.title3)
+                }
+                .buttonStyle(.borderless)
+            }
+            .padding()
+
+            Divider()
+
+            HStack(spacing: 0) {
+                // Left: the preset table and the model override.
+                VStack(alignment: .leading, spacing: 0) {
+                    List(RestorePresets.all, selection: $selectedID) { item in
+                        Label(item.title, systemImage: item.symbol)
+                    }
+                    .listStyle(.sidebar)
+                    .accessibilityIdentifier("retouchPresets")
+
+                    HStack {
+                        Text("Model")
+                            .font(.caption)
+                        TextField("Slot default", text: $model)
+                            .textFieldStyle(.roundedBorder)
+                            .font(.caption)
+                    }
+                    .padding(8)
+                }
+                .frame(width: 280)
+
+                Divider()
+
+                // Right: source and result, one step apart.
+                VStack(spacing: 12) {
+                    if let source = session.activeLayer?.asset?.image {
+                        HStack(spacing: 12) {
+                            previewTile(source, caption: "Source")
+                            if let result {
+                                previewTile(result, caption: "Retouched")
+                            } else if isProcessing {
+                                VStack(spacing: 8) {
+                                    ProgressView().controlSize(.small)
+                                    Text("Retouching…").font(.caption).foregroundColor(.secondary)
+                                }
+                                .frame(width: 180, height: 180)
+                            } else {
+                                VStack(spacing: 8) {
+                                    Image(systemName: "wand.and.stars")
+                                        .font(.system(size: 34))
+                                        .foregroundColor(.secondary)
+                                    Text("No result yet").font(.caption).foregroundColor(.secondary)
+                                }
+                                .frame(width: 180, height: 180)
+                            }
+                        }
+                    } else {
+                        Text("No pixel layer to retouch. Select a layer first.")
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
+
+                    if let error = errorMessage {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                            .padding(.horizontal)
+                    }
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding()
+            }
+
+            Divider()
+
+            // Footer
+            HStack {
+                Text("The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: 260, alignment: .leading)
+
+                Spacer()
+
+                Button("Apply") { run() }
+                    .disabled(session.activeLayer?.asset == nil || isProcessing)
+
+                Button("Replace Layer") { land(replacing: true) }
+                    .disabled(result == nil)
+
+                Button("Add as New Layer") { land(replacing: false) }
+                    .disabled(result == nil)
+
+                Button("Cancel") { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+            }
+            .padding()
+        }
+        .frame(width: 720, height: 540)
+        .background(Color(white: 0.14))
+    }
+
+    private func previewTile(_ image: CGImage, caption: String) -> some View {
+        VStack(spacing: 4) {
+            Image(nsImage: NSImage(cgImage: image, size: .zero))
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 180, height: 180)
+                .cornerRadius(6)
+            Text(caption).font(.caption).foregroundColor(.secondary)
+        }
+    }
+
+    /// Runs the preset against the layer's pixels. The request is the Image Editing sheet's pipeline: image,
+    /// mask when one applies, the preset's prompt, and the slot's model unless the field overrides it.
+    private func run() {
+        guard let source = session.activeLayer?.asset?.image else { return }
+        isProcessing = true
+        errorMessage = nil
+        result = nil
+        let mask = editMask()
+        Task {
+            do {
+                let parts = Self.multipartParts(image: source, mask: mask, preset: preset,
+                                                model: resolvedModel(preset))
+                let response: ImageResponse = try await GatewayClient.shared.uploadMultipart(
+                    endpoint: preset.endpointSlot, parts: parts, as: ImageResponse.self)
+                result = try await Self.firstImage(of: response)
+                isProcessing = false
+            } catch {
+                isProcessing = false
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    private func resolvedModel(_ preset: RestorePreset) -> String {
+        model.isEmpty ? (GatewayConfigurationStore.shared.model(for: preset.endpointSlot) ?? "gpt-image-1") : model
+    }
+
+    /// What limits the edit: a live selection wins (white is the area to touch); with no selection, the layer's
+    /// own enabled mask; neither, and the whole picture goes.
+    private func editMask() -> CGImage? {
+        if let selection = session.selection, let layer = session.activeLayer, let canvas = session.document?.size,
+           layer.asset != nil {
+            let width = layer.asset?.image.width ?? Int(layer.size.width.rounded())
+            let height = layer.asset?.image.height ?? Int(layer.size.height.rounded())
+            guard width > 0, height > 0,
+                  let context = try? BrushRaster.context(width: width, height: height, mask: true),
+                  let clip = try? selection.clip(canvas: canvas) else { return nil }
+            context.setFillColor(gray: 0, alpha: 1)
+            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+            context.concatenate(BrushRaster.pixelToDocument(layer.transform, width: width, height: height).inverted())
+            clip.apply(to: context)
+            context.setFillColor(gray: 1, alpha: 1)
+            context.fill(clip.rect)
+            return context.makeImage()
+        }
+        return session.activeLayer?.mask.flatMap { $0.isEnabled ? $0.asset.image : nil }
+    }
+
+    /// Builds the form fields; the tests pin the wire format without a network.
+    static func multipartParts(image: CGImage, mask: CGImage?, preset: RestorePreset,
+                               model: String) -> [MultipartPart] {
+        var parts: [MultipartPart] = []
+        if let sourcePart = ImageBridge.multipartPart(for: image, name: "image") {
+            parts.append(sourcePart)
+        }
+        if let mask, let maskPart = ImageBridge.multipartPart(for: mask, name: "mask") {
+            parts.append(maskPart)
+        }
+        parts.append(.text("prompt", preset.prompt))
+        parts.append(.text("model", model))
+        parts.append(.text("n", "1"))
+        parts.append(.text("response_format", "b64_json"))
+        return parts
+    }
+
+    /// The first image the response carries, decoded or downloaded, the way the Image Editing sheet reads it.
+    static func firstImage(of response: ImageResponse) async throws -> CGImage {
+        for imageData in response.data {
+            if let b64 = imageData.b64_json, let image = ImageBridge.cgImage(fromBase64: b64) { return image }
+            if let urlStr = imageData.url, let url = URL(string: urlStr) {
+                return try await ImageBridge.downloadImage(from: url)
+            }
+        }
+        throw GatewayClientError.invalidResponse
+    }
+
+    /// The result lands through the session's own edits, so history reads like any layer change.
+    private func land(replacing: Bool) {
+        guard let result else { return }
+        let done = replacing ? session.replaceActiveLayer(with: result)
+                             : session.placeGeneratedImage(result, named: preset.title)
+        if done { dismiss() } else { errorMessage = "Couldn't apply to the active layer. Select a pixel layer first." }
+    }
+}

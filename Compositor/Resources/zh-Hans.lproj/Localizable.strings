@@ -619,3 +619,43 @@
 /* Auto Crop. */
 "Auto Crop" = "自动裁剪";
 "No clear subject was found to crop to. Try a picture with a distinct subject." = "未找到明确的主体，无法裁切。换一张主体突出的图片试试。";
+
+/* AI Retouch & Enhance panel: presets and UI. */
+"Remove Watermark" = "去除水印";
+"Remove Blur" = "去除模糊";
+"Remove Fog" = "去除雾";
+"Remove Haze" = "去除霾";
+"Remove Purple Fringe" = "去除紫边";
+"Remove Compression Artifacts" = "去除压缩伪影";
+"Remove Mosaic" = "去除马赛克";
+"Remove Glare" = "去除眩光";
+"Remove Reflection" = "去除反光";
+"Remove Shadows" = "去除阴影";
+"Remove Highlights" = "去除高光";
+"Remove Noise" = "去除噪点";
+"Remove Grain" = "去除颗粒";
+"Remove Dust Spots" = "去除灰尘斑点";
+"Remove Rain" = "去除雨";
+"Remove Snow" = "去除雪";
+"Remove Hot Spots" = "去除光斑";
+"Remove Text" = "去除文字";
+"Remove Objects" = "去除物体";
+"Remove People" = "去除人物";
+"Remove Animals" = "去除动物";
+"Remove Vehicles" = "去除车辆";
+"Remove Buildings" = "去除建筑";
+"Remove Scenery" = "去除风景";
+"Remove Food" = "去除食物";
+"Remove Plants" = "去除植物";
+"Smart Color Match" = "智能调色";
+"Super Resolution" = "超分辨率";
+"HD Restore" = "高清修复";
+"General Retouch" = "通用精修";
+"AI Retouch & Enhance…" = "AI 修复与增强…";
+"Retouching…" = "修复中…";
+"Retouched" = "已修复";
+"Slot default" = "槽位默认";
+"No pixel layer to retouch. Select a layer first." = "没有可修复的像素图层。请先选择一个图层。";
+"The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "图像会发送至该槽位指定的网关模型。存在选区或启用蒙版时，只处理其中的区域。";
+"Couldn't apply to the active layer. Select a pixel layer first." = "无法应用到当前图层。请先选择一个像素图层。";
+"Old Photo Restore" = "老照片修复"; // Restore panel preset

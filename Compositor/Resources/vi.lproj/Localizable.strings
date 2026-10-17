@@ -534,3 +534,43 @@
 /* Auto Crop. */
 "Auto Crop" = "Cắt tự động";
 "No clear subject was found to crop to. Try a picture with a distinct subject." = "Không tìm thấy chủ thể rõ ràng để cắt. Hãy thử ảnh có chủ thể nổi bật.";
+
+/* AI Retouch & Enhance panel: presets and UI. */
+"Remove Watermark" = "Xóa hình mờ";
+"Remove Blur" = "Xóa mờ";
+"Remove Fog" = "Xóa sương mù";
+"Remove Haze" = "Xóa khói mù";
+"Remove Purple Fringe" = "Loại bỏ viền tím";
+"Remove Compression Artifacts" = "Xóa khuyết tất nén";
+"Remove Mosaic" = "Xóa mosaic";
+"Remove Glare" = "Xóa ánh sáng chói";
+"Remove Reflection" = "Xóa phản chiếu";
+"Remove Shadows" = "Xóa bóng tối";
+"Remove Highlights" = "Xóa vùng cháy sáng";
+"Remove Noise" = "Xóa nhiễu";
+"Remove Grain" = "Xóa nhiễu hạt";
+"Remove Dust Spots" = "Xóa đốm bụi";
+"Remove Rain" = "Xóa mưa";
+"Remove Snow" = "Xóa tuyết";
+"Remove Hot Spots" = "Xóa điểm sáng";
+"Remove Text" = "Xóa chữ";
+"Remove Objects" = "Xóa đối tượng";
+"Remove People" = "Xóa người";
+"Remove Animals" = "Xóa động vật";
+"Remove Vehicles" = "Xóa phương tiện";
+"Remove Buildings" = "Xóa công trình";
+"Remove Scenery" = "Xóa phong cảnh";
+"Remove Food" = "Xóa đồ ăn";
+"Remove Plants" = "Xóa cây cối";
+"Smart Color Match" = "Khớp màu thông minh";
+"Super Resolution" = "Siêu phân giải";
+"HD Restore" = "Phục hồi HD";
+"General Retouch" = "Retouch tổng hợp";
+"AI Retouch & Enhance…" = "AI Retouch & tăng cường…";
+"Retouching…" = "Đang chỉnh sửa…";
+"Retouched" = "Đã chỉnh sửa";
+"Slot default" = "Mặc định của slot";
+"No pixel layer to retouch. Select a layer first." = "Không có lớp pixel để chỉnh sửa. Hãy chọn một lớp trước.";
+"The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "Ảnh sẽ được gửi tới mô hình gateway mà slot chỉ định. Vùng chọn hoặc mặt nạ đang bật sẽ giới hạn phạm vi xử lý.";
+"Couldn't apply to the active layer. Select a pixel layer first." = "Không thể áp dụng lên lớp đang chọn. Hãy chọn một lớp pixel trước.";
+"Old Photo Restore" = "Phục hồi ảnh cũ"; // Restore panel preset
