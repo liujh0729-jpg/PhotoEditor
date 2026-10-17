@@ -77,121 +77,45 @@
 
 ## 文件统计
 
-**新增文件**：18 个 Swift 文件
-- Gateway 模块：3 个
-- UI 模块：1 个
-- AI 基础：3 个（ImageBridge, TaskQueue, GatewayDTOs）
-- AI 功能：11 个（ImageGeneration, ImageEditing, Video, TTS, STTS, NaturalLanguage, SemanticSelection, StyleTransfer）
-- Catalog 模块：1 个
+**AI/网关/目录模块 Swift 文件**（`Compositor/AI`、`Compositor/Gateway`、`Compositor/Catalog`）：共 25 个，包括：
+- Gateway：KeychainStore、GatewayConfiguration、GatewayClient
+- Catalog：CatalogStore、CostEstimate、PreferenceStore
+- AI 基础：ImageBridge、TaskQueue、GatewayDTOs
+- AI 功能：ImageGeneration、ImageEditing、Video（+LivePhoto）、Audio（TTS/STTS）、Selection（+SemanticSelection）、StyleTransfer、Restore（Presets/Sheet/Batch）、NaturalLanguage（IntentRecognition/AutoTidy）、ImageDescription、Search（AssetIndex）
 
-**修改文件**：1 个
-- `Compositor/CompositorApp.swift`（新增 Settings Scene + 菜单项）
+**配套 UI sheet**（`Compositor/UI`）：GatewaySettingsView、AutoTidySheet、AssetSearchSheet、RecognizeTextSheet、ImageDescriptionSheet 等。
 
-**文档**：3 个
-- `docs/ai-gateway-requirements.md` — 需求方案
-- `docs/ai-gateway-tech-design.md` — 技术方案
-- `docs/ai-implementation-progress.md` — 实现进度
+**测试**：`CompositorTests` 中 AIDomainTests、EditorSessionAITests、AssetIndexTests、AutoTidyTests、LivePhotoTests、RestorePanelTests、SmartArrangeTests、SmartExportSuggestionsTests 等硬验。
+
+**多语言**：所有新增 UI 键进入 7 语言 `.lproj/Localizable.strings`（zh-Hans/ja/fr/es/ru/vi/ar）。
 
 ---
 
-## 待集成事项（需在 macOS 上完成）
+## 集成状态
 
-### 1. EditorSession 集成
-所有 AI 功能 sheet 都标记了 `// TODO: Integrate with EditorSession`，需要：
-- 从 EditorSession 获取当前图层/选区/画布状态
-- 将 AI 生成的图像落为新图层或替换现有图层
-- 将 AI 生成的蒙版应用到图层
-- 将自然语言意图映射到 EditorSession 操作
+### 1. EditorSession 集成 ✅ 已完成
+AI 结果均通过 `session` 自身编辑原语落地（落新图层/替换像素/写蒙版/成组重命名），均可撤销：
+- 生图/修图/重绘 → 新图层或回填选区
+- 自然语言意图 → `EditorSession+AI.swift` 的 `applyAIIntent`（25+ 操作）
+- Auto-Tidy → `applyTidySuggestions`（rename + group，可撤销）
 
-### 2. 菜单集成
-需要在 `CompositorApp.swift` 的菜单中添加 AI 功能入口：
-```swift
-CommandMenu("AI") {
-    Button("Generate Image…") { /* show ImageGenerationSheet */ }
-    Button("Edit Image…") { /* show ImageEditingSheet */ }
-    Button("Generate Video…") { /* show VideoGenerationSheet */ }
-    Button("Text-to-Speech…") { /* show TTSSheet */ }
-    Button("Speech-to-Text…") { /* show STTSSheet */ }
-    Divider()
-    Button("Natural Language Editing…") { /* show NaturalLanguageSheet */ }
-    Button("Semantic Selection…") { /* show SemanticSelectionSheet */ }
-    Button("Style Transfer…") { /* show StyleTransferSheet */ }
-}
-```
+### 2. 菜单与命令面板集成 ✅ 已完成
+`CompositorApp.swift` 的 AI 菜单包含全部功能入口，隐私模式下置灰；命令面板可搜索调用。
 
-### 3. 命令面板集成
-需要将 AI 功能添加到 `CommandPaletteEntry` 列表，使其可通过 ⌘F 搜索调用。
-
-### 4. 项目格式升级
-如果 AI 功能需要存储元数据（如 AI 生成记录、prompt 历史），需要：
-- Bump `ProjectManifest.current` 到 v14
-- 更新 `docs/project-format.md`
-- 添加往返测试
-
-### 5. 单元测试
-需要为以下模块添加测试：
-- `GatewayConfiguration` 编解码
-- `KeychainStore` 存取
-- `GatewayClient` 请求构造
-- `TaskQueue` 状态机
-- `IntentRecognition` 意图解析
+### 3. 项目格式 ✅ 已升级
+`ProjectManifest.current = 14`（v14），图像描述等项目数据落盘，往返测试覆盖。
 
 ---
 
-## 构建与测试步骤
+## 已知限制 / 手动步骤
 
-### 在 macOS 上：
-
-1. **打开项目**
-   ```bash
-   open Compositor.xcodeproj
-   ```
-
-2. **构建项目**（⌘B）
-   - Xcode 会自动发现 `Compositor/Gateway/`、`Compositor/AI/`、`Compositor/Catalog/` 下的新文件
-   - 如果有编译错误，检查 Swift 版本（需要 Swift 5.0+）和 macOS 部署目标（26.0）
-
-3. **运行 App**（⌘R）
-
-4. **测试 M1 网关配置**
-   - 菜单：PhotoCompositor › AI Gateway Settings…
-   - 验证：AIPDD 内置渠道置顶，显示「Built-in」和「Default」徽章
-   - 点击「Add Channel」，填写表单，测试连接
-   - 验证 Keychain：`security find-generic-password -s "com.compositor.gateway"`
-
-5. **测试 AI 功能**（需要先完成菜单集成）
-   - 打开 AI 菜单，选择「Generate Image…」
-   - 输入 prompt，点击 Generate
-   - 验证图像生成并显示在预览区
+1. **Live 图写入相册**：帧对导出核心已实现并有单测；直接写入 Photos 库需 photo-library entitlement 与签名构建，留作手动步骤（把导出的文件夹拖入照片）。
+2. **真机联调**：语义选区/Auto Crop/OCR 走端上 Vision；视频/图生成等需真实网关与 API Key 在线验证。
 
 ---
 
-## 已知限制
+## 尚待补充（下一步）
 
-1. **EditorSession 集成未完成**：所有 AI sheet 的「Use as Layer」「Apply to Layer」等按钮目前是占位符，需要实现与 EditorSession 的集成。
-
-2. **语义选区和风格迁移未实现**：这两个功能需要特定的 AI 模型（如 SAM、风格迁移模型），目前只是框架。
-
-3. **自然语言修图未完全实现**：意图识别可以工作，但意图执行引擎（将意图映射到 EditorSession 操作）需要实现。
-
-4. **目录同步未完全测试**：CatalogStore 的同步逻辑已实现，但需要在真实 AIPDD 网关上测试。
-
----
-
-## 下一步建议
-
-1. **优先完成 EditorSession 集成**：这是所有 AI 功能落地的关键。
-2. **添加菜单和命令面板集成**：让用户可以访问 AI 功能。
-3. **在真实 AIPDD 网关上测试**：验证 API 调用、目录同步、任务轮询。
-4. **添加单元测试**：确保核心模块的稳定性。
-5. **逐步实现 M5 的其他功能**：批量处理、智能裁切、OCR、去水印等。
-
----
-
-## 技术债务
-
-- 所有 AI sheet 的 EditorSession 集成都是 TODO
-- 语义选区和风格迁移需要特定模型支持
-- 自然语言修图的执行引擎未实现
-- 缺少单元测试
-- 缺少项目格式升级（如果需要存储 AI 元数据）
+1. **B5 扩图 Outpainting**：选区外扩 + mask 提交 + 画布变大落层。
+2. **B7 提示词助手**：图层名/选区缩略图 → chat 产出可编辑 prompt。
+3. **D#5 文字替换半边**：改文字 → AI 抹原文 → 新文字层回位。

@@ -63,67 +63,76 @@
 
 ---
 
-## M2 出图/修图端到端 ⏳ 待实现
+## M2 出图/修图端到端 ✅ 已完成
 
-### 计划文件
-- `Compositor/AI/ImageGeneration/ImageGenerationSheet.swift` — 文生图 UI
-- `Compositor/AI/ImageEditing/ImageEditingSheet.swift` — 图生图/inpainting UI
-- `Compositor/AI/TaskQueue.swift` — 任务队列管理
+### 已实现文件
 - `Compositor/AI/ImageBridge.swift` — CGImage ↔ base64/multipart 转换
+- `Compositor/AI/TaskQueue.swift` — 异步任务队列（并发/进度/取消/重试）
+- `Compositor/AI/GatewayDTOs.swift` — 请求/响应数据模型（含 `AnyCodable`）
+- `Compositor/AI/ImageGeneration/ImageGenerationSheet.swift` — 文生图
+- `Compositor/AI/ImageEditing/ImageEditingSheet.swift` — 图生图/inpainting
 
 ### 功能点
-- B1 文生图：prompt/尺寸/张数/质量 → 落新图层
-- B2 AI 修图：multipart `image` + `prompt` → 落新图层
-- B3 局部重绘：选区/蒙版 → `mask` 字段 → 回填选区
-- B8 任务队列：并发/进度/取消/重试/结果对比
+- ✅ B1 文生图：prompt/尺寸/张数/质量 → 落新图层
+- ✅ B2 AI 修图：multipart `image` + `prompt` → 落新图层
+- ✅ B3 局部重绘：选区/蒙版 → `mask` 字段 → 回填选区
+- ✅ B8 任务队列：并发/进度/取消/重试/结果对比
+- ✅ EditorSession 集成：结果通过 `session` 原语落层，可撤销
 
 ---
 
-## M3 目录驱动 + 异步 + 视频/音频 ⏳ 待实现
+## M3 目录驱动 + 异步 + 视频/音频 ✅ 已完成
 
-### 计划文件
-- `Compositor/Gateway/CatalogStore.swift` — 目录同步 + 本地快照
-- `Compositor/Catalog/CatalogEntry.swift` — 能力目录解析
-- `Compositor/AI/Enhancement/EnhancementSheet.swift` — 一键增强
+### 已实现文件
+- `Compositor/Catalog/CatalogStore.swift` — 能力目录同步 + 本地快照 + 中文标签
 - `Compositor/AI/Video/VideoGenerationSheet.swift` — 视频生成
+- `Compositor/AI/Video/LivePhoto.swift` — 生成视频 → Live 图帧对导出
 - `Compositor/AI/Audio/TTSSheet.swift` — 语音合成
 - `Compositor/AI/Audio/STTSSheet.swift` — 语音转写
-- `Compositor/Gateway/TaskPoller.swift` — 异步任务轮询
+
+### 功能点
+- ✅ A7 目录同步（catalog，回落 models）
+- ✅ B9 视频生成（异步轮询）+ Live 图帧对导出
+- ✅ B10 语音合成 TTS（二进制下载 + 播放）
+- ✅ B11 语音转写 STT（multipart 上传）
 
 ---
 
-## M4 自然语言修图 ⏳ 待实现
+## M4 自然语言修图 ✅ 已完成
 
-### 计划文件
+### 已实现文件
 - `Compositor/AI/NaturalLanguage/IntentRecognition.swift` — 意图识别
-- `Compositor/AI/NaturalLanguage/IntentExecution.swift` — 执行引擎
+- `Compositor/AI/NaturalLanguage/AutoTidy.swift` — systemone 决策模型整理（重命名/成组）
 - `Compositor/AI/NaturalLanguage/NaturalLanguageSheet.swift` — UI
+- `Compositor/UI/AutoTidySheet.swift` — 整理预览确认
+- `Compositor/Document/EditorSession+AI.swift` — `applyAIIntent` 落地 25+ 操作
+
+### 功能点
+- ✅ C1 意图识别（chat 结构化工具调用）
+- ✅ C2 执行引擎：意图经 session 自身编辑路径落地
+- ✅ C3 确认机制 + C4 历史回放（复用文档历史）
+- ✅ Auto-Tidy 决策模型整理，可撤销
 
 ---
 
-## M5 增量功能 ⏳ 待实现
+## M5 增量功能 ✅ 已完成（见下方清单）
 
-### P1 功能（45 项）
-见 `docs/ai-gateway-requirements.md` 模块 D
+已交付的增量功能（各自独立测试 + 7 语言翻译）：
+- ✅ 隐私模式总开关（配置/拦截/菜单/设置页）
+- ✅ OCR 文字识别（Vision → 复制或回落活文字层）
+- ✅ 智能裁切 Auto Crop（Vision objectness）
+- ✅ 语义选区（Vision 主体蒙版，端上运行）
+- ✅ AI 修复与增强面板（网关预设）+ 批量逐层串行
+- ✅ 图像描述（chat 读画布，v14 落项目）
+- ✅ 智能导出建议 + AI 背景生成
+- ✅ 智能对齐/排列 + 历史学习偏好
+- ✅ embeddings 素材语义搜索（最近项目索引）
+- ✅ 成本预估展示 + 内容安全前置（moderations）
+- ✅ Live 图生成
 
----
+项目格式：`ProjectManifest.current = 14`（v14），往返测试覆盖。
 
-## 下一步
-
-1. **在 macOS 上构建并测试 M1**
-   - 打开 `Compositor.xcodeproj`
-   - 构建项目（⌘B）
-   - 运行 App（⌘R）
-   - 测试设置窗口功能
-
-2. **实现 M2（出图/修图）**
-   - 创建 ImageGenerationSheet
-   - 创建 ImageEditingSheet
-   - 创建 TaskQueue
-   - 创建 ImageBridge
-   - 集成到菜单和命令面板
-
-3. **迭代优化**
-   - 根据测试结果调整 UI
-   - 添加单元测试
-   - 更新文档
+### 尚待补充（下一步）
+- ⏳ B5 扩图 Outpainting：选区外扩 + mask 提交 + 画布变大落层
+- ⏳ B7 提示词助手：图层名/选区缩略图 → chat 产出可编辑 prompt
+- ⏳ D#5 文字替换半边：改文字 → AI 抹原文 → 新文字层回位
