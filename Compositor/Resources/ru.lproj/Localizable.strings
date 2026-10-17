@@ -594,3 +594,12 @@
 "The subject cutout runs on one layer at a time." = "Вырезание объекта применяется по одному слою за раз";
 "Run this preset on every pixel layer, one after another." = "Применяет этот пресет ко всем пиксельным слоям по очереди";
 "AI Background" = "Фон с ИИ";
+"Smart Arrange" = "Умная раскладка";
+"Align Left" = "Выровнять по левому краю";
+"Align Centers" = "Выровнять по центру";
+"Align Right" = "Выровнять по правому краю";
+"Align Top" = "Выровнять по верхнему краю";
+"Align Bottom" = "Выровнять по нижнему краю";
+"Distribute Horizontally" = "Распределить по горизонтали";
+"Distribute Vertically" = "Распределить по вертикали";
+"Because you often do this" = "Потому что вы часто это делаете";

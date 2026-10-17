@@ -594,3 +594,12 @@
 "The subject cutout runs on one layer at a time." = "Tách chủ thể chỉ chạy trên từng lớp một";
 "Run this preset on every pixel layer, one after another." = "Chạy preset này trên mọi lớp điểm ảnh, lần lượt từng lớp";
 "AI Background" = "Nền AI";
+"Smart Arrange" = "Sắp xếp thông minh";
+"Align Left" = "Canh trái";
+"Align Centers" = "Canh giữa";
+"Align Right" = "Canh phải";
+"Align Top" = "Canh trên";
+"Align Bottom" = "Canh dưới";
+"Distribute Horizontally" = "Phân bố ngang";
+"Distribute Vertically" = "Phân bố dọc";
+"Because you often do this" = "Vì bạn thường làm vậy";

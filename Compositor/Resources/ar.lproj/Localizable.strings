@@ -594,3 +594,12 @@
 "The subject cutout runs on one layer at a time." = "يعمل قصّ الموضوع على طبقة واحدة في كل مرة";
 "Run this preset on every pixel layer, one after another." = "يشغّل هذا الإعداد المسبق على كل طبقة بكسل تباعًا";
 "AI Background" = "خلفية بالذكاء الاصطناعي";
+"Smart Arrange" = "ترتيب ذكي";
+"Align Left" = "محاذاة إلى اليسار";
+"Align Centers" = "محاذاة المركز";
+"Align Right" = "محاذاة إلى اليمين";
+"Align Top" = "محاذاة إلى الأعلى";
+"Align Bottom" = "محاذاة إلى الأسفل";
+"Distribute Horizontally" = "توزيع أفقي";
+"Distribute Vertically" = "توزيع رأسي";
+"Because you often do this" = "لأنك غالبًا ما تفعل هذا";

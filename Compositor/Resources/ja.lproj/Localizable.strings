@@ -594,3 +594,12 @@
 "The subject cutout runs on one layer at a time." = "被写体の切り抜きは一度に1つのレイヤーに対して実行されます";
 "Run this preset on every pixel layer, one after another." = "このプリセットをすべてのピクセルレイヤーに順番に適用します";
 "AI Background" = "AI背景";
+"Smart Arrange" = "スマート整列";
+"Align Left" = "左に整列";
+"Align Centers" = "中央に整列";
+"Align Right" = "右に整列";
+"Align Top" = "上辺に整列";
+"Align Bottom" = "下辺に整列";
+"Distribute Horizontally" = "水平に分布";
+"Distribute Vertically" = "垂直に分布";
+"Because you often do this" = "よく行う操作だから";

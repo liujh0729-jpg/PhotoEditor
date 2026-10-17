@@ -17,6 +17,8 @@ struct NaturalLanguageSheet: View {
         let input: String
         let intent: EditingIntent
         let executed: Bool
+        /// The engine filled a parameter the intent left out from what this action usually runs with.
+        let preferred: Bool
         let timestamp: Date
     }
     
@@ -128,6 +130,7 @@ struct NaturalLanguageSheet: View {
                     input: input,
                     intent: intent,
                     executed: false,
+                    preferred: false,
                     timestamp: Date()
                 )
                 history.append(entry)
@@ -149,15 +152,19 @@ struct NaturalLanguageSheet: View {
     }
     
     private func executeIntent(_ intent: EditingIntent) async {
+        let preferred = intent.usedPreference
         guard await session.applyAIIntent(intent) else {
             errorMessage = "Can't apply \(intent.description) right now."
             return
         }
+        // The run is a habit worth remembering: every number that answered goes into the tally.
+        PreferenceStore.shared.record(intent)
         if let index = history.lastIndex(where: { $0.intent.action == intent.action && !$0.executed }) {
             history[index] = HistoryEntry(
                 input: history[index].input,
                 intent: history[index].intent,
                 executed: true,
+                preferred: preferred,
                 timestamp: history[index].timestamp
             )
         }
@@ -180,6 +187,14 @@ struct HistoryRow: View {
                 Text(entry.intent.description)
                     .font(.caption)
                     .foregroundColor(.secondary)
+
+                if entry.preferred {
+                    // Why a command with no numbers in it still knew what to set.
+                    Text("Because you often do this")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .italic()
+                }
             }
             
             Spacer()

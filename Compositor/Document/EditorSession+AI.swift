@@ -278,7 +278,9 @@ extension EditorSession {
             setLayerBlendMode(mode)
             return document?.layers.first(where: { $0.id == id })?.blendMode == mode
         case .changeOpacity:
-            guard var value = intent.number("opacity") ?? intent.number("value") else { return false }
+            // No number in the intent, and the learned habit answers if there is one — the sheet marks the
+            // entry "because you often do this" when it does.
+            guard var value = intent.numberOrPreference("opacity") ?? intent.numberOrPreference("value") else { return false }
             if value > 1 { value /= 100 } // Models speak in percents as often as fractions.
             focusActiveLayer()
             guard (0...1).contains(value), canEditOpacity, let id = activeLayerID else { return false }
@@ -470,6 +472,30 @@ extension EditorSession {
         if let v = raw as? Double { return v.isFinite ? v : nil }
         if let v = raw as? Int { return Double(v) }
         return nil
+    }
+}
+
+/// Habit readers the sheets lean on too: whether an intent's missing numbers come from the learned
+/// tally, so the entry can say "because you often do this".
+extension EditingIntent {
+    /// The intent's own number, or, when it carries none, the value this action most often ran with —
+    /// the parameter the panel would have typed, filled from the learned habit.
+    func numberOrPreference(_ key: String) -> Double? {
+        number(key) ?? PreferenceStore.shared.mostUsed(action: action.rawValue, parameter: key)
+    }
+    /// Whether any parameter the intent left out the tallies fill in.
+    var usedPreference: Bool {
+        for (key, parameter) in parameters {
+            let carries = (parameter.value is Double) || (parameter.value is Int)
+            if !carries, PreferenceStore.shared.mostUsed(action: action.rawValue, parameter: key) != nil { return true }
+        }
+        // A key the intent didn't send at all, filled from the tally, counts the same way.
+        for name in ["opacity", "value", "feather", "expand", "contract", "angle", "brightness"] {
+            if parameters[name] == nil, PreferenceStore.shared.mostUsed(action: action.rawValue, parameter: name) != nil {
+                return true
+            }
+        }
+        return false
     }
 }
 

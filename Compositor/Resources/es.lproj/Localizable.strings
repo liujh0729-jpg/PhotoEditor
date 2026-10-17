@@ -594,3 +594,12 @@
 "The subject cutout runs on one layer at a time." = "El recorte del sujeto actúa sobre una capa cada vez";
 "Run this preset on every pixel layer, one after another." = "Aplica este preajuste a todas las capas de píxeles, una tras otra";
 "AI Background" = "Fondo con IA";
+"Smart Arrange" = "Distribución inteligente";
+"Align Left" = "Alinear a la izquierda";
+"Align Centers" = "Alinear con el centro";
+"Align Right" = "Alinear a la derecha";
+"Align Top" = "Alinear en la parte superior";
+"Align Bottom" = "Alinear en la parte inferior";
+"Distribute Horizontally" = "Distribuir horizontalmente";
+"Distribute Vertically" = "Distribuir verticalmente";
+"Because you often do this" = "Porque haces esto con frecuencia";

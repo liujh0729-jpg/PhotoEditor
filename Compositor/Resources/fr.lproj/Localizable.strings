@@ -595,3 +595,12 @@
 "The subject cutout runs on one layer at a time." = "La découpe du sujet s'applique un calque à la fois";
 "Run this preset on every pixel layer, one after another." = "Applique ce préréglage à tous les calques de pixels, l'un après l'autre";
 "AI Background" = "Arrière-plan IA";
+"Smart Arrange" = "Disposition intelligente";
+"Align Left" = "Aligner à gauche";
+"Align Centers" = "Aligner au centre";
+"Align Right" = "Aligner à droite";
+"Align Top" = "Aligner en haut";
+"Align Bottom" = "Aligner en bas";
+"Distribute Horizontally" = "Répartir horizontalement";
+"Distribute Vertically" = "Répartir verticalement";
+"Because you often do this" = "Parce que vous faites souvent cela";

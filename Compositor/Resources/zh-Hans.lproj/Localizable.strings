@@ -679,3 +679,12 @@
 "The subject cutout runs on one layer at a time." = "主体抠像每次只处理一个图层";
 "Run this preset on every pixel layer, one after another." = "在一个接一个的所有像素图层上运行此预设";
 "AI Background" = "AI 背景";
+"Smart Arrange" = "智能排列";
+"Align Left" = "左对齐";
+"Align Centers" = "居中对齐";
+"Align Right" = "右对齐";
+"Align Top" = "顶部对齐";
+"Align Bottom" = "底部对齐";
+"Distribute Horizontally" = "水平分布";
+"Distribute Vertically" = "垂直分布";
+"Because you often do this" = "因为你常这样做";

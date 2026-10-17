@@ -375,6 +375,23 @@ struct CompositorApp: App {
                         .configuredKeyboardShortcut("g", modifiers: [.command, .shift]).disabled(!session.canUngroupLayers)
                     Button("Move Out of Folder") { session.moveActiveLayerOutOfGroup() }
                         .disabled(!session.canEditLayers || session.activeLayer?.parentID == nil)
+                    // Smart Arrange reads each layer's own pixels (or mask) and lines those up, not the frames.
+                    Menu("Smart Arrange") {
+                        Button("Align Left") { session.applySmartArrange(.alignLeft) }
+                            .configuredKeyboardShortcut("l", modifiers: [.command, .option])
+                        Button("Align Centers") { session.applySmartArrange(.alignCenters) }
+                        Button("Align Right") { session.applySmartArrange(.alignRight) }
+                            .configuredKeyboardShortcut("r", modifiers: [.command, .option])
+                        Button("Align Top") { session.applySmartArrange(.alignTop) }
+                            .configuredKeyboardShortcut("t", modifiers: [.command, .option])
+                        Button("Align Bottom") { session.applySmartArrange(.alignBottom) }
+                            .configuredKeyboardShortcut("b", modifiers: [.command, .option])
+                        Divider()
+                        Button("Distribute Horizontally") { session.applySmartArrange(.distributeHorizontally) }
+                            .configuredKeyboardShortcut("e", modifiers: [.command, .option])
+                        Button("Distribute Vertically") { session.applySmartArrange(.distributeVertically) }
+                            .configuredKeyboardShortcut("v", modifiers: [.command, .option])
+                    }.disabled(!session.canSmartArrange)
                     Button("New Blank Layer") { session.addBlankLayer() }
                         .configuredKeyboardShortcut("n", modifiers: [.command, .shift]).disabled(!session.canEditLayers)
                     Button("Rename Layer…") { session.renamingLayerID = session.activeLayerID }
