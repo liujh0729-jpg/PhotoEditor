@@ -14,6 +14,9 @@ struct RestoreSheet: View {
     @State private var isProcessing = false
     @State private var errorMessage: String?
     @State private var result: CGImage?
+    @State private var allLayers = false
+    @State private var batchDone = 0
+    @State private var batchTotal = 0
 
     private var preset: RestorePreset { RestorePresets.all.first { $0.id == selectedID } ?? RestorePresets.all[0] }
 
@@ -52,6 +55,12 @@ struct RestoreSheet: View {
                             .font(.caption)
                     }
                     .padding(8)
+
+                    Toggle("Apply to all layers", isOn: $allLayers)
+                        .font(.caption)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 8)
+                        .disabled(isProcessing)
                 }
                 .frame(width: 280)
 
@@ -68,6 +77,12 @@ struct RestoreSheet: View {
                                 VStack(spacing: 8) {
                                     ProgressView().controlSize(.small)
                                     Text("Retouching…").font(.caption).foregroundColor(.secondary)
+                                    if allLayers {
+                                        // The batch counts its way through the stack; the numbers need no catalog.
+                                        Text("\(batchDone)/\(batchTotal)")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
                                 .frame(width: 180, height: 180)
                             } else {
@@ -141,11 +156,39 @@ struct RestoreSheet: View {
 
     /// Runs the preset against the layer's pixels. The request is the Image Editing sheet's pipeline: image,
     /// mask when one applies, the preset's prompt, and the slot's model unless the field overrides it.
+    /// With "Apply to all layers" on, the same preset walks every pixel layer one at a time instead, and the
+    /// whole run lands as a single history entry; a layer the gateway lets down is listed and keeps its pixels.
     private func run() {
         guard let source = session.activeLayer?.asset?.image else { return }
         isProcessing = true
         errorMessage = nil
         result = nil
+        if allLayers {
+            let items = batchItems()
+            guard !items.isEmpty else { isProcessing = false; return }
+            batchDone = 0
+            batchTotal = items.count
+            let preset = self.preset
+            let model = resolvedModel(preset)
+            Task {
+                let outcome = await RestoreBatch.run(items: items, preset: preset, model: model,
+                                                     progress: { done, _ in batchDone = done })
+                { item, preset, model in
+                    let parts = Self.multipartParts(image: item.image, mask: nil, preset: preset, model: model)
+                    let response: ImageResponse = try await GatewayClient.shared.uploadMultipart(
+                        endpoint: preset.endpointSlot, parts: parts, as: ImageResponse.self)
+                    return try await Self.firstImage(of: response)
+                }
+                isProcessing = false
+                let changed = session.applyRestoreBatch(outcome.retouched, actionName: preset.title)
+                if !outcome.failed.isEmpty {
+                    errorMessage = String(format: NSLocalizedString("Couldn't retouch: %@.", comment: ""),
+                                          outcome.failureSummary)
+                }
+                if changed > 0 { dismiss() }
+            }
+            return
+        }
         let mask = editMask()
         Task {
             do {
@@ -164,6 +207,15 @@ struct RestoreSheet: View {
 
     private func resolvedModel(_ preset: RestorePreset) -> String {
         model.isEmpty ? (GatewayConfigurationStore.shared.model(for: preset.endpointSlot) ?? "gpt-image-1") : model
+    }
+
+    /// Every layer the batch can take: a pixel layer, not a group.
+    private func batchItems() -> [RestoreBatchItem] {
+        guard let document = session.document else { return [] }
+        return document.layers.compactMap { layer in
+            guard layer.isGroup != true, let image = layer.asset?.image else { return nil }
+            return RestoreBatchItem(layerID: layer.id, name: layer.name, image: image)
+        }
     }
 
     /// What limits the edit: a live selection wins (white is the area to touch); with no selection, the layer's

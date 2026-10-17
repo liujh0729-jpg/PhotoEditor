@@ -574,3 +574,5 @@
 "The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "Ảnh sẽ được gửi tới mô hình gateway mà slot chỉ định. Vùng chọn hoặc mặt nạ đang bật sẽ giới hạn phạm vi xử lý.";
 "Couldn't apply to the active layer. Select a pixel layer first." = "Không thể áp dụng lên lớp đang chọn. Hãy chọn một lớp pixel trước.";
 "Old Photo Restore" = "Phục hồi ảnh cũ"; // Restore panel preset
+"Apply to all layers" = "Áp dụng cho tất cả các lớp";
+"Couldn't retouch: %@." = "Không chỉnh sửa được: %@.";

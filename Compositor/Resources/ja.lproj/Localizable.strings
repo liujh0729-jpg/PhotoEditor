@@ -574,3 +574,5 @@
 "The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "画像はスロットに指定されたゲートウェイモデルに送信されます。選択範囲または有効なマスクがある場合、その内側のみ処理されます。";
 "Couldn't apply to the active layer. Select a pixel layer first." = "アクティブなレイヤーに適用できませんでした。まずピクセルレイヤーを選択してください。";
 "Old Photo Restore" = "古い写真の修復"; // Restore panel preset
+"Apply to all layers" = "すべてのレイヤーに適用";
+"Couldn't retouch: %@." = "レタッチできませんでした: %@。";

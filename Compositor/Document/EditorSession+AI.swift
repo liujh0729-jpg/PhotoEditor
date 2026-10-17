@@ -33,6 +33,32 @@ extension EditorSession {
         return true
     }
 
+    /// Lands a finished retouch batch in one history entry: each named layer gets its new pixels the way
+    /// `replaceActiveLayer` does, but the whole run undoes as a single step. Returns how many layers changed.
+    @discardableResult
+    func applyRestoreBatch(_ results: [(layerID: UUID, image: CGImage)], actionName: String) -> Int {
+        guard let document, !results.isEmpty else { return 0 }
+        // Only layers that are still on the canvas can take pixels; none of them, and history stays clean.
+        let applicable = results.filter { result in
+            document.layers.contains { $0.id == result.layerID && $0.isGroup != true }
+        }
+        guard !applicable.isEmpty else { return 0 }
+        beginEdit(actionName)
+        var changed = 0
+        for result in applicable {
+            guard let index = self.document?.layers.firstIndex(where: { $0.id == result.layerID }),
+                  self.document?.layers[index].isGroup != true,
+                  let thumbnail = try? PixelAdjust.thumbnail(of: result.image) else { continue }
+            let layer = self.document!.layers[index]
+            if layer.mask?.placement == nil { self.document?.layers[index].mask?.placement = layer.maskTransform }
+            self.document?.layers[index].asset = ImportedImage(image: result.image, thumbnail: thumbnail, name: layer.name)
+            self.document?.layers[index].transform.size = CGSize(width: result.image.width, height: result.image.height)
+            changed += 1
+        }
+        endEdit()
+        return changed
+    }
+
     /// Redraws a mask of any format (a segmentation map off the gateway is usually RGBA) into the monochrome,
     /// alpha-less 8-bit form a layer mask stores, at its own resolution. White reveals, black hides.
     private func normalizedMask(_ image: CGImage) -> CGImage? {

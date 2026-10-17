@@ -574,3 +574,5 @@
 "The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "تُرْسَل الصورة إلى نموذج البوابة المحدد للفتحة. يحدد التحديد أو القناع المفعَّل المنطقة المعالجة فقط.";
 "Couldn't apply to the active layer. Select a pixel layer first." = "لا يمكن التطبيق على الطبقة النشطة. اختر طبقة نقطية أولاً.";
 "Old Photo Restore" = "استعادة الصور القديمة"; // Restore panel preset
+"Apply to all layers" = "تطبيق على جميع الطبقات";
+"Couldn't retouch: %@." = "تعذّر التحسين: %@.";

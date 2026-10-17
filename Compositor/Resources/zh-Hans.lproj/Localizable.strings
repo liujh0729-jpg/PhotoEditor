@@ -659,3 +659,5 @@
 "The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "图像会发送至该槽位指定的网关模型。存在选区或启用蒙版时，只处理其中的区域。";
 "Couldn't apply to the active layer. Select a pixel layer first." = "无法应用到当前图层。请先选择一个像素图层。";
 "Old Photo Restore" = "老照片修复"; // Restore panel preset
+"Apply to all layers" = "应用到所有图层";
+"Couldn't retouch: %@." = "无法修复：%@。";

@@ -37,6 +37,8 @@ struct RestorePanelTests {
             "No pixel layer to retouch. Select a layer first.",
             "The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched.",
             "Couldn't apply to the active layer. Select a pixel layer first.",
+            "Apply to all layers",
+            "Couldn't retouch: %@.",
         ]
     }
 
@@ -132,5 +134,73 @@ struct RestorePanelTests {
         } catch {
             #expect((error as? GatewayClientError) == .invalidResponse)
         }
+    }
+
+    // MARK: Batch ("Apply to all layers")
+
+    private struct StubError: Error {}
+
+    private func items(_ names: [String]) -> [RestoreBatchItem] {
+        names.enumerated().map { RestoreBatchItem(layerID: UUID(), name: $0.element,
+                                                   image: swatch(4 + $0.offset, 3)) }
+    }
+
+    @Test func batchRunsEveryLayerOnceWithTheSamePreset() async {
+        let preset = RestorePresets.all.first { $0.id == "removeNoise" }!
+        let rows = items(["A", "B", "C"])
+        var calls = 0
+        var seen: [UUID] = []
+        let outcome = await RestoreBatch.run(items: rows, preset: preset, model: "test-model") { item, _, _ in
+            calls += 1
+            seen.append(item.layerID)
+            return swatch(2, 2)
+        }
+        #expect(calls == rows.count, "N layers, N requests")
+        #expect(seen == rows.map(\.layerID), "one pass per layer, in order")
+        #expect(outcome.retouched.count == 3 && outcome.failed.isEmpty)
+    }
+
+    @Test func batchSkipsFailedLayersWithoutStopping() async {
+        let preset = RestorePresets.all.first { $0.id == "removeWatermark" }!
+        let rows = items(["A", "B", "C", "D"])
+        var calls = 0
+        let outcome = await RestoreBatch.run(items: rows, preset: preset, model: "test-model") { item, _, _ in
+            calls += 1
+            if item.name == "B" { throw StubError() }
+            return swatch(2, 2)
+        }
+        #expect(calls == 4, "a failing layer doesn't cut the run short")
+        #expect(outcome.retouched.count == 3)
+        #expect(outcome.failed.map(\.name) == ["B"], "the layer the gateway let down is listed by name")
+        #expect(outcome.failureSummary == "B")
+    }
+
+    @Test func batchLandsOnTheLayersInOneHistoryEntry() async throws {
+        let session = EditorSession()
+        session.createDocument(width: 200, height: 200)
+        session.insert(ImportedImage(image: swatch(200, 200), thumbnail: swatch(20, 20), name: "A"))
+        session.insert(ImportedImage(image: swatch(120, 90), thumbnail: swatch(20, 20), name: "B"))
+        let layers = session.document?.layers ?? []
+        #expect(layers.count == 2)
+        let results = [(layerID: layers[0].id, image: swatch(50, 40)),
+                       (layerID: layers[1].id, image: swatch(60, 20))]
+        let changed = session.applyRestoreBatch(results, actionName: "Remove Noise")
+        #expect(changed == 2)
+        #expect(session.document?.layers[0].asset?.image.width == 50)
+        #expect(session.document?.layers[1].transform.size == CGSize(width: 60, height: 20))
+        // The whole batch is a single step: one undo takes both layers back.
+        #expect(session.history.undoName == "Remove Noise")
+        session.undo()
+        #expect(session.document?.layers[0].asset?.image.width == 200)
+        #expect(session.document?.layers[1].asset?.image.width == 120)
+    }
+
+    @Test func batchIgnoresLayersThatCannotTakeThePixels() async throws {
+        let session = EditorSession()
+        session.createDocument(width: 100, height: 100)
+        session.insert(ImportedImage(image: swatch(100, 100), thumbnail: swatch(20, 20), name: "A"))
+        let changed = session.applyRestoreBatch([(layerID: UUID(), image: swatch(10, 10))], actionName: "Remove Noise")
+        #expect(changed == 0, "an id that isn't on the canvas changes nothing")
+        #expect(session.history.undoName != "Remove Noise", "nothing was recorded")
     }
 }

@@ -575,3 +575,5 @@
 "The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "L'image est envoyée au modèle de la passerelle assigné à l'emplacement. Une sélection ou un masque actif limite la zone traitée.";
 "Couldn't apply to the active layer. Select a pixel layer first." = "Impossible d'appliquer au calque actif. Sélectionnez d'abord un calque de pixels.";
 "Old Photo Restore" = "Restauration de photo ancienne"; // Restore panel preset
+"Apply to all layers" = "Appliquer à tous les calques";
+"Couldn't retouch: %@." = "Retouche impossible : %@.";

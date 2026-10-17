@@ -574,3 +574,5 @@
 "The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched." = "Изображение отправляется модели шлюза, назначенной слоту. Выделение или включённая маска ограничивают область обработки.";
 "Couldn't apply to the active layer. Select a pixel layer first." = "Не удалось применить к активному слою. Сначала выберите пиксельный слой.";
 "Old Photo Restore" = "Восстановление старых фотографий"; // Restore panel preset
+"Apply to all layers" = "Применить ко всем слоям";
+"Couldn't retouch: %@." = "Не удалось ретушировать: %@.";
