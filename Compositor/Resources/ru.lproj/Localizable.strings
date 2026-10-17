@@ -500,3 +500,8 @@
 
 /* Semantic selection */
 "The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "Маску создаёт Vision на этом Mac, поэтому она работает офлайн. Ваш запрос лишь называет правку.";
+
+/* Privacy mode */
+"Privacy Mode" = "Режим конфиденциальности";
+"Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "Пока включён режим конфиденциальности, на шлюз ничего не отправляется — ни изображения, ни запросы, ни аудио. Локальные инструменты, такие как «Семантическое выделение», продолжают работать.";
+"Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "Режим конфиденциальности включён — на шлюз ничего не отправляется. Отключите его в «Настройки › Общие».";

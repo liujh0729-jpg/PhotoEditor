@@ -104,6 +104,28 @@ struct GatewayConfiguration: Codable {
     var channels: [ProviderChannel]
     var defaultChannelID: UUID?
     var capabilitySlots: [CapabilitySlot]
+    /// Privacy Mode: nothing leaves the Mac. The client refuses every call and the gateway's AI commands dim.
+    var privacyMode: Bool
+    
+    init(channels: [ProviderChannel], defaultChannelID: UUID?, capabilitySlots: [CapabilitySlot], privacyMode: Bool = false) {
+        self.channels = channels
+        self.defaultChannelID = defaultChannelID
+        self.capabilitySlots = capabilitySlots
+        self.privacyMode = privacyMode
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case channels, defaultChannelID, capabilitySlots, privacyMode
+    }
+    
+    /// A saved config written before Privacy Mode carries no key for it; it meant the old, sending behavior.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        channels = try container.decode([ProviderChannel].self, forKey: .channels)
+        defaultChannelID = try container.decodeIfPresent(UUID.self, forKey: .defaultChannelID)
+        capabilitySlots = try container.decode([CapabilitySlot].self, forKey: .capabilitySlots)
+        privacyMode = try container.decodeIfPresent(Bool.self, forKey: .privacyMode) ?? false
+    }
     
     /// Returns the default channel, or the first enabled channel sorted by priority.
     var activeChannel: ProviderChannel? {
@@ -193,6 +215,12 @@ final class GatewayConfigurationStore: ObservableObject {
     /// Adds a new channel.
     func addChannel(_ channel: ProviderChannel) {
         configuration.channels.append(channel)
+    }
+    
+    /// Privacy Mode, spelled the way callers flip it; saving rides on the published configuration.
+    var privacyMode: Bool {
+        get { configuration.privacyMode }
+        set { configuration.privacyMode = newValue }
     }
     
     /// Updates an existing channel.

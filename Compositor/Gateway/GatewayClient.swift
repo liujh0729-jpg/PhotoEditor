@@ -63,6 +63,14 @@ final class GatewayClient {
         }
     }
     
+    /// Privacy Mode keeps the Mac silent: checked before a byte of a request is built, so nothing is sent
+    /// while it's on — no pixels, no prompts, no audio.
+    private static func guardPrivacy() throws {
+        if GatewayConfigurationStore.shared.privacyMode {
+            throw GatewayClientError.privacyMode
+        }
+    }
+    
     /// Builds (and caches) a session that routes through `proxy`, falling back to the shared session when none is set.
     private static func configuredSession(base: URLSession, proxy: URL?, timeout: TimeInterval,
                                           cache: inout [String: URLSession]) -> URLSession {
@@ -95,6 +103,7 @@ final class GatewayClient {
         body: some Encodable,
         as responseType: T.Type
     ) async throws -> T {
+        try Self.guardPrivacy()
         let plan = try GatewayConfigurationStore.shared.plan(for: endpoint)
         
         var request = URLRequest(url: makeURL(base: plan.baseURL, path: plan.path))
@@ -116,6 +125,7 @@ final class GatewayClient {
         path: String,
         as responseType: T.Type
     ) async throws -> T {
+        try Self.guardPrivacy()
         let plan = try GatewayConfigurationStore.shared.plan(for: endpoint)
         
         var request = URLRequest(url: makeURL(base: plan.baseURL, path: path))
@@ -134,6 +144,7 @@ final class GatewayClient {
         parts: [MultipartPart],
         as responseType: T.Type
     ) async throws -> T {
+        try Self.guardPrivacy()
         let plan = try GatewayConfigurationStore.shared.plan(for: endpoint)
         
         let boundary = "Boundary-\(UUID().uuidString)"
@@ -157,6 +168,7 @@ final class GatewayClient {
     
     /// Downloads binary data (for TTS audio, video content).
     func downloadBinary(endpoint: EndpointType, body: some Encodable) async throws -> Data {
+        try Self.guardPrivacy()
         let plan = try GatewayConfigurationStore.shared.plan(for: endpoint)
         
         var request = URLRequest(url: makeURL(base: plan.baseURL, path: plan.path))
@@ -196,6 +208,7 @@ final class GatewayClient {
     /// Fetches a raw GET payload using a specific channel and API key, honoring the channel's proxy and timeout.
     /// Used by catalog discovery, which lives outside the fixed capability slots on `EndpointType`.
     func fetchRaw(channel: ProviderChannel, apiKey: String, path: String) async throws -> Data {
+        try Self.guardPrivacy()
         var request = URLRequest(url: makeURL(base: channel.baseURL, path: path))
         request.httpMethod = "GET"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
@@ -243,11 +256,13 @@ struct MultipartPart: Sendable {
     }
 }
 
-enum GatewayClientError: Error, LocalizedError {
+/// Client-side failures raised before a request goes out. `Equatable` so tests can pin down which refusal fired.
+enum GatewayClientError: Error, LocalizedError, Equatable {
     case noChannelAvailable
     case missingAPIKey(String)
     case invalidResponse
     case httpError(Int)
+    case privacyMode
     
     var errorDescription: String? {
         switch self {
@@ -259,6 +274,8 @@ enum GatewayClientError: Error, LocalizedError {
             return "Invalid response from server"
         case .httpError(let code):
             return "HTTP error \(code)"
+        case .privacyMode:
+            return "Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General."
         }
     }
 }

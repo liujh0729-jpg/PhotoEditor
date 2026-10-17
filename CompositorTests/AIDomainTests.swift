@@ -135,4 +135,56 @@ struct AIDomainTests {
         #expect(a.errorDescription == "rate limited")
         #expect(b.errorDescription == "rate limited")
     }
+
+    // MARK: Privacy Mode
+
+    /// The flag rides the saved config: it survives a round trip, and a config written before Privacy Mode
+    /// existed decodes as the old, sending behavior rather than failing whole.
+    @Test func privacyModeSurvivesTheSavedConfig() throws {
+        let store = GatewayConfigurationStore.shared
+        var on = store.configuration
+        on.privacyMode = true
+        let back = try JSONDecoder().decode(GatewayConfiguration.self, from: JSONEncoder().encode(on))
+        #expect(back.privacyMode, "the flag rides the saved config")
+        let old = #"{"channels":[{"id":"A1A1A1A1-B2B2-C3C3-D4D4-E5E5E5E5E5E5","name":"Test","baseURL":"https://example.invalid","enabled":true,"priority":0,"weight":10,"timeout":60,"isBuiltIn":false}],"capabilitySlots":[]}"#
+        let before = try JSONDecoder().decode(GatewayConfiguration.self, from: Data(old.utf8))
+        #expect(!before.privacyMode, "a config from before Privacy Mode meant the old, sending behavior")
+    }
+
+    /// With Privacy Mode on, every gateway call refuses before a request is built — and the catalog sync
+    /// simply doesn't go out, rather than failing at a missing key.
+    @Test func privacyModeRefusesEveryGatewayCall() async throws {
+        let store = GatewayConfigurationStore.shared
+        let was = store.privacyMode
+        defer { store.privacyMode = was }
+        store.privacyMode = true
+        let channel = ProviderChannel(name: "Test", baseURL: URL(string: "https://example.invalid")!)
+        await #expect(throws: GatewayClientError.privacyMode) {
+            _ = try await GatewayClient.shared.request(endpoint: .chat, body: ["model": "gpt"], as: [String: String].self)
+        }
+        await #expect(throws: GatewayClientError.privacyMode) {
+            _ = try await GatewayClient.shared.get(endpoint: .chat, path: "/v1/models", as: [String: String].self)
+        }
+        await #expect(throws: GatewayClientError.privacyMode) {
+            _ = try await GatewayClient.shared.uploadMultipart(endpoint: .imageEdits, parts: [.text("prompt", "cat")], as: [String: String].self)
+        }
+        await #expect(throws: GatewayClientError.privacyMode) {
+            _ = try await GatewayClient.shared.downloadBinary(endpoint: .audioSpeech, body: ["input": "hello"])
+        }
+        await #expect(throws: GatewayClientError.privacyMode) {
+            _ = try await GatewayClient.shared.fetchRaw(channel: channel, apiKey: "sk-test", path: "/v1/models")
+        }
+        // Quietly skipping beats an error dialog: the catalog list just stays as the cache showed it.
+        try await CatalogStore.shared.sync()
+        // And the refusal tells the user where the switch is.
+        #expect(GatewayClientError.privacyMode.errorDescription?.contains("Settings") == true)
+        store.privacyMode = false
+        do {
+            // The unreachable host proves the call actually went out once Privacy Mode is off.
+            _ = try await GatewayClient.shared.fetchRaw(channel: channel, apiKey: "sk-test", path: "/v1/models")
+            Issue.record("an unreachable channel should fail, not answer")
+        } catch GatewayClientError.privacyMode {
+            Issue.record("Privacy Mode is off; the call should go out and fail on the network")
+        } catch {}
+    }
 }

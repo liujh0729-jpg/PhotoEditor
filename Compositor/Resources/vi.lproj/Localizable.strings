@@ -500,3 +500,8 @@
 
 /* Semantic selection */
 "The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "Mặt nạ do Vision tạo trên chính máy Mac này nên hoạt động ngoại tuyến. Câu nhắc của bạn chỉ dùng để đặt tên thao tác sửa đổi.";
+
+/* Privacy mode */
+"Privacy Mode" = "Chế độ riêng tư";
+"Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "Khi Chế độ riêng tư đang bật, không gì được gửi đến gateway — không ảnh, câu nhắc hay âm thanh. Các công cụ trên máy như Chọn ngữ nghĩa vẫn dùng được.";
+"Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "Chế độ riêng tư đang bật nên không gì được gửi đến gateway. Tắt nó trong Cài đặt › Chung.";

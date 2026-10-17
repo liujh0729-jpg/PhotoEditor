@@ -6,7 +6,11 @@ import Sparkle
 struct CompositorApp: App {
     @NSApplicationDelegateAdaptor(CompositorApplicationDelegate.self) private var applicationDelegate
     @AppStorage("navigator.visible") private var showsNavigator = false
+    @ObservedObject private var gateway = GatewayConfigurationStore.shared
     private var session: EditorSession { applicationDelegate.session }
+    /// Privacy Mode dims every command that would ship pixels, prompts or audio to the gateway.
+    private var privacyMode: Bool { gateway.privacyMode }
+    private var privacyHelp: LocalizedStringKey { "Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." }
     var body: some Scene {
         Window("PhotoCompositor", id: "editor") {
             ProjectWorkspaceView(applicationDelegate: applicationDelegate).roundedControls()
@@ -397,21 +401,32 @@ struct CompositorApp: App {
                 }
                 CommandMenu("AI") {
                     Button("Generate Image…") { session.showsImageGeneration = true }
-                        .disabled(session.document == nil)
+                        .disabled(session.document == nil || privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Button("Edit Image…") { session.showsImageEditing = true }
-                        .disabled(session.document == nil || session.activeLayer?.asset == nil)
+                        .disabled(session.document == nil || session.activeLayer?.asset == nil || privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Divider()
                     Button("Generate Video…") { session.showsVideoGeneration = true }
-                        .disabled(session.document == nil)
+                        .disabled(session.document == nil || privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Button("Text-to-Speech…") { session.showsTTS = true }
+                        .disabled(privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Button("Speech-to-Text…") { session.showsSTTS = true }
+                        .disabled(privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Divider()
                     Button("Natural Language Editing…") { session.showsNaturalLanguage = true }
                         .configuredKeyboardShortcut("k", modifiers: [.command, .shift])
+                        .disabled(privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
+                    // Semantic Selection is Vision on this Mac: it keeps working with Privacy Mode on.
                     Button("Semantic Selection…") { session.showsSemanticSelection = true }
                         .disabled(session.document == nil)
                     Button("Style Transfer…") { session.showsStyleTransfer = true }
-                        .disabled(session.document == nil || session.activeLayer?.asset == nil)
+                        .disabled(session.document == nil || session.activeLayer?.asset == nil || privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Divider()
                     // Same Settings window the app menu opens, reachable from where the model-hungry
                     // commands live.

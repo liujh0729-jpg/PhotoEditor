@@ -585,3 +585,8 @@
 
 /* Semantic selection */
 "The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "蒙版由本机的 Vision 生成，可离线使用。你的提示词只用于命名此次编辑。";
+
+/* Privacy mode */
+"Privacy Mode" = "隐私模式";
+"Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "隐私模式开启期间，不会向网关发送任何内容——图像、提示词和音频都不发送。语义选择等本机工具照常可用。";
+"Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "隐私模式已开启，不会向网关发送任何内容。可在设置 › 通用中关闭。";

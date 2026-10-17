@@ -500,3 +500,8 @@
 
 /* Semantic selection */
 "The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "La máscara la crea Vision en este Mac, así que funciona sin conexión. Tu indicación nombra la edición.";
+
+/* Privacy mode */
+"Privacy Mode" = "Modo de privacidad";
+"Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working." = "Mientras el Modo de privacidad está activado, no se envía nada a la pasarela: ni imágenes, ni indicaciones, ni audio. Las herramientas locales como la Selección semántica siguen disponibles.";
+"Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General." = "El Modo de privacidad está activado, no se envía nada a la pasarela. Desactívalo en Ajustes › General.";

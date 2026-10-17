@@ -493,10 +493,15 @@ struct CapabilitySlotRow: View {
 /// shipped locales instead of following the system setting.
 struct GeneralTab: View {
     @ObservedObject private var languageStore = LanguageStore.shared
+    @ObservedObject private var store = GatewayConfigurationStore.shared
     @State private var pending: LanguageStore.AppLanguage?
 
     var body: some View {
         Form {
+            Toggle("Privacy Mode", isOn: $store.privacyMode)
+            Text("Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working.")
+                .foregroundStyle(.secondary)
+                .font(.callout)
             Picker("Language", selection: $languageStore.selection) {
                 ForEach(LanguageStore.AppLanguage.allCases) { language in
                     if language == .system {

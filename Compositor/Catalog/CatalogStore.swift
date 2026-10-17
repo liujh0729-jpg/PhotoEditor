@@ -74,6 +74,8 @@ final class CatalogStore: ObservableObject {
     
     /// Syncs the catalog from the gateway.
     func sync() async throws {
+        // Privacy Mode: the catalog lives on the gateway too, so nothing is fetched and the cached list stays shown.
+        if GatewayConfigurationStore.shared.privacyMode { return }
         isSyncing = true
         defer { isSyncing = false }
         
