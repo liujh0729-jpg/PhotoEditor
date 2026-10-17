@@ -260,4 +260,34 @@ struct AIDomainTests {
         #expect(GatewayClient.prompt(inBody: noPrompt) == nil)
         #expect(GatewayClient.prompt(inBody: Data("plain".utf8)) == nil, "a body that isn't JSON carries no text")
     }
+
+    // MARK: - Image description
+
+    /// A text-only conversation stays the plain string wire form every older gateway expects.
+    @Test func plainTextMessageKeepsTheStringShape() throws {
+        let message = ChatCompletionRequest.ChatMessage(role: "system", content: "you are an editor")
+        let data = try JSONEncoder().encode(message)
+        let json = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        #expect(json["content"] as? String == "you are an editor")
+        let back = try JSONDecoder().decode(ChatCompletionRequest.ChatMessage.self, from: data)
+        guard case .text(let text) = back.content else { Issue.record("a string decodes as text"); return }
+        #expect(text == "you are an editor")
+    }
+
+    /// The vision request goes out OpenAI-compatible: the content is a part list with the picture as a
+    /// data-URL `image_url` next to the instruction.
+    @Test func visionMessageCarriesTextAndImageParts() throws {
+        let messages = ImageDescription.messages(base64: "QUJDRA==")
+        let data = try JSONEncoder().encode(messages)
+        let json = try #require(String(data: data, encoding: .utf8))
+        #expect(json.contains("\"type\":\"image_url\""), "the picture rides an image_url part")
+        // The encoder escapes the slash in the data URL; the gateway unescapes it back.
+        #expect(json.contains("data:image\\/png;base64,QUJDRA=="), "a data URL the gateway can read inline")
+        #expect(json.contains(ImageDescription.instruction), "the instruction travels with the picture")
+        let back = try JSONDecoder().decode([ChatCompletionRequest.ChatMessage].self, from: data)
+        guard case .parts(let parts) = back[0].content else { Issue.record("parts must decode as parts"); return }
+        #expect(parts.count == 2)
+        guard case .imageURL(let url) = parts[1] else { Issue.record("the second part is the picture"); return }
+        #expect(url.hasPrefix("data:image/png;base64,"))
+    }
 }

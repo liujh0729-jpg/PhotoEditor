@@ -580,3 +580,7 @@
 "Cost unknown" = "Coste desconocido";
 "Check content before sending" = "Comprobar el contenido antes de enviar";
 "Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "Consulta la comprobación de contenido de la pasarela sobre el prompt o la imagen antes de enviar una solicitud de IA. Una pasarela sin ese endpoint se omite; solo una señal explícita detiene el envío.";
+"Image Description…" = "Descripción de la imagen…";
+"Describing…" = "Describiendo…";
+"The canvas picture goes to the chat model the slot names." = "La imagen del lienzo se envía al modelo de chat asignado a la ranura.";
+"There's nothing on the canvas to describe." = "No hay nada que describir en el lienzo.";

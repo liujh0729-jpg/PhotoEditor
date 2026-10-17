@@ -665,3 +665,7 @@
 "Cost unknown" = "成本未知";
 "Check content before sending" = "发送前检查内容";
 "Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "在发出 AI 请求前，让网关的内容检查审阅提示词或图像。没有该端点的网关会被跳过；只有明确命中时才会拦截。";
+"Image Description…" = "图像描述…";
+"Describing…" = "正在描述…";
+"The canvas picture goes to the chat model the slot names." = "画布图像会发送至该槽位指定的对话模型。";
+"There's nothing on the canvas to describe." = "画布上没有可描述的图像。";

@@ -580,3 +580,7 @@
 "Cost unknown" = "Chưa rõ chi phí";
 "Check content before sending" = "Kiểm tra nội dung trước khi gửi";
 "Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "Hỏi kiểm duyệt nội dung của gateway về prompt hoặc ảnh trước khi gửi yêu cầu AI. Gateway không có endpoint đó sẽ được bỏ qua; chỉ khi bị đánh dấu rõ ràng mới chặn gửi.";
+"Image Description…" = "Mô tả hình ảnh…";
+"Describing…" = "Đang mô tả…";
+"The canvas picture goes to the chat model the slot names." = "Ảnh trên canvas sẽ được gửi tới mô hình chat mà slot chỉ định.";
+"There's nothing on the canvas to describe." = "Không có gì trên canvas để mô tả.";

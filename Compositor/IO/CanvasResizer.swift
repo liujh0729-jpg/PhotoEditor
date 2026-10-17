@@ -15,7 +15,7 @@ actor CanvasResizer {
         guard options.width != old.width || options.height != old.height || offset != .zero else { return snapshot }
         var manifest = ProjectManifest(resolution: old.resolution, documentID: old.documentID,
             width: options.width, height: options.height, activeLayerID: old.activeLayerID, layers: [],
-            guides: old.guides?.map { $0.offset(x: offset.x, y: offset.y) })
+            guides: old.guides?.map { $0.offset(x: offset.x, y: offset.y) }, aiDescription: old.aiDescription)
         for layer in old.layers {
             var transform = layer.transform
             transform.origin.x += offset.x

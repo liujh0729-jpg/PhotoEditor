@@ -596,6 +596,9 @@ final class EditorSession {
     var showsRecognizeText = false
     var showsStyleTransfer = false
     var showsRestore = false
+    var showsImageDescription = false
+    /// What the AI said about the picture, filed with the project (manifest version 14).
+    var aiDescription: String?
     /// The RAW file being developed, and the settings the sheet is editing (see RawImporter).
     var rawDevelop: (url: URL, settings: RawDevelopSettings)?
     var showsRawDevelop = false { didSet { resumeFileRequests() } }

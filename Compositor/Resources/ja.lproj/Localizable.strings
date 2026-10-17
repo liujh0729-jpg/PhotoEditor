@@ -580,3 +580,7 @@
 "Cost unknown" = "コスト不明";
 "Check content before sending" = "送信前にコンテンツを確認";
 "Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "AI リクエストを送信する前に、ゲートウェイのコンテンツチェックにプロンプトや画像を照会します。そのエンドポイントを持たないゲートウェイはスキップされ、明示的なフラグが立ったときだけ停止します。";
+"Image Description…" = "画像の説明…";
+"Describing…" = "説明を生成中…";
+"The canvas picture goes to the chat model the slot names." = "キャンバスの画像はスロットに指定されたチャットモデルに送信されます。";
+"There's nothing on the canvas to describe." = "キャンバスに説明できる画像がありません。";

@@ -309,4 +309,34 @@ struct ProjectTests {
         let centerPixel = try #require(styledBitmap.colorAt(x: 30, y: 30))
         #expect(centerPixel.redComponent > 0.9)
     }
+
+    /// Version 14 carries the AI's read of the picture on the manifest: the save writes the field, the load
+    /// hands it back to the session, and a resize carries it along untouched.
+    @Test func aiDescriptionRidesTheManifest() async throws {
+        let root = try temporaryFolder()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let session = EditorSession()
+        session.createDocument(width: 40, height: 30)
+        session.addBlankLayer()
+        session.aiDescription = "A quiet test card."
+        let url = root.appendingPathComponent("Described.comp")
+        try await ProjectStore.shared.save(try #require(session.projectSnapshot()), to: url)
+        let loaded = try await ProjectStore.shared.load(from: url)
+        #expect(loaded.manifest.version == ProjectManifest.current)
+        #expect(loaded.manifest.aiDescription == "A quiet test card.")
+        let reopened = EditorSession()
+        reopened.installProject(loaded, from: url)
+        #expect(reopened.aiDescription == "A quiet test card.", "reopening files the description back on the session")
+        // Canvas Size rebuilds the manifest; the description rides along untouched.
+        let before = try #require(session.projectSnapshot())
+        let resized = try await CanvasResizer.shared.resize(before, to: CanvasSizeOptions(width: 60, height: 30))
+        #expect(resized.manifest.aiDescription == "A quiet test card.")
+    }
+
+    /// A manifest from before version 14 simply lacks the field; the reader must not choke on the old file.
+    @Test func aManifestFromBeforeTheDescriptionStillDecodes() throws {
+        let old = #"{"format":"com.compositor.project","version":13,"colorSpace":"sRGB","documentID":"6C1E0D9F-3F0F-4E8F-9E0A-2C5B7A6D1E22","width":40,"height":30,"activeLayerID":null,"layers":[]}"#
+        let back = try JSONDecoder().decode(ProjectManifest.self, from: Data(old.utf8))
+        #expect(back.aiDescription == nil, "a v13 file reads as no description, not as damage")
+    }
 }

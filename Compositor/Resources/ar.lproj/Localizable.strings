@@ -580,3 +580,7 @@
 "Cost unknown" = "التكلفة غير معروفة";
 "Check content before sending" = "فحص المحتوى قبل الإرسال";
 "Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "يستعلم عن فحص المحتوى في البوابة بخصوص النص أو الصورة قبل إرسال طلب الذكاء الاصطناعي. البوابات التي لا تملك هذه النقطة تُتخطَّى؛ الإيقاف يحدث فقط عند وجود إشارة صريحة.";
+"Image Description…" = "وصف الصورة…";
+"Describing…" = "جارٍ الوصف…";
+"The canvas picture goes to the chat model the slot names." = "تُرْسَل صورة اللوحة إلى نموذج المحادثة المحدد للفتحة.";
+"There's nothing on the canvas to describe." = "لا يوجد شيء على اللوحة لوصفه.";

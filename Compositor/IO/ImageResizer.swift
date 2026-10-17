@@ -17,7 +17,7 @@ actor ImageResizer {
         let old = snapshot.manifest
         var manifest = ProjectManifest(resolution: options.resolution, documentID: old.documentID,
             width: options.width, height: options.height, activeLayerID: old.activeLayerID, layers: [],
-            guides: old.guides)
+            guides: old.guides, aiDescription: old.aiDescription)
         if old.width == options.width && old.height == options.height {
             manifest.layers = old.layers
             return ProjectSnapshot(manifest: manifest, images: snapshot.images, masks: snapshot.masks)

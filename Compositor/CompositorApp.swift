@@ -436,6 +436,9 @@ struct CompositorApp: App {
                     Button("AI Retouch & Enhance…") { session.showsRestore = true }
                         .disabled(session.document == nil || session.activeLayer?.asset == nil || privacyMode)
                         .help(privacyMode ? privacyHelp : "")
+                    Button("Image Description…") { session.showsImageDescription = true }
+                        .disabled(session.document == nil || privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Divider()
                     // Same Settings window the app menu opens, reachable from where the model-hungry
                     // commands live.

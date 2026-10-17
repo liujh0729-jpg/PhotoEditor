@@ -111,11 +111,72 @@ struct ChatCompletionRequest: Codable {
     
     struct ChatMessage: Codable {
         let role: String
-        let content: String
+        let content: Content
+        
+        /// Plain text, or OpenAI-compatible parts — text next to images — as a vision request carries.
+        enum Content: Codable {
+            case text(String)
+            case parts([Part])
+            
+            enum Part: Codable {
+                case text(String)
+                case imageURL(String)
+                
+                private enum CodingKeys: String, CodingKey {
+                    case type, text, imageURL = "image_url"
+                }
+                
+                private struct ImageURL: Codable { let url: String }
+                
+                init(from decoder: Decoder) throws {
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    switch try container.decode(String.self, forKey: .type) {
+                    case "image_url":
+                        self = .imageURL(try container.decode(ImageURL.self, forKey: .imageURL).url)
+                    default:
+                        self = .text(try container.decode(String.self, forKey: .text))
+                    }
+                }
+                
+                func encode(to encoder: Encoder) throws {
+                    var container = encoder.container(keyedBy: CodingKeys.self)
+                    switch self {
+                    case .text(let text):
+                        try container.encode("text", forKey: .type)
+                        try container.encode(text, forKey: .text)
+                    case .imageURL(let url):
+                        try container.encode("image_url", forKey: .type)
+                        try container.encode(ImageURL(url: url), forKey: .imageURL)
+                    }
+                }
+            }
+            
+            init(from decoder: Decoder) throws {
+                let container = try decoder.singleValueContainer()
+                if let text = try? container.decode(String.self) {
+                    self = .text(text)
+                } else {
+                    self = .parts(try container.decode([Part].self))
+                }
+            }
+            
+            func encode(to encoder: Encoder) throws {
+                var container = encoder.singleValueContainer()
+                switch self {
+                case .text(let text): try container.encode(text)
+                case .parts(let parts): try container.encode(parts)
+                }
+            }
+        }
         
         init(role: String, content: String) {
             self.role = role
-            self.content = content
+            self.content = .text(content)
+        }
+        
+        init(role: String, parts: [Content.Part]) {
+            self.role = role
+            self.content = .parts(parts)
         }
     }
     

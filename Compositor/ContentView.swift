@@ -540,5 +540,8 @@ private struct AISheets: ViewModifier {
         .sheet(isPresented: $session.showsRestore) {
             RestoreSheet(session: session)
         }
+        .sheet(isPresented: $session.showsImageDescription) {
+            ImageDescriptionSheet(session: session)
+        }
     }
 }
