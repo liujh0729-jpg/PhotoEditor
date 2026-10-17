@@ -247,3 +247,14 @@ private struct TypeFontPicker: NSViewRepresentable {
         }
     }
 }
+
+/// One-color tool-rail icon for the Type tool: "Aa" drawn as literal letters. The matching SF Symbol
+/// (`textformat`) is a localized symbol — macOS swaps its glyph for a CJK character in Chinese — but this
+/// is an icon, not a word, so it reads "Aa" in every language the app speaks.
+struct TypeToolIcon: View {
+    var body: some View {
+        Text(verbatim: "Aa")
+            .font(.system(size: 14, weight: .regular))
+            .accessibilityHidden(true)
+    }
+}
