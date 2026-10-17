@@ -633,3 +633,9 @@
 "Suggest a prompt" = "Suggérer un prompt";
 "No prompt yet" = "Aucun prompt pour l'instant";
 "The layer's name and the picture on the canvas go to the chat model the slot names." = "Le nom du calque et l'image du canevas sont envoyés au modèle de conversation indiqué par l'emplacement.";
+"Replace Text…" = "Remplacer le texte…";
+"Replace Text" = "Remplacer le texte";
+"New text" = "Nouveau texte";
+"Replace" = "Remplacer";
+"Select a layer with text on it first." = "Sélectionnez d'abord un calque contenant du texte.";
+"Couldn't replace the text. Try again." = "Le texte n'a pas pu être remplacé. Réessayez.";

@@ -550,6 +550,9 @@ private struct AISheets: ViewModifier {
         .sheet(isPresented: $session.showsPromptHelper) {
             PromptHelperSheet(session: session)
         }
+        .sheet(isPresented: $session.showsTextReplacement) {
+            TextReplacementSheet(session: session)
+        }
         .sheet(isPresented: $session.showsAssetSearch) {
             AssetSearchSheet(open: { url in Task { await applicationDelegate?.projects.open(url) } })
         }

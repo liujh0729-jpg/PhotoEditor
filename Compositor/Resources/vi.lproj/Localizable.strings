@@ -632,3 +632,9 @@
 "Suggest a prompt" = "Đề xuất câu lệnh";
 "No prompt yet" = "Chưa có câu lệnh";
 "The layer's name and the picture on the canvas go to the chat model the slot names." = "Tên lớp và ảnh trên canvas sẽ được gửi tới model chat mà khe chỉ định.";
+"Replace Text…" = "Thay văn bản…";
+"Replace Text" = "Thay văn bản";
+"New text" = "Văn bản mới";
+"Replace" = "Thay";
+"Select a layer with text on it first." = "Hãy chọn một lớp có văn bản trước.";
+"Couldn't replace the text. Try again." = "Không thể thay văn bản. Hãy thử lại.";

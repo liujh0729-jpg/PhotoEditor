@@ -605,6 +605,8 @@ final class EditorSession {
     var showsOutpaint = false
     /// Prompt Assistant…: the chat model drafts an editable prompt from the layer name and the picture.
     var showsPromptHelper = false
+    /// Replace Text…: the gateway lifts the old words off the active layer and new text lands back in their place.
+    var showsTextReplacement = false
     /// What the AI said about the picture, filed with the project (manifest version 14).
     var aiDescription: String?
     /// The RAW file being developed, and the settings the sheet is editing (see RawImporter).

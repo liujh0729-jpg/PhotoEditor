@@ -717,3 +717,9 @@
 "Suggest a prompt" = "生成提示词";
 "No prompt yet" = "尚无提示词";
 "The layer's name and the picture on the canvas go to the chat model the slot names." = "图层名称和画布上的图片会发送到该槽位指定的聊天模型。";
+"Replace Text…" = "替换文字…";
+"Replace Text" = "替换文字";
+"New text" = "新文字";
+"Replace" = "替换";
+"Select a layer with text on it first." = "请先选择带有文字的图层。";
+"Couldn't replace the text. Try again." = "无法替换文字。请再试一次。";

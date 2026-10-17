@@ -447,6 +447,10 @@ struct CompositorApp: App {
                     // OCR is Vision on this Mac too — nothing is uploaded to read the words.
                     Button("Recognize Text…") { session.showsRecognizeText = true }
                         .disabled(session.document == nil)
+                    // The erase asks the gateway to lift the words out, so it's gated off in Privacy Mode.
+                    Button("Replace Text…") { session.showsTextReplacement = true }
+                        .disabled(session.document == nil || session.activeLayer?.asset == nil || privacyMode)
+                        .help(privacyMode ? privacyHelp : "")
                     Button("Style Transfer…") { session.showsStyleTransfer = true }
                         .disabled(session.document == nil || session.activeLayer?.asset == nil || privacyMode)
                         .help(privacyMode ? privacyHelp : "")

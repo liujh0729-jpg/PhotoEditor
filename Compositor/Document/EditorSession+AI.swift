@@ -131,6 +131,31 @@ extension EditorSession {
         return applyText(draft)
     }
 
+    /// Replaces the words the active layer carries in `box` (that layer's own pixel grid, top-left origin, straight
+    /// off the OCR read): the gateway repaints only the box to lift the old text out, the layer takes those pixels
+    /// back in place, and new text lands over the same spot as a fresh live-text layer. `sender` runs the request
+    /// and hands back the erased picture, so the whole path is testable without a network. Returns false when the
+    /// canvas can't be edited, there's no eligible active layer, the box or the new text is empty, or the request fails.
+    @discardableResult
+    func replaceText(in box: CGRect, newText: String, model: String,
+                     sender: (CGImage, CGImage) async throws -> CGImage) async -> Bool {
+        guard canEditLayers, canStartProjectOperation, textDraft == nil,
+              let layer = activeLayer, layer.isGroup != true, let asset = layer.asset,
+              !newText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              let mask = TextReplacement.eraseMask(box: box, canvasSize: CGSize(width: asset.image.width, height: asset.image.height))
+        else { return false }
+        let erased: CGImage
+        do { erased = try await sender(asset.image, mask) } catch { return false }
+        // Lift the old words out of the layer, then lay the new ones back where they sat.
+        guard replaceActiveLayer(with: erased) else { return false }
+        let toDocument = BrushRaster.pixelToDocument(layer.transform, width: asset.image.width, height: asset.image.height)
+        let docBox = box.applying(toDocument)
+        beginText(in: docBox)
+        guard var draft = textDraft else { return false }
+        draft.style.content = newText
+        return applyText(draft)
+    }
+
     /// Auto Crop: Vision's saliency picks the composition and the canvas becomes the suggested box, through the
     /// same resizer the Crop tool commits with — so it lands in history like a hand-drawn crop. The reading is
     /// local work, so it keeps working in Privacy Mode.

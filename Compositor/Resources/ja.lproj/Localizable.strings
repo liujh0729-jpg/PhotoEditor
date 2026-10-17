@@ -632,3 +632,9 @@
 "Suggest a prompt" = "プロンプトを提案";
 "No prompt yet" = "まだプロンプトがありません";
 "The layer's name and the picture on the canvas go to the chat model the slot names." = "レイヤー名とキャンバス上の画像は、スロットが指定するチャットモデルに送信されます。";
+"Replace Text…" = "テキストを置き換え…";
+"Replace Text" = "テキストを置き換え";
+"New text" = "新しいテキスト";
+"Replace" = "置き換え";
+"Select a layer with text on it first." = "最初にテキストを含むレイヤーを選択してください。";
+"Couldn't replace the text. Try again." = "テキストを置き換えできませんでした。もう一度お試しください。";

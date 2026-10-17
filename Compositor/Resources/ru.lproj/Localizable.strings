@@ -632,3 +632,9 @@
 "Suggest a prompt" = "Предложить запрос";
 "No prompt yet" = "Запроса пока нет";
 "The layer's name and the picture on the canvas go to the chat model the slot names." = "Имя слоя и изображение на холсте отправляются чат-модели, указанной в слоте.";
+"Replace Text…" = "Заменить текст…";
+"Replace Text" = "Заменить текст";
+"New text" = "Новый текст";
+"Replace" = "Заменить";
+"Select a layer with text on it first." = "Сначала выберите слой с текстом.";
+"Couldn't replace the text. Try again." = "Не удалось заменить текст. Попробуйте снова.";

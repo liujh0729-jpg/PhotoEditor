@@ -632,3 +632,9 @@
 "Suggest a prompt" = "Sugerir un prompt";
 "No prompt yet" = "Aún no hay prompt";
 "The layer's name and the picture on the canvas go to the chat model the slot names." = "El nombre de la capa y la imagen del lienzo se envían al modelo de chat que indica el espacio.";
+"Replace Text…" = "Reemplazar texto…";
+"Replace Text" = "Reemplazar texto";
+"New text" = "Texto nuevo";
+"Replace" = "Reemplazar";
+"Select a layer with text on it first." = "Selecciona primero una capa con texto.";
+"Couldn't replace the text. Try again." = "No se pudo reemplazar el texto. Inténtalo de nuevo.";

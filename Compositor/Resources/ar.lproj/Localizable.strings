@@ -632,3 +632,9 @@
 "Suggest a prompt" = "اقتراح مطالبة";
 "No prompt yet" = "لا توجد مطالبة بعد";
 "The layer's name and the picture on the canvas go to the chat model the slot names." = "يُرسل اسم الطبقة والصورة الموجودة على اللوحة إلى نموذج المحادثة الذي تحدده الفتحة.";
+"Replace Text…" = "استبدال النص…";
+"Replace Text" = "استبدال النص";
+"New text" = "نص جديد";
+"Replace" = "استبدال";
+"Select a layer with text on it first." = "حدّد أولًا طبقة تحتوي على نص.";
+"Couldn't replace the text. Try again." = "تعذّر استبدال النص. حاول مرة أخرى.";
