@@ -41,11 +41,15 @@ xcodebuild -exportArchive -quiet \
   -exportOptionsPlist "$PROJECT_DIR/scripts/ExportOptions.plist" \
   -exportPath "$WORK/export"
 APP_PATH="$WORK/export/$PRODUCT.app"
-codesign --verify --deep --strict --verbose=2 "$APP_PATH"
+echo "==> Local preflight: strict signature checks"
+codesign --verify --deep --strict -vvv "$APP_PATH"
+# Run the Gatekeeper assessment for visibility only: the notarization ticket isn't stapled yet, so a
+# rejection here flags packaging trouble, not a reason to stop the release; the post-staple checks below decide.
+spctl --assess --type execute -vv "$APP_PATH" || echo "note: pre-notarization assessment; the real verdict is checked after stapling"
 
 echo "==> Notarizing the app"
 ditto -c -k --keepParent "$APP_PATH" "$WORK/$PRODUCT.zip"
-xcrun notarytool submit "$WORK/$PRODUCT.zip" --keychain-profile "$NOTARY_PROFILE" --wait
+xcrun notarytool submit "$WORK/$PRODUCT.zip" --keychain-profile "$NOTARY_PROFILE" --verbose --wait
 xcrun stapler staple "$APP_PATH"
 
 echo "==> Building the DMG window"
@@ -70,7 +74,12 @@ if [[ -f "$LOW" && -f "$HIGH" ]]; then
 elif [[ -f "$LOW" ]]; then
   background=(--background "$LOW")
 fi
+# Pinned to HFS+ UDZO (zlib) on purpose: the tool's default drifts with version and host, and an
+# HFS+ image mounts everywhere back to the oldest installers, with none of the APFS-in-a-DMG
+# notarization flakiness seen on this pipeline.
 create-dmg \
+  --filesystem HFS+ \
+  --format UDZO \
   --volname "$PRODUCT" \
   --window-pos 200 120 --window-size 600 380 \
   --icon-size 128 --text-size 13 \
@@ -80,8 +89,13 @@ create-dmg \
   "$DMG" "$STAGE"
 
 echo "==> Signing and notarizing the DMG"
-codesign --sign "$IDENTITY" --timestamp "$DMG"
-xcrun notarytool submit "$DMG" --keychain-profile "$NOTARY_PROFILE" --wait
+codesign --sign "$IDENTITY" --timestamp --options runtime "$DMG"
+# Preflight the image itself before submitting: the outer signature must verify strict. The
+# Gatekeeper look is visibility only — before the ticket is stapled it reports "Unnotarized Developer ID"
+# even for a correctly packaged DMG — so it must not stop the run; the post-staple checks below decide.
+codesign --verify --strict -vvv "$DMG"
+spctl --assess --type open --context context:primary-signature -vv "$DMG" || echo "note: pre-notarization assessment; the real verdict is checked after stapling"
+xcrun notarytool submit "$DMG" --keychain-profile "$NOTARY_PROFILE" --verbose --wait
 xcrun stapler staple "$DMG"
 
 echo "==> What Gatekeeper will say on another Mac"
