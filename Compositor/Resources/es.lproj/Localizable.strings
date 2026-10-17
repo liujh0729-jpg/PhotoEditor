@@ -603,3 +603,12 @@
 "Distribute Horizontally" = "Distribuir horizontalmente";
 "Distribute Vertically" = "Distribuir verticalmente";
 "Because you often do this" = "Porque haces esto con frecuencia";
+"Search Assets…" = "Buscar recursos…";
+"What are you looking for?" = "¿Qué estás buscando?";
+"Index Recent Projects" = "Indexar proyectos recientes";
+"Search" = "Buscar";
+"Thinking…" = "Pensando…";
+"Nothing indexed yet. Index the recent projects, then ask." = "Nada indexado todavía. Indexa los proyectos recientes y luego pregunta.";
+"The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "El modelo aprende cómo se llaman las capas de cada proyecto; solo las palabras van a la pasarela, nunca las imágenes.";
+"There are no recent projects to index." = "No hay proyectos recientes que indexar.";
+"Nothing new to index." = "Nada nuevo que indexar.";

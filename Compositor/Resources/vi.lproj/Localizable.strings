@@ -603,3 +603,12 @@
 "Distribute Horizontally" = "Phân bố ngang";
 "Distribute Vertically" = "Phân bố dọc";
 "Because you often do this" = "Vì bạn thường làm vậy";
+"Search Assets…" = "Tìm kiếm tài nguyên…";
+"What are you looking for?" = "Bạn đang tìm gì?";
+"Index Recent Projects" = "Chỉ mục các dự án gần đây";
+"Search" = "Tìm";
+"Thinking…" = "Đang suy nghĩ…";
+"Nothing indexed yet. Index the recent projects, then ask." = "Chưa có chỉ mục. Hãy chỉ mục các dự án gần đây, rồi hỏi.";
+"The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "Mô hình học tên các lớp của từng dự án; chỉ có chữ gửi tới cổng, không bao giờ gửi ảnh.";
+"There are no recent projects to index." = "Không có dự án gần đây để chỉ mục.";
+"Nothing new to index." = "Không có gì mới để chỉ mục.";

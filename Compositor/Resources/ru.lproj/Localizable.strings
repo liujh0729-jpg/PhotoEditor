@@ -603,3 +603,12 @@
 "Distribute Horizontally" = "Распределить по горизонтали";
 "Distribute Vertically" = "Распределить по вертикали";
 "Because you often do this" = "Потому что вы часто это делаете";
+"Search Assets…" = "Поиск материалов…";
+"What are you looking for?" = "Что вы ищете?";
+"Index Recent Projects" = "Индексировать недавние проекты";
+"Search" = "Поиск";
+"Thinking…" = "Думаю…";
+"Nothing indexed yet. Index the recent projects, then ask." = "Индекс ещё не построен. Индексируйте недавние проекты, затем задайте вопрос.";
+"The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "Модель запоминает названия слоёв каждого проекта; на шлюз уходят только слова, никогда не изображения.";
+"There are no recent projects to index." = "Нет недавних проектов для индексации.";
+"Nothing new to index." = "Нового для индексации нет.";

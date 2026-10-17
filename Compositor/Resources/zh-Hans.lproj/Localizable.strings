@@ -688,3 +688,12 @@
 "Distribute Horizontally" = "水平分布";
 "Distribute Vertically" = "垂直分布";
 "Because you often do this" = "因为你常这样做";
+"Search Assets…" = "搜索素材…";
+"What are you looking for?" = "你想找什么？";
+"Index Recent Projects" = "索引最近项目";
+"Search" = "搜索";
+"Thinking…" = "思考中…";
+"Nothing indexed yet. Index the recent projects, then ask." = "尚未建立索引。先索引最近项目，然后再搜索。";
+"The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "模型只学习每个项目图层的名称；只有文字会发送到网关，图片不会。";
+"There are no recent projects to index." = "没有可索引的最近项目。";
+"Nothing new to index." = "没有需要新索引的内容。";

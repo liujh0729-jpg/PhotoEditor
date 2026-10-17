@@ -603,3 +603,12 @@
 "Distribute Horizontally" = "توزيع أفقي";
 "Distribute Vertically" = "توزيع رأسي";
 "Because you often do this" = "لأنك غالبًا ما تفعل هذا";
+"Search Assets…" = "البحث في الأصول…";
+"What are you looking for?" = "عن ماذا تبحث؟";
+"Index Recent Projects" = "فهرسة المشاريع الأخيرة";
+"Search" = "بحث";
+"Thinking…" = "جارٍ التفكير…";
+"Nothing indexed yet. Index the recent projects, then ask." = "لم تتم الفهرسة بعد. قم بفهرسة المشاريع الأخيرة ثم اسأل.";
+"The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "يتعرف النموذج على أسماء طبقات كل مشروع؛ تذهب الكلمات فقط إلى البوابة، وليس الصور أبدًا.";
+"There are no recent projects to index." = "لا توجد مشاريع أخيرة لفهرستها.";
+"Nothing new to index." = "لا يوجد جديد لفهرسته.";

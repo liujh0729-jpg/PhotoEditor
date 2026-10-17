@@ -603,3 +603,12 @@
 "Distribute Horizontally" = "水平に分布";
 "Distribute Vertically" = "垂直に分布";
 "Because you often do this" = "よく行う操作だから";
+"Search Assets…" = "アセットを検索…";
+"What are you looking for?" = "何を探していますか？";
+"Index Recent Projects" = "最近のプロジェクトをインデックス";
+"Search" = "検索";
+"Thinking…" = "思考中…";
+"Nothing indexed yet. Index the recent projects, then ask." = "まだインデックスがありません。最近のプロジェクトをインデックスしてから検索してください。";
+"The model learns what each project's layers are called; only the words go to the gateway, never the pictures." = "モデルは各プロジェクトのレイヤー名を学習します。ゲートウェイに送られるのは文字だけで、画像は送られません。";
+"There are no recent projects to index." = "インデックスできる最近のプロジェクトがありません。";
+"Nothing new to index." = "新しくインデックスするものはありません。";

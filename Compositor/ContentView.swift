@@ -304,7 +304,7 @@ struct ContentView: View {
             } message: { Text(session.cropError ?? "") }
         
         // AI feature sheets, kept in their own modifier so the body's long chain stays cheap to type-check.
-        .modifier(AISheets(session: session))
+        .modifier(AISheets(session: session, applicationDelegate: applicationDelegate))
     }
     private func requestNewCanvas() {
         if let applicationDelegate { Task { await applicationDelegate.projects.newCanvas() } }
@@ -504,6 +504,7 @@ private struct WidthReader: ViewModifier {
 /// type-checking is already near its limit.
 private struct AISheets: ViewModifier {
     @Bindable var session: EditorSession
+    let applicationDelegate: CompositorApplicationDelegate?
     func body(content: Content) -> some View {
         content
         .sheet(isPresented: $session.showsImageGeneration) {
@@ -542,6 +543,9 @@ private struct AISheets: ViewModifier {
         }
         .sheet(isPresented: $session.showsImageDescription) {
             ImageDescriptionSheet(session: session)
+        }
+        .sheet(isPresented: $session.showsAssetSearch) {
+            AssetSearchSheet(open: { url in Task { await applicationDelegate?.projects.open(url) } })
         }
     }
 }
