@@ -4,6 +4,13 @@ import Testing
 
 @MainActor
 struct CommandPaletteTests {
+    /// The live-menu-bar tests look commands up by their English titles. The test host is the real app, which runs
+    /// in whatever language its saved preference asks for (Settings › Language, or the system's), so these tests
+    /// only make sense when the host actually got the English `.lproj`.
+    private nonisolated static var menuBarSpeaksEnglish: Bool {
+        Bundle.main.preferredLocalizations.first.map { $0.hasPrefix("en") } ?? true
+    }
+
     private func entry(_ id: String, enabled: Bool = true) -> CommandPaletteEntry {
         CommandPaletteEntry(id: id, shortcut: nil, isEnabled: enabled, perform: {})
     }
@@ -53,7 +60,8 @@ struct CommandPaletteTests {
 
     /// Against the app's own SwiftUI menu bar, not a hand-built one: its commands are listed, disabled ones greyed
     /// (SwiftUI takes their action away), and running one runs its SwiftUI action.
-    @Test func realMenuBarRunsItsCommands() async throws {
+    @Test(.disabled(if: !Self.menuBarSpeaksEnglish, "the host app is running in a language whose menus these English lookups can't find"))
+    func realMenuBarRunsItsCommands() async throws {
         let bar = try #require(NSApp.mainMenu)
         func entries() -> [CommandPaletteEntry] { CommandPaletteMenu.entries(in: bar, skipping: CommandPaletteController.skipped) }
         func gridState() -> NSControl.StateValue? {
@@ -79,7 +87,8 @@ struct CommandPaletteTests {
     /// The AI commands live in a menu-bar CommandMenu, so the palette lists them like any other command: searching
     /// "ai" or "generate" finds them, and ⌘F can open every AI sheet. With no document the canvas-bound ones are
     /// listed greyed; the ones that don't touch the canvas are runnable.
-    @Test func aiCommandsAreListedInPalette() throws {
+    @Test(.disabled(if: !Self.menuBarSpeaksEnglish, "the host app is running in a language whose menus these English lookups can't find"))
+    func aiCommandsAreListedInPalette() throws {
         let bar = try #require(NSApp.mainMenu)
         let listed = CommandPaletteMenu.entries(in: bar, skipping: CommandPaletteController.skipped)
         let titles = Set(listed.map(\.title))

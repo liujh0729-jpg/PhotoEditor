@@ -63,6 +63,9 @@ nonisolated enum CMYK {
 
     /// A CMYK profile embedded in a file (a CMYK PSD, JPEG or TIFF), named as it names itself; nil when it isn't one.
     static func embedded(_ data: Data) -> CMYKProfile? {
+        // A file that embeds a profile macOS already ships keeps that profile's name: ColorSync's description string
+        // comes back in the machine's language, which would give one profile a different name in each locale.
+        if let known = installed().first(where: { $0.data == data }) { return known }
         var name: String?
         if let profile = ColorSyncProfileCreate(data as CFData, nil)?.takeRetainedValue(),
            let described = ColorSyncProfileCopyDescriptionString(profile)?.takeRetainedValue() {
