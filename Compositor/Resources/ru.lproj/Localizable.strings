@@ -620,3 +620,9 @@
 "Save Live Photo…" = "Сохранить как Live Photo…";
 "Export the first frame and the clip as a Live Photo pair." = "Экспортирует первый кадр и клип как пару Live Photo.";
 "The clip had no frame to lift into a Live Photo." = "В клипе не нашлось кадра для извлечения в Live Photo.";
+"Extend Image…" = "Расширить изображение…";
+"Outpaint" = "Расширение кадра";
+"Margin" = "Отступ";
+"Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "Расширьте холст, и модель дорисует только новые края. Само изображение останется без изменений.";
+"Extend" = "Расширить";
+"Couldn't extend the image. Check the prompt and try again." = "Не удалось расширить изображение. Проверьте запрос и повторите попытку.";

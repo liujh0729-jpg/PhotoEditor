@@ -620,3 +620,9 @@
 "Save Live Photo…" = "Guardar como Live Photo…";
 "Export the first frame and the clip as a Live Photo pair." = "Exporta el primer fotograma y el clip como un par de Live Photo.";
 "The clip had no frame to lift into a Live Photo." = "El clip no tenía ningún fotograma que extraer para un Live Photo.";
+"Extend Image…" = "Ampliar imagen…";
+"Outpaint" = "Ampliar imagen";
+"Margin" = "Margen";
+"Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "Amplía el lienzo y deja que el modelo pinte solo los nuevos bordes. La imagen en sí permanece igual.";
+"Extend" = "Ampliar";
+"Couldn't extend the image. Check the prompt and try again." = "No se pudo ampliar la imagen. Revisa el indicador e inténtalo de nuevo.";

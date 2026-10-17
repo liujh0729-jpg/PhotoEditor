@@ -59,6 +59,30 @@ extension EditorSession {
         return changed
     }
 
+    /// Outpaints the canvas: it grows by `margin` on each side with the picture centered, the gateway paints only
+    /// the new ring (the mask is white over the fresh border, black over the picture as it stands), and the answer
+    /// lands as a new layer over the enlarged box. `sender` runs the request and hands back the painted picture,
+    /// so the whole path is testable without a network. Returns false when the canvas can't be edited, the margin
+    /// or prompt is empty, or the enlarged size would break the document's limits.
+    @discardableResult
+    func outpaint(margin: Int, prompt: String, model: String,
+                  sender: (CGImage, CGImage) async throws -> CGImage) async -> Bool {
+        guard canEditLayers, canStartProjectOperation, let document,
+              margin > 0, !prompt.isEmpty,
+              let sample = selectionSample(document, sampleAllLayers: true) else { return false }
+        let width = document.width + 2 * margin
+        let height = document.height + 2 * margin
+        guard CGFloat(width) <= DocumentLimits.maxSideExtent, CGFloat(height) <= DocumentLimits.maxSideExtent,
+              let padded = Outpaint.pad(sample, margin: margin),
+              let mask = Outpaint.mask(originalSize: CGSize(width: document.width, height: document.height), margin: margin)
+        else { return false }
+        let result: CGImage
+        do { result = try await sender(padded, mask) } catch { return false }
+        // Grow the canvas with the picture centered, then lay the painted ring over the whole enlarged box.
+        guard await resizeCanvas(toWidth: width, height: height, offset: nil, actionName: "Outpaint") else { return false }
+        return placeGeneratedImage(result, named: "Outpaint")
+    }
+
     /// Redraws a mask of any format (a segmentation map off the gateway is usually RGBA) into the monochrome,
     /// alpha-less 8-bit form a layer mask stores, at its own resolution. White reveals, black hides.
     private func normalizedMask(_ image: CGImage) -> CGImage? {

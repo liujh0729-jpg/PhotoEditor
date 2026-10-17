@@ -601,6 +601,8 @@ final class EditorSession {
     var showsAssetSearch = false
     /// Auto-Tidy…: the decision model's rename and folder proposals over the layer tree.
     var showsAutoTidy = false
+    /// Extend Image…: outpainting — the canvas grows and the model paints only the new border.
+    var showsOutpaint = false
     /// What the AI said about the picture, filed with the project (manifest version 14).
     var aiDescription: String?
     /// The RAW file being developed, and the settings the sheet is editing (see RawImporter).

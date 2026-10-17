@@ -705,3 +705,9 @@
 "Save Live Photo…" = "保存为动态照片…";
 "Export the first frame and the clip as a Live Photo pair." = "将首帧和短片导出为一对动态照片。";
 "The clip had no frame to lift into a Live Photo." = "该短片没有可提取为动态照片的画面。";
+"Extend Image…" = "扩展图像…";
+"Outpaint" = "扩图";
+"Margin" = "边距";
+"Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "扩大画布并让模型只绘制新增的边缘，画面本身保持不变。";
+"Extend" = "扩展";
+"Couldn't extend the image. Check the prompt and try again." = "无法扩展图像。请检查提示词后重试。";

@@ -620,3 +620,9 @@
 "Save Live Photo…" = "حفظ كصورة حية…";
 "Export the first frame and the clip as a Live Photo pair." = "يصدّر الإطار الأول والمقطع كزوج صورة حية.";
 "The clip had no frame to lift into a Live Photo." = "لم يحتوِ المقطع على إطار لاستخراجه كصورة حية.";
+"Extend Image…" = "تمديد الصورة…";
+"Outpaint" = "تمديد الإطار";
+"Margin" = "هامش";
+"Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "وسّع اللوحة ودع النموذج يرسم الحواف الجديدة فقط. تبقى الصورة كما هي.";
+"Extend" = "تمديد";
+"Couldn't extend the image. Check the prompt and try again." = "تعذّر تمديد الصورة. تحقق من المطالبة وحاول مرة أخرى.";

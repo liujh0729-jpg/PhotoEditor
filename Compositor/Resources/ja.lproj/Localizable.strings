@@ -620,3 +620,9 @@
 "Save Live Photo…" = "Live Photo として保存…";
 "Export the first frame and the clip as a Live Photo pair." = "最初のフレームとクリップを Live Photo のペアとして書き出します。";
 "The clip had no frame to lift into a Live Photo." = "クリップに Live Photo へ抽出できるフレームがありません。";
+"Extend Image…" = "画像を拡張…";
+"Outpaint" = "画像拡張";
+"Margin" = "余白";
+"Grow the canvas and let the model paint only the new edges. The picture itself stays as it is." = "キャンバスを広げ、モデルは新しい縁のみを描画します。画像自体はそのままです。";
+"Extend" = "拡張";
+"Couldn't extend the image. Check the prompt and try again." = "画像を拡張できませんでした。プロンプトを確認して再試行してください。";
