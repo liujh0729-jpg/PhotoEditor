@@ -702,3 +702,6 @@
 "There are no layers to tidy." = "没有可整理的图层。";
 "The model sees nothing worth renaming or grouping." = "模型没有发现值得重命名或分组的内容。";
 "Only the layer names and their place in the tree go to the model, never the pictures." = "只有图层名称及其在层级中的位置会发送到模型，图片不会。";
+"Save Live Photo…" = "保存为动态照片…";
+"Export the first frame and the clip as a Live Photo pair." = "将首帧和短片导出为一对动态照片。";
+"The clip had no frame to lift into a Live Photo." = "该短片没有可提取为动态照片的画面。";

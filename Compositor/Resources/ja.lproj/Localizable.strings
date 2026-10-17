@@ -617,3 +617,6 @@
 "There are no layers to tidy." = "整理できるレイヤーがありません。";
 "The model sees nothing worth renaming or grouping." = "モデルは名前変更やグループ化に値するものを見つけていません。";
 "Only the layer names and their place in the tree go to the model, never the pictures." = "送られるのはレイヤー名とツリー上の位置だけで、画像は送られません。";
+"Save Live Photo…" = "Live Photo として保存…";
+"Export the first frame and the clip as a Live Photo pair." = "最初のフレームとクリップを Live Photo のペアとして書き出します。";
+"The clip had no frame to lift into a Live Photo." = "クリップに Live Photo へ抽出できるフレームがありません。";

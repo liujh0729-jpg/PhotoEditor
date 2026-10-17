@@ -618,3 +618,6 @@
 "There are no layers to tidy." = "Aucun calque à ranger.";
 "The model sees nothing worth renaming or grouping." = "Le modèle ne voit rien qui mérite d'être renommé ou groupé.";
 "Only the layer names and their place in the tree go to the model, never the pictures." = "Seuls les noms des calques et leur place dans l'arborescence vont au modèle, jamais les images.";
+"Save Live Photo…" = "Enregistrer en Live Photo…";
+"Export the first frame and the clip as a Live Photo pair." = "Exporte la première image et le clip comme une paire Live Photo.";
+"The clip had no frame to lift into a Live Photo." = "Le clip n'avait aucune image à extraire pour un Live Photo.";

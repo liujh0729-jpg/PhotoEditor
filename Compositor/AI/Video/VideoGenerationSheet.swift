@@ -132,6 +132,10 @@ struct VideoGenerationSheet: View {
                                     Button("Download Video") {
                                         downloadVideo(task.outputURLs[0])
                                     }
+                                    Button("Save Live Photo…") {
+                                        saveLivePhoto(task.outputURLs[0])
+                                    }
+                                    .help("Export the first frame and the clip as a Live Photo pair.")
                                 }
                             case .failed:
                                 Image(systemName: "xmark.circle.fill")
@@ -246,6 +250,38 @@ struct VideoGenerationSheet: View {
                 } catch {
                     errorMessage = "Failed to download: \(error.localizedDescription)"
                 }
+            }
+        }
+    }
+
+    /// Pulls the clip to a temp file, lifts its first frame, and writes the still + movie pair — a Live
+    /// Photo Photos reunites — into a folder the person picks. Filing straight into the library is the last
+    /// manual step (drop the folder onto Photos), since that needs the photo-library entitlement.
+    private func saveLivePhoto(_ url: URL) {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.prompt = "Export"
+        guard panel.runModal() == .OK, let folder = panel.url else { return }
+        isGenerating = true
+        errorMessage = nil
+        Task {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let temp = FileManager.default.temporaryDirectory
+                    .appendingPathComponent("livephoto-\(UUID().uuidString).mov")
+                try data.write(to: temp)
+                defer { try? FileManager.default.removeItem(at: temp) }
+                guard await LivePhoto.export(from: temp, to: folder) != nil else {
+                    errorMessage = "The clip had no frame to lift into a Live Photo."
+                    isGenerating = false
+                    return
+                }
+                isGenerating = false
+            } catch {
+                isGenerating = false
+                errorMessage = "Failed to save Live Photo: \(error.localizedDescription)"
             }
         }
     }

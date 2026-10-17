@@ -617,3 +617,6 @@
 "There are no layers to tidy." = "لا توجد طبقات لترتيبها.";
 "The model sees nothing worth renaming or grouping." = "لا يرى النموذج ما يستحق إعادة التسمية أو التجميع.";
 "Only the layer names and their place in the tree go to the model, never the pictures." = "تذهب أسماء الطبقات وموضعها في الشجرة إلى النموذج فقط، وليس الصور أبدًا.";
+"Save Live Photo…" = "حفظ كصورة حية…";
+"Export the first frame and the clip as a Live Photo pair." = "يصدّر الإطار الأول والمقطع كزوج صورة حية.";
+"The clip had no frame to lift into a Live Photo." = "لم يحتوِ المقطع على إطار لاستخراجه كصورة حية.";

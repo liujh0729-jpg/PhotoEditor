@@ -617,3 +617,6 @@
 "There are no layers to tidy." = "Không có lớp để dọn dẹp.";
 "The model sees nothing worth renaming or grouping." = "Mô hình không thấy gì đáng đổi tên hoặc gộp nhóm.";
 "Only the layer names and their place in the tree go to the model, never the pictures." = "Chỉ tên lớp và vị trí của chúng trong cây gửi tới mô hình, không bao giờ gửi ảnh.";
+"Save Live Photo…" = "Lưu thành Live Photo…";
+"Export the first frame and the clip as a Live Photo pair." = "Xuất khung hình đầu và đoạn clip thành một cặp Live Photo.";
+"The clip had no frame to lift into a Live Photo." = "Đoạn clip không có khung hình nào để trích vào Live Photo.";

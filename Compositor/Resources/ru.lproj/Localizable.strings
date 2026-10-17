@@ -617,3 +617,6 @@
 "There are no layers to tidy." = "Нет слоёв для упорядочивания.";
 "The model sees nothing worth renaming or grouping." = "Модель не нашла ничего, что стоит переименовать или сгруппировать.";
 "Only the layer names and their place in the tree go to the model, never the pictures." = "Модель получает только имена слоёв и их место в дереве, никогда не изображения.";
+"Save Live Photo…" = "Сохранить как Live Photo…";
+"Export the first frame and the clip as a Live Photo pair." = "Экспортирует первый кадр и клип как пару Live Photo.";
+"The clip had no frame to lift into a Live Photo." = "В клипе не нашлось кадра для извлечения в Live Photo.";
