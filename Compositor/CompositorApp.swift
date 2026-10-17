@@ -412,6 +412,12 @@ struct CompositorApp: App {
                         .disabled(session.document == nil)
                     Button("Style Transfer…") { session.showsStyleTransfer = true }
                         .disabled(session.document == nil || session.activeLayer?.asset == nil)
+                    Divider()
+                    // Same Settings window the app menu opens, reachable from where the model-hungry
+                    // commands live.
+                    SettingsLink {
+                        Text("AI Model Settings…")
+                    }
                 }
             }
 

@@ -473,3 +473,27 @@
 "Create canvas" = "Crear lienzo";
 "Enter whole numbers from 1 to %@ pixels." = "Introduce números enteros de 1 a %@ píxeles.";
 "Enter a size up to %@ pixels at this DPI." = "Introduce un tamaño de hasta %@ píxeles con esta resolución.";
+
+/* Channel editor */
+"API Key" = "Clave de API";
+"API Key: %@" = "Clave de API: %@";
+"Base URL" = "URL base";
+"Edit…" = "Editar…";
+
+/* Capability slots */
+"Text Chat" = "Chat de texto";
+"Image Generation" = "Generación de imagen";
+"Image Editing" = "Edición de imagen";
+"Video Generation" = "Generación de video";
+"Text-to-Speech" = "Texto a voz";
+"Speech-to-Text" = "Voz a texto";
+"Embeddings" = "Embeddings";
+"Decision Model" = "Modelo de decisión";
+"Model:" = "Modelo:";
+"Path:" = "Ruta:";
+"Channel:" = "Canal:";
+
+/* Capability catalog status */
+"Loading models…" = "Cargando modelos…";
+"No models loaded — configure a channel with an API key first." = "No hay modelos cargados: configura primero un canal con clave API.";
+"AI Model Settings…" = "Ajustes de modelos de IA…";

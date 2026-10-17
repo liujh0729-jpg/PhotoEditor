@@ -473,3 +473,27 @@
 "Create canvas" = "Создать холст";
 "Enter whole numbers from 1 to %@ pixels." = "Введите целые числа от 1 до %@ пикс.";
 "Enter a size up to %@ pixels at this DPI." = "Введите размер до %@ пикс. при этом разрешении.";
+
+/* Channel editor */
+"API Key" = "Ключ API";
+"API Key: %@" = "Ключ API: %@";
+"Base URL" = "Базовый URL";
+"Edit…" = "Редактировать…";
+
+/* Capability slots */
+"Text Chat" = "Текстовый чат";
+"Image Generation" = "Генерация изображения";
+"Image Editing" = "Редактирование изображения";
+"Video Generation" = "Генерация видео";
+"Text-to-Speech" = "Текст в речь";
+"Speech-to-Text" = "Речь в текст";
+"Embeddings" = "Векторные представления";
+"Decision Model" = "Модель принятия решений";
+"Model:" = "Модель:";
+"Path:" = "Путь:";
+"Channel:" = "Канал:";
+
+/* Capability catalog status */
+"Loading models…" = "Загрузка моделей…";
+"No models loaded — configure a channel with an API key first." = "Модели не загружены — сначала настройте канал с ключом API.";
+"AI Model Settings…" = "Настройки моделей AI…";

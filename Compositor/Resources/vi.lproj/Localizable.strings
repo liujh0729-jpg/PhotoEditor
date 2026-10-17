@@ -473,3 +473,27 @@
 "Create canvas" = "Tạo khung vẽ";
 "Enter whole numbers from 1 to %@ pixels." = "Nhập số nguyên từ 1 đến %@ điểm ảnh.";
 "Enter a size up to %@ pixels at this DPI." = "Nhập kích thước tối đa %@ điểm ảnh ở DPI này.";
+
+/* Channel editor */
+"API Key" = "Khóa API";
+"API Key: %@" = "Khóa API: %@";
+"Base URL" = "URL cơ sở";
+"Edit…" = "Chỉnh sửa…";
+
+/* Capability slots */
+"Text Chat" = "Trò chuyện văn bản";
+"Image Generation" = "Tạo hình ảnh";
+"Image Editing" = "Chỉnh sửa hình ảnh";
+"Video Generation" = "Tạo video";
+"Text-to-Speech" = "Chuyển văn bản thành giọng nói";
+"Speech-to-Text" = "Chuyển giọng nói thành văn bản";
+"Embeddings" = "Embeddings";
+"Decision Model" = "Mô hình quyết định";
+"Model:" = "Mô hình:";
+"Path:" = "Đường dẫn:";
+"Channel:" = "Kênh:";
+
+/* Capability catalog status */
+"Loading models…" = "Đang tải mô hình…";
+"No models loaded — configure a channel with an API key first." = "Chưa có mô hình — hãy cấu hình kênh có khóa API trước.";
+"AI Model Settings…" = "Cài đặt mô hình AI…";

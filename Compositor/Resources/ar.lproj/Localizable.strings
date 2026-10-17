@@ -473,3 +473,27 @@
 "Create canvas" = "إنشاء لوحة";
 "Enter whole numbers from 1 to %@ pixels." = "أدخل أعدادًا صحيحة من 1 إلى %@ بكسل.";
 "Enter a size up to %@ pixels at this DPI." = "أدخل حجمًا حتى %@ بكسل عند هذه الدقة.";
+
+/* Channel editor */
+"API Key" = "مفتاح API";
+"API Key: %@" = "مفتاح API: %@";
+"Base URL" = "عنوان URL الأساسي";
+"Edit…" = "تحرير…";
+
+/* Capability slots */
+"Text Chat" = "دردشة نصية";
+"Image Generation" = "توليد الصور";
+"Image Editing" = "تحرير الصور";
+"Video Generation" = "توليد الفيديو";
+"Text-to-Speech" = "نص إلى كلام";
+"Speech-to-Text" = "كلام إلى نص";
+"Embeddings" = "متجهات التضمين";
+"Decision Model" = "نموذج القرار";
+"Model:" = "النموذج:";
+"Path:" = "المسار:";
+"Channel:" = "القناة:";
+
+/* Capability catalog status */
+"Loading models…" = "جارٍ تحميل النماذج…";
+"No models loaded — configure a channel with an API key first." = "لا توجد نماذج — اضبط قناة تحتوي على مفتاح API أولاً.";
+"AI Model Settings…" = "إعدادات نماذج الذكاء الاصطناعي…";

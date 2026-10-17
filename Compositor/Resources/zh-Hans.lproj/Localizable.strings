@@ -558,3 +558,27 @@
 "Create canvas" = "创建画布";
 "Enter whole numbers from 1 to %@ pixels." = "请输入 1 到 %@ 之间的整数（像素）。";
 "Enter a size up to %@ pixels at this DPI." = "在当前 DPI 下，尺寸最大为 %@ 像素。";
+
+/* Channel editor */
+"API Key" = "API 密钥";
+"API Key: %@" = "API 密钥：%@";
+"Base URL" = "基础 URL";
+"Edit…" = "编辑…";
+
+/* Capability slots */
+"Text Chat" = "文本对话";
+"Image Generation" = "图像生成";
+"Image Editing" = "图像编辑";
+"Video Generation" = "视频生成";
+"Text-to-Speech" = "文字转语音";
+"Speech-to-Text" = "语音转文字";
+"Embeddings" = "向量嵌入";
+"Decision Model" = "决策模型";
+"Model:" = "模型：";
+"Path:" = "路径：";
+"Channel:" = "通道：";
+
+/* Capability catalog status */
+"Loading models…" = "正在加载模型…";
+"No models loaded — configure a channel with an API key first." = "暂无模型，请先配置带 API 密钥的通道。";
+"AI Model Settings…" = "AI 模型设置…";

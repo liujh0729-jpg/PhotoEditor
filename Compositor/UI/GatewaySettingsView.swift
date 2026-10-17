@@ -128,6 +128,7 @@ struct ChannelRow: View {
                 ))
                 .toggleStyle(.switch)
                 .labelsHidden()
+                .controlSize(.small)
                 
                 Menu {
                     Button("Edit…", action: onEdit)
@@ -139,7 +140,7 @@ struct ChannelRow: View {
                         Button("Delete", action: onDelete)
                     }
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Text("Edit")
                 }
                 .menuStyle(.borderlessButton)
                 .fixedSize()
@@ -182,6 +183,7 @@ struct ChannelEditorView: View {
                     TextField("Base URL", text: $baseURL)
                         .textFieldStyle(.roundedBorder)
                     SecureField("API Key", text: $apiKey)
+                        .textFieldStyle(.roundedBorder)
                 }
                 
                 Section("Settings") {
@@ -350,14 +352,42 @@ struct ChannelEditorView: View {
 /// Tab for managing capability slots.
 struct CapabilitiesTab: View {
     @ObservedObject private var store = GatewayConfigurationStore.shared
+    @ObservedObject private var catalog = CatalogStore.shared
     
     var body: some View {
-        List {
-            ForEach(store.configuration.capabilitySlots) { slot in
-                CapabilitySlotRow(slot: slot)
+        VStack(spacing: 0) {
+            List {
+                ForEach(store.configuration.capabilitySlots) { slot in
+                    CapabilitySlotRow(slot: slot)
+                }
+            }
+            .listStyle(.inset)
+            
+            // Model pickers read from the gateway catalog, so the tab pulls it on appear:
+            // first the AIPDD catalog, falling back to /v1/models (see CatalogStore).
+            if catalog.isSyncing {
+                HStack(spacing: 8) {
+                    ProgressView()
+                        .controlSize(.small)
+                    Text("Loading models…")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 6)
+            } else if catalog.models.isEmpty {
+                Text("No models loaded — configure a channel with an API key first.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 6)
             }
         }
-        .listStyle(.inset)
+        .onAppear {
+            guard !catalog.isSyncing else { return }
+            Task { try? await catalog.sync() }
+        }
     }
 }
 
@@ -365,15 +395,31 @@ struct CapabilitiesTab: View {
 struct CapabilitySlotRow: View {
     let slot: CapabilitySlot
     @ObservedObject private var store = GatewayConfigurationStore.shared
+    @ObservedObject private var catalog = CatalogStore.shared
     
     @State private var modelOverride: String = ""
     @State private var pathOverride: String = ""
     @State private var channelOverrideID: UUID?
     
+    /// Models offered for this slot: the catalog's models that serve the slot's endpoint, or — when
+    /// the catalog carries no per-model routing (an OpenAI-style /v1/models fallback) — the whole list,
+    /// so a dropdown always has something to show next to "Default".
+    private var modelOptions: [CatalogModel] {
+        let available = catalog.models.filter(\.available)
+        let scoped = available.filter { catalogModelsMatch($0) }
+        return scoped.isEmpty ? available : scoped
+    }
+    
+    private func catalogModelsMatch(_ model: CatalogModel) -> Bool {
+        model.execution.path.contains(slot.endpointType.defaultPath)
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(slot.endpointType.displayName)
+                // Slot names ("Text Chat", "Image Generation"…) go through LocalizedStringKey
+                // so the catalog can translate them.
+                Text(LocalizedStringKey(slot.endpointType.displayName))
                     .font(.headline)
                 Spacer()
                 Text(slot.endpointType.defaultPath)
@@ -384,8 +430,19 @@ struct CapabilitySlotRow: View {
             HStack {
                 Text("Model:")
                     .frame(width: 60, alignment: .leading)
-                TextField("Default", text: $modelOverride)
-                    .textFieldStyle(.roundedBorder)
+                Picker("", selection: $modelOverride) {
+                    Text("Default").tag("")
+                    ForEach(modelOptions) { model in
+                        Text(verbatim: model.name).tag(model.id)
+                    }
+                    // An override saved earlier may name a model the catalog no longer lists;
+                    // keep it visible instead of silently falling back to Default.
+                    if !modelOverride.isEmpty, !modelOptions.contains(where: { $0.id == modelOverride }) {
+                        Text(verbatim: modelOverride).tag(modelOverride)
+                    }
+                }
+                .labelsHidden()
+                .disabled(catalog.isSyncing)
             }
             
             HStack {

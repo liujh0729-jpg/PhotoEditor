@@ -473,3 +473,27 @@
 "Create canvas" = "キャンバスを作成";
 "Enter whole numbers from 1 to %@ pixels." = "1 以上 %@ 以下の整数をピクセルで入力してください。";
 "Enter a size up to %@ pixels at this DPI." = "この DPI では、サイズは %@ ピクセルまでです。";
+
+/* Channel editor */
+"API Key" = "API キー";
+"API Key: %@" = "API キー：%@";
+"Base URL" = "ベース URL";
+"Edit…" = "編集…";
+
+/* Capability slots */
+"Text Chat" = "テキストチャット";
+"Image Generation" = "画像生成";
+"Image Editing" = "画像編集";
+"Video Generation" = "動画生成";
+"Text-to-Speech" = "音声合成";
+"Speech-to-Text" = "文字起こし";
+"Embeddings" = "埋め込み";
+"Decision Model" = "決定モデル";
+"Model:" = "モデル：";
+"Path:" = "パス：";
+"Channel:" = "チャネル：";
+
+/* Capability catalog status */
+"Loading models…" = "モデルを読み込み中…";
+"No models loaded — configure a channel with an API key first." = "モデルが読み込まれていません。まず API キーを設定したチャネルを作成してください。";
+"AI Model Settings…" = "AI モデル設定…";
