@@ -459,3 +459,18 @@
 "Nearest" = "Plus proche";
 "Smooth" = "Lissé";
 "High quality" = "Qualité élevée";
+
+/* New canvas */
+"Custom" = "Personnalisée";
+"Height" = "Hauteur";
+"Pixels" = "Pixels";
+"Inches" = "Pouces";
+"Centimeters" = "Centimètres";
+"Millimeters" = "Millimètres";
+"Transparent canvas" = "Canevas transparent";
+"White canvas" = "Canevas blanc";
+"Black canvas" = "Canevas noir";
+"Import image" = "Importer une image";
+"Create canvas" = "Créer un canevas";
+"Enter whole numbers from 1 to %@ pixels." = "Saisissez des nombres entiers de 1 à %@ pixels.";
+"Enter a size up to %@ pixels at this DPI." = "Saisissez une taille allant jusqu'à %@ pixels à cette résolution.";

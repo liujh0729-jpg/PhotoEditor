@@ -458,3 +458,18 @@
 "Nearest" = "Ближайший";
 "Smooth" = "Плавный";
 "High quality" = "Высокое качество";
+
+/* New canvas */
+"Custom" = "Пользовательский";
+"Height" = "Высота";
+"Pixels" = "Пиксели";
+"Inches" = "Дюймы";
+"Centimeters" = "Сантиметры";
+"Millimeters" = "Миллиметры";
+"Transparent canvas" = "Прозрачный холст";
+"White canvas" = "Белый холст";
+"Black canvas" = "Чёрный холст";
+"Import image" = "Импортировать изображение";
+"Create canvas" = "Создать холст";
+"Enter whole numbers from 1 to %@ pixels." = "Введите целые числа от 1 до %@ пикс.";
+"Enter a size up to %@ pixels at this DPI." = "Введите размер до %@ пикс. при этом разрешении.";

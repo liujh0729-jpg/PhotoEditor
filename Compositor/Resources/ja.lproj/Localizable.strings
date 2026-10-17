@@ -458,3 +458,18 @@
 "Nearest" = "最近傍";
 "Smooth" = "スムーズ";
 "High quality" = "高品質";
+
+/* New canvas */
+"Custom" = "カスタム";
+"Height" = "高さ";
+"Pixels" = "ピクセル";
+"Inches" = "インチ";
+"Centimeters" = "センチメートル";
+"Millimeters" = "ミリメートル";
+"Transparent canvas" = "透明なキャンバス";
+"White canvas" = "白のキャンバス";
+"Black canvas" = "黒のキャンバス";
+"Import image" = "画像を読み込む";
+"Create canvas" = "キャンバスを作成";
+"Enter whole numbers from 1 to %@ pixels." = "1 以上 %@ 以下の整数をピクセルで入力してください。";
+"Enter a size up to %@ pixels at this DPI." = "この DPI では、サイズは %@ ピクセルまでです。";

@@ -458,3 +458,18 @@
 "Nearest" = "Gần nhất";
 "Smooth" = "Làm mượt";
 "High quality" = "Chất lượng cao";
+
+/* New canvas */
+"Custom" = "Tùy chỉnh";
+"Height" = "Cao";
+"Pixels" = "Điểm ảnh";
+"Inches" = "inch";
+"Centimeters" = "xentimét";
+"Millimeters" = "milimét";
+"Transparent canvas" = "Khung vẽ trong suốt";
+"White canvas" = "Khung vẽ trắng";
+"Black canvas" = "Khung vẽ đen";
+"Import image" = "Nhập ảnh";
+"Create canvas" = "Tạo khung vẽ";
+"Enter whole numbers from 1 to %@ pixels." = "Nhập số nguyên từ 1 đến %@ điểm ảnh.";
+"Enter a size up to %@ pixels at this DPI." = "Nhập kích thước tối đa %@ điểm ảnh ở DPI này.";

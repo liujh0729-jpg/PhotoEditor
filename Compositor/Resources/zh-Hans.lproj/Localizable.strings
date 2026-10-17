@@ -543,3 +543,18 @@
 "Nearest" = "邻近";
 "Smooth" = "平滑";
 "High quality" = "高质量";
+
+/* New canvas */
+"Custom" = "自定";
+"Height" = "高度";
+"Pixels" = "像素";
+"Inches" = "英寸";
+"Centimeters" = "厘米";
+"Millimeters" = "毫米";
+"Transparent canvas" = "透明画布";
+"White canvas" = "白色画布";
+"Black canvas" = "黑色画布";
+"Import image" = "导入图像";
+"Create canvas" = "创建画布";
+"Enter whole numbers from 1 to %@ pixels." = "请输入 1 到 %@ 之间的整数（像素）。";
+"Enter a size up to %@ pixels at this DPI." = "在当前 DPI 下，尺寸最大为 %@ 像素。";

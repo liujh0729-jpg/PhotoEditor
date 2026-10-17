@@ -458,3 +458,18 @@
 "Nearest" = "الأقرب";
 "Smooth" = "تنعيم";
 "High quality" = "جودة عالية";
+
+/* New canvas */
+"Custom" = "مخصص";
+"Height" = "الارتفاع";
+"Pixels" = "بكسل";
+"Inches" = "بوصة";
+"Centimeters" = "سنتيمتر";
+"Millimeters" = "مليمتر";
+"Transparent canvas" = "لوحة شفافة";
+"White canvas" = "لوحة بيضاء";
+"Black canvas" = "لوحة سوداء";
+"Import image" = "استيراد صورة";
+"Create canvas" = "إنشاء لوحة";
+"Enter whole numbers from 1 to %@ pixels." = "أدخل أعدادًا صحيحة من 1 إلى %@ بكسل.";
+"Enter a size up to %@ pixels at this DPI." = "أدخل حجمًا حتى %@ بكسل عند هذه الدقة.";
