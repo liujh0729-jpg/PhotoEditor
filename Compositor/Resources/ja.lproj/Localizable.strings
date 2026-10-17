@@ -576,3 +576,7 @@
 "Old Photo Restore" = "古い写真の修復"; // Restore panel preset
 "Apply to all layers" = "すべてのレイヤーに適用";
 "Couldn't retouch: %@." = "レタッチできませんでした: %@。";
+"≈ %@ credits" = "≈ %@ クレジット";
+"Cost unknown" = "コスト不明";
+"Check content before sending" = "送信前にコンテンツを確認";
+"Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "AI リクエストを送信する前に、ゲートウェイのコンテンツチェックにプロンプトや画像を照会します。そのエンドポイントを持たないゲートウェイはスキップされ、明示的なフラグが立ったときだけ停止します。";

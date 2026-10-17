@@ -661,3 +661,7 @@
 "Old Photo Restore" = "老照片修复"; // Restore panel preset
 "Apply to all layers" = "应用到所有图层";
 "Couldn't retouch: %@." = "无法修复：%@。";
+"≈ %@ credits" = "≈ %@ 积分";
+"Cost unknown" = "成本未知";
+"Check content before sending" = "发送前检查内容";
+"Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "在发出 AI 请求前，让网关的内容检查审阅提示词或图像。没有该端点的网关会被跳过；只有明确命中时才会拦截。";

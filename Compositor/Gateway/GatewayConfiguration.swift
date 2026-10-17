@@ -106,25 +106,31 @@ struct GatewayConfiguration: Codable {
     var capabilitySlots: [CapabilitySlot]
     /// Privacy Mode: nothing leaves the Mac. The client refuses every call and the gateway's AI commands dim.
     var privacyMode: Bool
+    /// Content safety: before a generation request goes out, the optional /v1/moderations endpoint gets a
+    /// look at the prompt (and the picture, when one rides along). Off by default; only an explicit flag stops.
+    var contentSafety: Bool
     
-    init(channels: [ProviderChannel], defaultChannelID: UUID?, capabilitySlots: [CapabilitySlot], privacyMode: Bool = false) {
+    init(channels: [ProviderChannel], defaultChannelID: UUID?, capabilitySlots: [CapabilitySlot], privacyMode: Bool = false, contentSafety: Bool = false) {
         self.channels = channels
         self.defaultChannelID = defaultChannelID
         self.capabilitySlots = capabilitySlots
         self.privacyMode = privacyMode
+        self.contentSafety = contentSafety
     }
     
     private enum CodingKeys: String, CodingKey {
-        case channels, defaultChannelID, capabilitySlots, privacyMode
+        case channels, defaultChannelID, capabilitySlots, privacyMode, contentSafety
     }
     
     /// A saved config written before Privacy Mode carries no key for it; it meant the old, sending behavior.
+    /// Same for the content safety flag that came after it.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         channels = try container.decode([ProviderChannel].self, forKey: .channels)
         defaultChannelID = try container.decodeIfPresent(UUID.self, forKey: .defaultChannelID)
         capabilitySlots = try container.decode([CapabilitySlot].self, forKey: .capabilitySlots)
         privacyMode = try container.decodeIfPresent(Bool.self, forKey: .privacyMode) ?? false
+        contentSafety = try container.decodeIfPresent(Bool.self, forKey: .contentSafety) ?? false
     }
     
     /// Returns the default channel, or the first enabled channel sorted by priority.
@@ -221,6 +227,12 @@ final class GatewayConfigurationStore: ObservableObject {
     var privacyMode: Bool {
         get { configuration.privacyMode }
         set { configuration.privacyMode = newValue }
+    }
+    
+    /// The content safety gate, same deal: flipping it saves through the published configuration.
+    var contentSafety: Bool {
+        get { configuration.contentSafety }
+        set { configuration.contentSafety = newValue }
     }
     
     /// Updates an existing channel.

@@ -162,6 +162,10 @@ struct ImageGenerationSheet: View {
                     }
                 }
                 
+                Text(CatalogStore.shared.estimate(for: .imageGeneration, prompt: prompt))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
                 Spacer()
                 
                 Button("Cancel") {

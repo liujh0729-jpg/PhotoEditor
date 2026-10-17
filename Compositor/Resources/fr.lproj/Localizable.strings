@@ -577,3 +577,7 @@
 "Old Photo Restore" = "Restauration de photo ancienne"; // Restore panel preset
 "Apply to all layers" = "Appliquer à tous les calques";
 "Couldn't retouch: %@." = "Retouche impossible : %@.";
+"≈ %@ credits" = "≈ %@ crédits";
+"Cost unknown" = "Coût inconnu";
+"Check content before sending" = "Vérifier le contenu avant l'envoi";
+"Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "Avise le contrôle de contenu de la passerelle du prompt ou de l'image avant d'envoyer une requête IA. Une passerelle sans ce point de terminaison est ignorée ; seul un signalement explicite arrête l'envoi.";

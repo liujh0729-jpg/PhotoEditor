@@ -576,3 +576,7 @@
 "Old Photo Restore" = "Restauración de fotos antiguas"; // Restore panel preset
 "Apply to all layers" = "Aplicar a todas las capas";
 "Couldn't retouch: %@." = "No se pudo retocar: %@.";
+"≈ %@ credits" = "≈ %@ créditos";
+"Cost unknown" = "Coste desconocido";
+"Check content before sending" = "Comprobar el contenido antes de enviar";
+"Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "Consulta la comprobación de contenido de la pasarela sobre el prompt o la imagen antes de enviar una solicitud de IA. Una pasarela sin ese endpoint se omite; solo una señal explícita detiene el envío.";

@@ -118,10 +118,16 @@ struct RestoreSheet: View {
 
             // Footer
             HStack {
-                Text("The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: 260, alignment: .leading)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("The picture goes to the gateway model the slot names. A selection or an enabled mask limits what gets touched.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    // The ballpark the catalog's pricing gives for one request of this preset's slot.
+                    Text(CatalogStore.shared.estimate(for: preset.endpointSlot, prompt: preset.prompt))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: 260, alignment: .leading)
 
                 Spacer()
 

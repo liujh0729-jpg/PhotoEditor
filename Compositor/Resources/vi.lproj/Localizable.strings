@@ -576,3 +576,7 @@
 "Old Photo Restore" = "Phục hồi ảnh cũ"; // Restore panel preset
 "Apply to all layers" = "Áp dụng cho tất cả các lớp";
 "Couldn't retouch: %@." = "Không chỉnh sửa được: %@.";
+"≈ %@ credits" = "≈ %@ tín dụng";
+"Cost unknown" = "Chưa rõ chi phí";
+"Check content before sending" = "Kiểm tra nội dung trước khi gửi";
+"Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "Hỏi kiểm duyệt nội dung của gateway về prompt hoặc ảnh trước khi gửi yêu cầu AI. Gateway không có endpoint đó sẽ được bỏ qua; chỉ khi bị đánh dấu rõ ràng mới chặn gửi.";

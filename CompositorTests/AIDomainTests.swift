@@ -187,4 +187,77 @@ struct AIDomainTests {
             Issue.record("Privacy Mode is off; the call should go out and fail on the network")
         } catch {}
     }
+
+    // MARK: - Cost estimate
+
+    /// The extended pricing fields are all optional: an old catalog entry decodes without them, and a
+    /// gateway that spells them out reads in full.
+    @Test func pricingDecodesWithOrWithoutTheExtendedFields() throws {
+        let plain = #"{"pricingModel":"per_image","currency":"USD","enabled":true}"#
+        let sparse = try JSONDecoder().decode(CatalogCapability.Pricing.self, from: Data(plain.utf8))
+        #expect(sparse.promptPerMillion == nil && sparse.imagePricing == nil && sparse.byResolution == nil && sparse.awcoinRate == nil)
+        let full = #"{"pricingModel":"mixed","currency":"USD","enabled":true,"promptPerMillion":10,"imagePricing":{"tiers":[{"resolution":"1024x1024","price":0.4}]},"byResolution":{"512x512":0.2},"awcoinRate":100}"#
+        let rich = try JSONDecoder().decode(CatalogCapability.Pricing.self, from: Data(full.utf8))
+        #expect(rich.promptPerMillion == 10)
+        #expect(rich.imagePricing?.tiers?.first?.price == 0.4)
+        #expect(rich.byResolution?["512x512"] == 0.2)
+        #expect(rich.awcoinRate == 100)
+    }
+
+    @Test func estimateReadsWhatTheCatalogSays() {
+        #expect(CostEstimate.credits(for: nil) == nil, "no pricing, no promise")
+        let free = CatalogCapability.Pricing(pricingModel: "free", currency: "USD", enabled: true, free: true)
+        #expect(CostEstimate.credits(for: free) == 0)
+        let off = CatalogCapability.Pricing(pricingModel: "per_image", currency: "USD", enabled: false)
+        #expect(CostEstimate.credits(for: off) == nil, "a pricing the catalog hasn't turned on doesn't quote")
+        let byRes = CatalogCapability.Pricing(pricingModel: "per_image", currency: "USD", enabled: true,
+                                              byResolution: ["1024x1024": 0.3, "512x512": 0.1])
+        #expect(CostEstimate.credits(for: byRes, resolution: "512x512") == 0.1)
+        let tiers = CatalogCapability.Pricing(pricingModel: "per_image", currency: "USD", enabled: true,
+                                              imagePricing: .init(tiers: [.init(resolution: "1024x1024", price: 0.4),
+                                                                          .init(resolution: "2048x2048", price: 0.8)]))
+        #expect(CostEstimate.credits(for: tiers, resolution: "2048x2048") == 0.8)
+        #expect(CostEstimate.credits(for: tiers) == 0.4, "with no resolution named, the first tier is the ballpark")
+        let tokens = CatalogCapability.Pricing(pricingModel: "per_token", currency: "USD", enabled: true,
+                                              promptPerMillion: 10)
+        // Eight characters read as two tokens; at ten per million, that's the fraction a request costs.
+        #expect(CostEstimate.credits(for: tokens, prompt: "12345678")! == 20.0 / 1_000_000)
+        let coins = CatalogCapability.Pricing(pricingModel: "per_image", currency: "USD", enabled: true,
+                                              byResolution: ["x": 0.3], awcoinRate: 100)
+        #expect(CostEstimate.credits(for: coins, resolution: "x")! == 30, "the coin rate turns a price into credits")
+    }
+
+    // MARK: - Content safety
+
+    /// The gate rides the saved config: it survives a round trip, and a config written before it existed
+    /// decodes as the old, unchecked behavior rather than failing whole.
+    @Test func contentSafetySurvivesTheSavedConfig() throws {
+        let store = GatewayConfigurationStore.shared
+        var on = store.configuration
+        on.contentSafety = true
+        let back = try JSONDecoder().decode(GatewayConfiguration.self, from: JSONEncoder().encode(on))
+        #expect(back.contentSafety, "the gate rides the saved config")
+        let old = #"{"channels":[],"capabilitySlots":[]}"#
+        let before = try JSONDecoder().decode(GatewayConfiguration.self, from: Data(old.utf8))
+        #expect(!before.contentSafety, "a config from before the gate means the unchecked behavior")
+    }
+
+    /// Only an explicit "flagged" objects. Anything else — false, silent, garbage — must not stop a request.
+    @Test func moderationAnswersAreReadConservatively() {
+        let flagged = #"{"results":[{"flagged":true,"categories":{"violence":true}}]}"#
+        #expect(GatewayClient.moderationFlags(Data(flagged.utf8)))
+        let clean = #"{"results":[{"flagged":false}]}"#
+        #expect(!GatewayClient.moderationFlags(Data(clean.utf8)))
+        let quiet = #"{"results":[{}]}"#
+        #expect(!GatewayClient.moderationFlags(Data(quiet.utf8)), "a result that doesn't answer isn't an objection")
+        #expect(!GatewayClient.moderationFlags(Data("not json".utf8)), "garbage reads as couldn't ask, not no")
+    }
+
+    @Test func promptIsLiftedOutOfJSONBodies() {
+        let withPrompt = Data(#"{"model":"gpt-image-1","prompt":"a red fox"}"#.utf8)
+        #expect(GatewayClient.prompt(inBody: withPrompt) == "a red fox")
+        let noPrompt = Data(#"{"model":"gpt-4"}"#.utf8)
+        #expect(GatewayClient.prompt(inBody: noPrompt) == nil)
+        #expect(GatewayClient.prompt(inBody: Data("plain".utf8)) == nil, "a body that isn't JSON carries no text")
+    }
 }

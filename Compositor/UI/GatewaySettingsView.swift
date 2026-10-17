@@ -502,6 +502,10 @@ struct GeneralTab: View {
             Text("Nothing is sent to the gateway while Privacy Mode is on — no images, prompts or audio. On-device tools like Semantic Selection keep working.")
                 .foregroundStyle(.secondary)
                 .font(.callout)
+            Toggle("Check content before sending", isOn: $store.contentSafety)
+            Text("Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission.")
+                .foregroundStyle(.secondary)
+                .font(.callout)
             Picker("Language", selection: $languageStore.selection) {
                 ForEach(LanguageStore.AppLanguage.allCases) { language in
                     if language == .system {

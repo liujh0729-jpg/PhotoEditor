@@ -576,3 +576,7 @@
 "Old Photo Restore" = "Восстановление старых фотографий"; // Restore panel preset
 "Apply to all layers" = "Применить ко всем слоям";
 "Couldn't retouch: %@." = "Не удалось ретушировать: %@.";
+"≈ %@ credits" = "≈ %@ кредитов";
+"Cost unknown" = "Стоимость неизвестна";
+"Check content before sending" = "Проверять содержимое перед отправкой";
+"Asks the gateway's content check about a prompt or picture before an AI request goes out. A gateway without that endpoint is left alone; only an explicit flag stops a submission." = "Перед отправкой AI-запроса проверяет промпт или изображение через контент-контроль шлюза. Шлюз без этой конечной точки пропускается; только явное срабатывание останавливает отправку.";

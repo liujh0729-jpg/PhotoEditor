@@ -144,6 +144,10 @@ struct StyleTransferSheet: View {
                     }
                 }
                 
+                Text(CatalogStore.shared.estimate(for: .imageEdits))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
                 Spacer()
                 
                 Button("Cancel") {

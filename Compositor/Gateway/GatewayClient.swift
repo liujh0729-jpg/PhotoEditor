@@ -71,6 +71,56 @@ final class GatewayClient {
         }
     }
     
+    /// The content safety gate, run after Privacy Mode and before the real request goes out. Only an explicit
+    /// "flagged" from the gateway stops the submission; anything else the moderation can be — no endpoint,
+    /// an error, a body we can't read — steps aside and lets the request through with the usual channel.
+    private func guardContent(text: String?, image: Data?, plan: GatewayRequestPlan) async throws {
+        guard GatewayConfigurationStore.shared.contentSafety else { return }
+        // A moderation that can't run at all — transport error, bad credentials — reads as "couldn't ask":
+        // the request goes out and the channel answers it the ordinary way.
+        let flagged = (try? await moderate(text: text, image: image, plan: plan)) ?? false
+        if flagged {
+            throw GatewayClientError.contentFlagged
+        }
+    }
+    
+    /// One moderation round trip on the plan's channel. Returns whether the gateway objects.
+    func moderate(text: String?, image: Data?, plan: GatewayRequestPlan) async throws -> Bool {
+        var payload: [String: Any] = [:]
+        if let text { payload["input"] = text }
+        if let image { payload["image"] = image.base64EncodedString() }
+        guard !payload.isEmpty else { return false }
+        
+        var request = URLRequest(url: makeURL(base: plan.baseURL, path: "/v1/moderations"))
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(plan.apiKey)", forHTTPHeaderField: "Authorization")
+        request.timeoutInterval = plan.timeout
+        request.httpBody = try JSONSerialization.data(withJSONObject: payload)
+        
+        let (data, response) = try await session(for: plan).data(for: request)
+        // The endpoint is optional and the check is a courtesy: any non-2xx or transport error means
+        // "couldn't ask", not "no". Only a readable, flagged answer says otherwise.
+        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else { return false }
+        return Self.moderationFlags(data)
+    }
+    
+    /// Whether a moderation body objects: any result with `flagged` true. Garbage reads as no objection.
+    nonisolated static func moderationFlags(_ data: Data) -> Bool {
+        struct Response: Decodable {
+            struct Result: Decodable { let flagged: Bool? }
+            let results: [Result]?
+        }
+        guard let decoded = try? JSONDecoder().decode(Response.self, from: data) else { return false }
+        return (decoded.results ?? []).contains { $0.flagged == true }
+    }
+    
+    /// The prompt carried in a JSON request body, when it has one; that's the text moderation gets to see.
+    nonisolated static func prompt(inBody data: Data) -> String? {
+        guard let json = try? JSONSerialization.jsonObject(with: data), let dictionary = json as? [String: Any] else { return nil }
+        return dictionary["prompt"] as? String
+    }
+    
     /// Builds (and caches) a session that routes through `proxy`, falling back to the shared session when none is set.
     private static func configuredSession(base: URLSession, proxy: URL?, timeout: TimeInterval,
                                           cache: inout [String: URLSession]) -> URLSession {
@@ -113,6 +163,8 @@ final class GatewayClient {
         request.timeoutInterval = plan.timeout
         request.httpBody = try JSONEncoder().encode(body)
         
+        try await guardContent(text: Self.prompt(inBody: request.httpBody ?? Data()), image: nil, plan: plan)
+        
         let (data, response) = try await session(for: plan).data(for: request)
         try Self.validate(response, data)
         return try JSONDecoder().decode(T.self, from: data)
@@ -149,11 +201,25 @@ final class GatewayClient {
         
         let boundary = "Boundary-\(UUID().uuidString)"
         
+        // What moderation gets to see: the prompt field and the first picture in the form.
+        var promptText: String?
+        var imageData: Data?
+        for part in parts {
+            switch part.content {
+            case .text(let value):
+                if part.name == "prompt", promptText == nil { promptText = value }
+            case .data(let data, _, _):
+                if imageData == nil { imageData = data }
+            }
+        }
+        
         var request = URLRequest(url: makeURL(base: plan.baseURL, path: plan.path))
         request.httpMethod = "POST"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(plan.apiKey)", forHTTPHeaderField: "Authorization")
         request.timeoutInterval = plan.timeout
+        
+        try await guardContent(text: promptText, image: imageData, plan: plan)
         
         // Concatenating multi-megabyte PNG payloads is real work; do it on the global executor so the
         // editor doesn't stall while an edit's request body comes together.
@@ -263,6 +329,7 @@ enum GatewayClientError: Error, LocalizedError, Equatable {
     case invalidResponse
     case httpError(Int)
     case privacyMode
+    case contentFlagged
     
     var errorDescription: String? {
         switch self {
@@ -276,6 +343,8 @@ enum GatewayClientError: Error, LocalizedError, Equatable {
             return "HTTP error \(code)"
         case .privacyMode:
             return "Privacy Mode is on, so nothing is sent to the gateway. Turn it off in Settings › General."
+        case .contentFlagged:
+            return "The gateway's content check flagged this request, so nothing was sent."
         }
     }
 }

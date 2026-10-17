@@ -31,6 +31,23 @@ struct CatalogCapability: Codable, Identifiable {
         let currency: String
         let enabled: Bool
         var free: Bool? = nil
+        /// What a million prompt tokens costs, on the chat-shaped slots.
+        var promptPerMillion: Double? = nil
+        /// What one picture costs, per resolution tier, on the image-shaped slots.
+        var imagePricing: ImagePricing? = nil
+        /// What one picture costs, keyed by resolution label, when the catalog spells it out that way.
+        var byResolution: [String: Double]? = nil
+        /// The gateway's coin rate: a price times this reads in the credits the gateway bills.
+        var awcoinRate: Double? = nil
+
+        struct ImagePricing: Codable {
+            var tiers: [Tier]? = nil
+
+            struct Tier: Codable {
+                var resolution: String? = nil
+                var price: Double? = nil
+            }
+        }
     }
 }
 
@@ -153,6 +170,17 @@ final class CatalogStore: ObservableObject {
     /// Returns capabilities for a specific endpoint type.
     func capabilities(for endpointType: EndpointType) -> [CatalogCapability] {
         capabilities.filter { $0.endpointType == endpointType.rawValue }
+    }
+    
+    /// What one request against a slot costs as the catalog spells it out, in the words the AI sheets show
+    /// before submitting. A catalog that says nothing — or isn't there at all — reads "Cost unknown".
+    func estimate(for endpointType: EndpointType, prompt: String? = nil) -> String {
+        let pricing = capabilities(for: endpointType).first?.pricing
+        if let credits = CostEstimate.credits(for: pricing, prompt: prompt) {
+            return String(format: NSLocalizedString("≈ %@ credits", comment: ""),
+                          credits == 0 ? "0" : String(format: "%.3g", credits))
+        }
+        return NSLocalizedString("Cost unknown", comment: "")
     }
     
     /// Saves the catalog to cache.
