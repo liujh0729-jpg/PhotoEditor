@@ -58,50 +58,188 @@ struct EditorSessionAITests {
         #expect(frozen.size == CGSize(width: 200, height: 200))
     }
 
-    @Test func renameIntentTargetsTheActiveLayer() throws {
+    @Test func renameIntentTargetsTheActiveLayer() async throws {
         let session = try session(withLayerNamed: "Before")
         let intent = EditingIntent(action: .renameLayer, parameters: ["name": AnyCodable("After")])
-        #expect(session.applyAIIntent(intent))
+        #expect(await session.applyAIIntent(intent))
         #expect(session.activeLayer?.name == "After")
+        // A rename with no name to give isn't an edit.
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .renameLayer))))
     }
 
-    @Test func duplicateAndDeleteIntentsChangeTheLayerStack() throws {
+    @Test func duplicateAndDeleteIntentsChangeTheLayerStack() async throws {
         let session = try session(withLayerNamed: "Layer")
-        #expect(session.applyAIIntent(EditingIntent(action: .duplicateLayer)))
+        #expect(await session.applyAIIntent(EditingIntent(action: .duplicateLayer)))
         #expect(session.document?.layers.count == 2)
-        #expect(session.applyAIIntent(EditingIntent(action: .deleteLayer)))
+        #expect(await session.applyAIIntent(EditingIntent(action: .deleteLayer)))
         #expect(session.document?.layers.count == 1)
     }
 
-    @Test func addMaskIntentRunsOnceThenRefuses() throws {
+    @Test func addMaskIntentRunsOnceThenRefuses() async throws {
         let session = try session(withLayerNamed: "Layer")
         let id = try #require(session.activeLayerID)
         session.selectedLayerIDs = [id]
-        #expect(session.applyAIIntent(EditingIntent(action: .addMask)))
+        #expect(await session.applyAIIntent(EditingIntent(action: .addMask)))
         #expect(session.activeLayer?.mask != nil)
         // The layer already has a mask, so the intent no longer applies.
-        #expect(!session.applyAIIntent(EditingIntent(action: .addMask)))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .addMask))))
+        // Removing it applies again; removing twice doesn't.
+        #expect(await session.applyAIIntent(EditingIntent(action: .removeMask)))
+        #expect(session.activeLayer?.mask == nil)
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .removeMask))))
     }
 
-    @Test func selectionIntentsFollowTheCurrentSelection() throws {
+    @Test func invertMaskFlipsTheMaskPixels() async throws {
         let session = try session(withLayerNamed: "Layer")
-        #expect(session.applyAIIntent(EditingIntent(action: .deselect)))
-        // There's nothing to invert without a selection.
-        #expect(!session.applyAIIntent(EditingIntent(action: .invertSelection)))
+        let id = try #require(session.activeLayerID)
+        session.selectedLayerIDs = [id]
+        session.addLayerMask(revealing: true)
+        let before = try #require(session.activeLayer?.mask?.asset.image)
+        #expect(await session.applyAIIntent(EditingIntent(action: .invertMask)))
+        #expect(session.activeLayer?.mask?.asset.image !== before)
+        // Without a mask there's nothing to invert.
+        session.deleteLayerMask()
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .invertMask))))
     }
 
-    @Test func layerIntentsDoNothingWithoutAnActiveLayer() throws {
+    @Test func selectionIntentsFollowTheCurrentSelection() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        #expect(await session.applyAIIntent(EditingIntent(action: .deselect)))
+        // There's nothing to invert without a selection.
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .invertSelection))))
+    }
+
+    @Test func layerIntentsDoNothingWithoutAnActiveLayer() async throws {
         let session = EditorSession()
         session.createDocument(width: 100, height: 100) // Empty: no layers yet.
-        #expect(!session.applyAIIntent(EditingIntent(action: .deleteLayer)))
-        #expect(!session.applyAIIntent(EditingIntent(action: .duplicateLayer)))
-        #expect(!session.applyAIIntent(EditingIntent(action: .renameLayer, parameters: ["name": AnyCodable("X")])))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .deleteLayer))))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .duplicateLayer))))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .renameLayer, parameters: ["name": AnyCodable("X")]))))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .changeOpacity, parameters: ["opacity": AnyCodable(50)]))))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .adjustLevels, parameters: ["black": AnyCodable(20)]))))
     }
 
-    @Test func unknownIntentsAreReportedAsNotApplied() throws {
+    @Test func unknownIntentsAreReportedAsNotApplied() async throws {
         let session = try session(withLayerNamed: "Layer")
         // Adjustments the editor can't yet carry out fall through to the failure path rather than crashing.
-        #expect(!session.applyAIIntent(EditingIntent(action: .adjustLevels)))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .adjustLevels))))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .strokeSelection))))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .selectColorRange))))
+    }
+
+    @Test func adjustLevelsRewritesThePixels() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let before = try #require(session.activeLayer?.asset?.image)
+        let intent = EditingIntent(action: .adjustLevels, parameters: ["black": AnyCodable(60), "white": AnyCodable(240)])
+        #expect(await session.applyAIIntent(intent))
+        // Committed like a panel OK: new pixels, one undo step away from the old ones.
+        #expect(session.activeLayer?.asset?.image !== before)
+        session.undo()
+        #expect(session.activeLayer?.asset?.image === before)
+    }
+
+    @Test func adjustHueSaturationRewritesThePixels() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let before = try #require(session.activeLayer?.asset?.image)
+        #expect(await session.applyAIIntent(EditingIntent(action: .adjustHueSaturation, parameters: ["saturation": AnyCodable(30)])))
+        #expect(session.activeLayer?.asset?.image !== before)
+        // Nothing asked for, nothing applied.
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .adjustHueSaturation))))
+    }
+
+    @Test func filterIntentsCommitThroughThePanelPath() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let before = try #require(session.activeLayer?.asset?.image)
+        let intent = EditingIntent(action: .adjustExposure, parameters: ["exposure": AnyCodable(0.5)])
+        #expect(await session.applyAIIntent(intent))
+        #expect(session.activeLayer?.asset?.image !== before)
+        // Out-of-range numbers are refused rather than clamped behind the user's back.
+        let bad = EditingIntent(action: .adjustExposure, parameters: ["exposure": AnyCodable(50)])
+        #expect(!(await session.applyAIIntent(bad)))
+    }
+
+    @Test func curveIntentRebuildsTheRGBCurve() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let before = try #require(session.activeLayer?.asset?.image)
+        // Decoded off the wire shape, the way a gateway response reaches the engine.
+        let json = Data(#"{"action":"adjustCurves","parameters":{"points":[[64,96],[128,192],[192,208]]}}"#.utf8)
+        let intent = try #require(try JSONDecoder().decode(EditingIntent.self, from: json))
+        #expect(await session.applyAIIntent(intent))
+        #expect(session.activeLayer?.asset?.image !== before)
+    }
+
+    @Test func blendModeAndOpacityIntentsLandOnTheActiveLayer() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let id = try #require(session.activeLayerID)
+        #expect(await session.applyAIIntent(EditingIntent(action: .changeBlendMode, parameters: ["mode": AnyCodable("Multiply")])))
+        #expect(session.document?.layers.first(where: { $0.id == id })?.blendMode == .multiply)
+        #expect(await session.applyAIIntent(EditingIntent(action: .changeOpacity, parameters: ["opacity": AnyCodable(50)])))
+        #expect(session.document?.layers.first(where: { $0.id == id })?.opacity == 0.5)
+        // A mode the editor doesn't know is not silently mapped to a near neighbor.
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .changeBlendMode, parameters: ["mode": AnyCodable("Vivid Dye")]))))
+    }
+
+    @Test func groupingAndUngroupingIntentsRoundTrip() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        #expect(await session.applyAIIntent(EditingIntent(action: .groupLayers)))
+        #expect(session.activeLayer?.isGroup == true)
+        #expect(await session.applyAIIntent(EditingIntent(action: .ungroupLayers)))
+        #expect(session.activeLayer?.isGroup != true)
+        #expect(session.document?.layers.count == 1)
+    }
+
+    @Test func reorderLayerIntentMovesTheActiveLayer() async throws {
+        let session = try session(withLayerNamed: "Bottom")
+        session.placeGeneratedImage(try solidImage(width: 40, height: 40), named: "Top")
+        let id = try #require(session.activeLayerID)
+        // Already the frontmost layer: "up" has nowhere to go.
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .reorderLayers, parameters: ["to": AnyCodable("up")]))))
+        #expect(await session.applyAIIntent(EditingIntent(action: .reorderLayers, parameters: ["to": AnyCodable("back")])))
+        #expect(session.document?.layers.first?.id == id)
+    }
+
+    @Test func flipAndTransformIntentsMoveTheLayer() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let transform = try #require(session.activeLayer?.transform)
+        #expect(await session.applyAIIntent(EditingIntent(action: .transformLayer, parameters: ["dx": AnyCodable(20)])))
+        #expect(session.activeLayer?.transform != transform)
+        let moved = try #require(session.activeLayer?.transform)
+        #expect(await session.applyAIIntent(EditingIntent(action: .flipLayer, parameters: ["axis": AnyCodable("horizontal")])))
+        #expect(session.activeLayer?.transform.flipX == !moved.flipX)
+        // Nothing asked to change: nothing applied.
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .transformLayer))))
+    }
+
+    @Test func cropIntentResizesTheCanvas() async throws {
+        let session = try session(withLayerNamed: "Layer", width: 200, height: 200)
+        let crop = EditingIntent(action: .cropCanvas, parameters: ["x": AnyCodable(10), "y": AnyCodable(20), "width": AnyCodable(100), "height": AnyCodable(80)])
+        #expect(await session.applyAIIntent(crop))
+        #expect(session.document?.size == CGSize(width: 100, height: 80))
+        // A crop box reaching past the canvas is refused.
+        let bad = EditingIntent(action: .cropCanvas, parameters: ["x": AnyCodable(150), "width": AnyCodable(100), "height": AnyCodable(100)])
+        #expect(!(await session.applyAIIntent(bad)))
+    }
+
+    @Test func adjustmentLayerIntentAddsOneNamedKind() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let before = session.document?.layers.count ?? 0
+        #expect(await session.applyAIIntent(EditingIntent(action: .addAdjustmentLayer, parameters: ["kind": AnyCodable("curves")])))
+        #expect(session.document?.layers.count == before + 1)
+        #expect(session.activeLayer?.adjustment?.kind == .curves)
+        // And the follow-up intent takes it back off again.
+        #expect(await session.applyAIIntent(EditingIntent(action: .removeAdjustmentLayer)))
+        #expect(session.document?.layers.count == before)
+    }
+
+    @Test func applyFilterIntentRunsANamedFilter() async throws {
+        let session = try session(withLayerNamed: "Layer")
+        let before = try #require(session.activeLayer?.asset?.image)
+        let intent = EditingIntent(action: .applyFilter, parameters: ["name": AnyCodable("Gaussian Blur"), "radius": AnyCodable(8)])
+        #expect(await session.applyAIIntent(intent))
+        #expect(session.activeLayer?.asset?.image !== before)
+        // A filter that isn't a plain one-click filter isn't run blind.
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .applyFilter, parameters: ["name": AnyCodable("Remove Background")]))))
+        #expect(!(await session.applyAIIntent(EditingIntent(action: .applyFilter, parameters: ["name": AnyCodable("Imaginarium")]))))
     }
 
     /// A mask image with `on` marking the selected (white) pixels, standing in for a segmentation map off the gateway.

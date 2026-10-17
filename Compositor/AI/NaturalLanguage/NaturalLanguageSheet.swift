@@ -95,7 +95,7 @@ struct NaturalLanguageSheet: View {
             }
             Button("Execute", role: .destructive) {
                 if let intent = pendingIntent {
-                    executeIntent(intent)
+                    Task { await executeIntent(intent) }
                 }
             }
         } message: {
@@ -136,7 +136,7 @@ struct NaturalLanguageSheet: View {
                     pendingIntent = intent
                     showingConfirmation = true
                 } else {
-                    executeIntent(intent)
+                    await executeIntent(intent)
                 }
                 
                 isProcessing = false
@@ -148,8 +148,8 @@ struct NaturalLanguageSheet: View {
         }
     }
     
-    private func executeIntent(_ intent: EditingIntent) {
-        guard session.applyAIIntent(intent) else {
+    private func executeIntent(_ intent: EditingIntent) async {
+        guard await session.applyAIIntent(intent) else {
             errorMessage = "Can't apply \(intent.description) right now."
             return
         }

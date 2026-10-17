@@ -22,6 +22,7 @@ struct EditingIntent: Codable {
         case changeBlendMode
         case changeOpacity
         case transformLayer
+        case flipLayer
         case cropCanvas
         case resizeCanvas
         case rotateCanvas
@@ -106,6 +107,7 @@ final class IntentRecognition {
         - changeBlendMode: Change layer blend mode
         - changeOpacity: Change layer opacity
         - transformLayer: Transform (scale, rotate, move) a layer
+        - flipLayer: Flip a layer horizontally or vertically
         - cropCanvas: Crop the canvas
         - resizeCanvas: Resize the canvas
         - rotateCanvas: Rotate the canvas
@@ -120,6 +122,22 @@ final class IntentRecognition {
         - deselect: Deselect all
         - fillSelection: Fill selection with color
         - strokeSelection: Stroke selection border
+        
+        Parameter keys per action (numbers unless noted):
+        - adjustLevels: black/white (0–255), gamma; shadows/highlights also accepted
+        - adjustCurves: points, an array of [x, y] pairs in 0–255
+        - adjustHueSaturation: hue (−180…180), saturation, lightness (−100…100)
+        - adjustExposure: exposure (−20…20), offset (−0.5…0.5), gamma (0.01…9.99)
+        - adjustColorBalance: warmth or tint (−100…100), or shadow/mid/highlight CyanRed, MagentaGreen, YellowBlue
+        - addAdjustmentLayer: kind ("Levels", "Curves", "Exposure", …)
+        - changeBlendMode: mode ("Multiply", "Screen", …); changeOpacity: opacity (0–100)
+        - reorderLayers: to ("up", "down", "front", "back")
+        - transformLayer: dx, dy (pixels), scale (multiplier), rotation (degrees)
+        - flipLayer: axis ("horizontal" or "vertical"); flipCanvas: axis; rotateCanvas: direction ("clockwise" or "counterclockwise")
+        - cropCanvas: x, y, width, height in pixels; resizeCanvas: width, height in pixels
+        - expandSelection/contractSelection/featherSelection: amount in pixels
+        - fillSelection: with ("foreground" or "background"); renameLayer: name (text)
+        - applyFilter: name (e.g. "Gaussian Blur"), radius
         
         Respond with a JSON object containing:
         - action: one of the actions above
