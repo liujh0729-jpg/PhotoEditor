@@ -513,3 +513,20 @@
 "Copy All" = "Sao chép tất cả";
 "Insert as Text Layer" = "Chèn dưới dạng lớp văn bản";
 "Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision đọc chữ ngay trên máy Mac này — vẫn dùng được khi ngoại tuyến và trong Chế độ riêng tư.";
+
+/* The tool rail's tooltips. */
+"Type (T)" = "Chữ (T)";
+"Eyedropper (I)" = "Nhỏ giọt (I)";
+"Marquee (M)" = "Khung chọn (M)";
+"Lasso (L)" = "Thòng lọng (L)";
+"Magic (W) · Tab switches Wand and Object" = "Đũa thần (W) · Tab chuyển giữa Đũa thần và Đối tượng";
+"Brush (B) · Eraser (E)" = "Cọ (B) · Tẩy (E)";
+"Spot Healing Brush (J)" = "Cọ phục hồi điểm (J)";
+"Clone Stamp (S) · Option-click sets the source" = "Đóng dấu sao chép (S) · Option-click để đặt nguồn";
+"Smear (R)" = "Xoa (R)";
+"Gradient (G)" = "Chuyển sắc (G)";
+"Shape (U) · Shift-U switches Rectangle/Ellipse" = "Hình (U) · Shift-U chuyển giữa Hình chữ nhật/Hình ê-lip";
+"Crop (C)" = "Cắt (C)";
+"Move / Transform (V)" = "Di chuyển / Biến đổi (V)";
+"Hand (H)" = "Bàn tay (H)";
+"Zoom (Z)" = "Thu phóng (Z)";

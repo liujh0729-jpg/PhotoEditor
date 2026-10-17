@@ -513,3 +513,20 @@
 "Copy All" = "نسخ الكل";
 "Insert as Text Layer" = "إدراج كطبقة نص";
 "Vision reads the words on this Mac — it works offline and in Privacy Mode." = "يقرأ Vision النص على هذا الجهاز — يعمل دون اتصال وفي وضع الخصوصية.";
+
+/* The tool rail's tooltips. */
+"Type (T)" = "نص (T)";
+"Eyedropper (I)" = "قطارة (I)";
+"Marquee (M)" = "تحديد (M)";
+"Lasso (L)" = "القلم (L)";
+"Magic (W) · Tab switches Wand and Object" = "سحري (W) · Tab يبدّل بين العصا والكائن";
+"Brush (B) · Eraser (E)" = "فرشاة (B) · ممحاة (E)";
+"Spot Healing Brush (J)" = "فرشاة الإصلاح الموضعي (J)";
+"Clone Stamp (S) · Option-click sets the source" = "ختم النسخ (S) · Option+نقر يحدد المصدر";
+"Smear (R)" = "تلطيخ (R)";
+"Gradient (G)" = "تدرج لوني (G)";
+"Shape (U) · Shift-U switches Rectangle/Ellipse" = "شكل (U) · Shift-U يبدّل بين مستطيل وبيضاوي";
+"Crop (C)" = "اقتصاص (C)";
+"Move / Transform (V)" = "تحريك / تحويل (V)";
+"Hand (H)" = "يد (H)";
+"Zoom (Z)" = "تكبير (Z)";

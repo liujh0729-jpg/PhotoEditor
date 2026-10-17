@@ -598,3 +598,20 @@
 "Copy All" = "全部拷贝";
 "Insert as Text Layer" = "插入为文本图层";
 "Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision 在这台 Mac 上读取文字——离线和隐私模式下都可用。";
+
+/* The tool rail's tooltips. */
+"Type (T)" = "文字 (T)";
+"Eyedropper (I)" = "吸管 (I)";
+"Marquee (M)" = "选框 (M)";
+"Lasso (L)" = "套索 (L)";
+"Magic (W) · Tab switches Wand and Object" = "魔棒 (W) · 按 Tab 在魔棒与对象间切换";
+"Brush (B) · Eraser (E)" = "画笔 (B) · 橡皮擦 (E)";
+"Spot Healing Brush (J)" = "斑点修复画笔 (J)";
+"Clone Stamp (S) · Option-click sets the source" = "仿制图章 (S) · Option-点击设置源点";
+"Smear (R)" = "涂抹 (R)";
+"Gradient (G)" = "渐变 (G)";
+"Shape (U) · Shift-U switches Rectangle/Ellipse" = "形状 (U) · Shift-U 切换矩形/椭圆";
+"Crop (C)" = "裁剪 (C)";
+"Move / Transform (V)" = "移动 / 变换 (V)";
+"Hand (H)" = "抓手 (H)";
+"Zoom (Z)" = "缩放 (Z)";

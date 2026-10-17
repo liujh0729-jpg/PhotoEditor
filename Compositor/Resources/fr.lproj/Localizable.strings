@@ -514,3 +514,20 @@
 "Copy All" = "Tout copier";
 "Insert as Text Layer" = "Insérer comme couche de texte";
 "Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision lit les mots sur ce Mac — cela fonctionne hors ligne et en Mode Confidentialité.";
+
+/* The tool rail's tooltips. */
+"Type (T)" = "Texte (T)";
+"Eyedropper (I)" = "Pipette (I)";
+"Marquee (M)" = "Sélection (M)";
+"Lasso (L)" = "Lasso (L)";
+"Magic (W) · Tab switches Wand and Object" = "Magique (W) · Tab bascule entre Baguette et Objet";
+"Brush (B) · Eraser (E)" = "Pinceau (B) · Gomme (E)";
+"Spot Healing Brush (J)" = "Correcteur localisé (J)";
+"Clone Stamp (S) · Option-click sets the source" = "Tampon de duplication (S) · Option+clic définit la source";
+"Smear (R)" = "Doigt (R)";
+"Gradient (G)" = "Dégradé (G)";
+"Shape (U) · Shift-U switches Rectangle/Ellipse" = "Forme (U) · Maj-U bascule Rectangle/Ellipse";
+"Crop (C)" = "Recadrage (C)";
+"Move / Transform (V)" = "Déplacer / Transformer (V)";
+"Hand (H)" = "Main (H)";
+"Zoom (Z)" = "Zoom (Z)";

@@ -513,3 +513,20 @@
 "Copy All" = "すべてコピー";
 "Insert as Text Layer" = "テキストレイヤーとして挿入";
 "Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision はこの Mac 上でテキストを読み取るため、オフラインでもプライバシーモードでも使えます。";
+
+/* The tool rail's tooltips. */
+"Type (T)" = "テキスト (T)";
+"Eyedropper (I)" = "スポイト (I)";
+"Marquee (M)" = "選択範囲 (M)";
+"Lasso (L)" = "なげなわ (L)";
+"Magic (W) · Tab switches Wand and Object" = "マジック (W) · Tab でワンドとオブジェクトを切替";
+"Brush (B) · Eraser (E)" = "ブラシ (B) · 消しゴム (E)";
+"Spot Healing Brush (J)" = "スポット修復ブラシ (J)";
+"Clone Stamp (S) · Option-click sets the source" = "コピースタンプ (S) · Option+クリックでソースを設定";
+"Smear (R)" = "なぞり (R)";
+"Gradient (G)" = "グラデーション (G)";
+"Shape (U) · Shift-U switches Rectangle/Ellipse" = "図形 (U) · Shift-U で長方形/楕円を切替";
+"Crop (C)" = "トリミング (C)";
+"Move / Transform (V)" = "移動 / 変形 (V)";
+"Hand (H)" = "ハンド (H)";
+"Zoom (Z)" = "ズーム (Z)";

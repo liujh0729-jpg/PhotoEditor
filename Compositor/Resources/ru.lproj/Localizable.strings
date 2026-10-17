@@ -513,3 +513,20 @@
 "Copy All" = "Копировать всё";
 "Insert as Text Layer" = "Вставить как текстовый слой";
 "Vision reads the words on this Mac — it works offline and in Privacy Mode." = "Vision считывает текст на этом Mac — работает офлайн и в режиме конфиденциальности.";
+
+/* The tool rail's tooltips. */
+"Type (T)" = "Текст (T)";
+"Eyedropper (I)" = "Пипетка (I)";
+"Marquee (M)" = "Область (M)";
+"Lasso (L)" = "Лассо (L)";
+"Magic (W) · Tab switches Wand and Object" = "Волшебная (W) · Tab переключает Палочку и Объект";
+"Brush (B) · Eraser (E)" = "Кисть (B) · Ластик (E)";
+"Spot Healing Brush (J)" = "Точечная восстанавливающая кисть (J)";
+"Clone Stamp (S) · Option-click sets the source" = "Штамп (S) · Option+клик задаёт источник";
+"Smear (R)" = "Палец (R)";
+"Gradient (G)" = "Градиент (G)";
+"Shape (U) · Shift-U switches Rectangle/Ellipse" = "Фигура (U) · Shift-U переключает Прямоугольник/Эллипс";
+"Crop (C)" = "Обрезка (C)";
+"Move / Transform (V)" = "Перемещение / Трансформация (V)";
+"Hand (H)" = "Рука (H)";
+"Zoom (Z)" = "Масштаб (Z)";

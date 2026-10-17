@@ -336,7 +336,9 @@ struct ContentView: View {
                         }
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain).help(tool.label).accessibilityLabel(tool.label)
+                // The rail's tooltip goes through the catalog like every other string: Chinese hosts read
+                // Chinese labels. The icon above it is different: "Aa" is a mark, not a word, and stays.
+                .buttonStyle(.plain).help(LocalizedStringKey(tool.label)).accessibilityLabel(Text(LocalizedStringKey(tool.label)))
                 .foregroundStyle(.primary)
                 .accessibilityAddTraits(session.tool == tool ? .isSelected : [])
             }
