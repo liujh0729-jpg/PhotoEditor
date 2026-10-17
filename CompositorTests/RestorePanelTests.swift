@@ -17,9 +17,11 @@ struct RestorePanelTests {
         for preset in RestorePresets.all {
             #expect(!preset.prompt.isEmpty, "\(preset.id) needs an instruction to send")
             #expect(!preset.symbol.isEmpty, "\(preset.id) needs a list icon")
-            let upscales = preset.id == "superResolution" || preset.id == "hdRestore"
-            #expect(preset.endpointSlot == (upscales ? .imageGeneration : .imageEdits),
-                    "only the upscale family runs on the generation slot")
+            let generation = preset.id == "superResolution" || preset.id == "hdRestore" || preset.id == "aiBackground"
+            #expect(preset.endpointSlot == (generation ? .imageGeneration : .imageEdits),
+                    "only the upscale family and the background generation run on the generation slot")
+            #expect(preset.subjectCompositing == (preset.id == "aiBackground"),
+                    "the background generation is the one preset that composites locally")
         }
         #expect(RestorePresets.all.count >= 30, "the panel promises a broad table")
     }
@@ -39,6 +41,8 @@ struct RestorePanelTests {
             "Couldn't apply to the active layer. Select a pixel layer first.",
             "Apply to all layers",
             "Couldn't retouch: %@.",
+            "The subject cutout runs on one layer at a time.",
+            "Run this preset on every pixel layer, one after another.",
         ]
     }
 
@@ -203,4 +207,66 @@ struct RestorePanelTests {
         #expect(changed == 0, "an id that isn't on the canvas changes nothing")
         #expect(session.history.undoName != "Remove Noise", "nothing was recorded")
     }
+
+    // MARK: Background generation ("AI Background")
+
+    /// A flat gray mask swatch, `level` from black to white.
+    private func graySwatch(_ level: CGFloat, _ width: Int = 4, _ height: Int = 3) -> CGImage {
+        let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                                space: CGColorSpaceCreateDeviceGray(),
+                                bitmapInfo: CGImageAlphaInfo.none.rawValue)!
+        context.setFillColor(gray: level, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        return context.makeImage()!
+    }
+
+    /// The single pixel at (x, y), through an RGBA8 bitmap context.
+    private func pixel(_ image: CGImage, _ x: Int, _ y: Int) -> (r: Int, g: Int, b: Int, a: Int) {
+        let ctx = CGContext(data: nil, width: image.width, height: image.height, bitsPerComponent: 8, bytesPerRow: 0,
+                            space: CGColorSpaceCreateDeviceRGB(),
+                            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+        ctx.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+        let bytes = ctx.data!.assumingMemoryBound(to: UInt8.self)
+        let i = y * ctx.bytesPerRow + x * 4
+        return (Int(bytes[i]), Int(bytes[i + 1]), Int(bytes[i + 2]), Int(bytes[i + 3]))
+    }
+
+    @Test func invertFlipsTheCutout() {
+        let white = RestoreSheet.invert(graySwatch(1))
+        #expect(pixel(white, 0, 0).r < 8, "white in, black out")
+        let black = RestoreSheet.invert(graySwatch(0))
+        #expect(pixel(black, 0, 0).r > 247, "black in, white out")
+    }
+
+    @Test func compositeKeepsTheSubjectOverTheAnswer() throws {
+        // back: left half white ("paint here"), right half black (the subject stays).
+        let backContext = CGContext(data: nil, width: 4, height: 3, bitsPerComponent: 8, bytesPerRow: 0,
+                                    space: CGColorSpaceCreateDeviceGray(),
+                                    bitmapInfo: CGImageAlphaInfo.none.rawValue)!
+        backContext.setFillColor(gray: 1, alpha: 1)
+        backContext.fill(CGRect(x: 0, y: 0, width: 2, height: 3))
+        let back = backContext.makeImage()!
+        let subject = swatch(4, 3)  // the blue swatch: what Vision said was the subject
+        let generated = RestorePanelTests_flatRed(4, 3)
+        let out = try RestoreSheet.composite(subject: subject, over: generated, back: back)
+        let left = pixel(out, 0, 0)
+        #expect(left.r > 200 && left.g < 60, "over the painted area the answer shows through")
+        let right = pixel(out, 3, 0)
+        #expect(right.b > 200 && right.r < 60, "over the subject the layer's own pixels stay on top")
+    }
+
+    @Test func compositeWithoutAMaskIsTheSubjectAlone() throws {
+        let out = try RestoreSheet.composite(subject: swatch(4, 3), over: swatch(9, 7), back: nil)
+        #expect(out.width == 4 && out.height == 3)
+    }
+}
+
+/// A flat red swatch for the compositing tests.
+private func RestorePanelTests_flatRed(_ width: Int, _ height: Int) -> CGImage {
+    let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                            space: CGColorSpaceCreateDeviceRGB(),
+                            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+    context.setFillColor(red: 1, green: 0, blue: 0, alpha: 1)
+    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    return context.makeImage()!
 }

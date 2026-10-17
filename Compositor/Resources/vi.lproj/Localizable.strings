@@ -584,3 +584,13 @@
 "Describing…" = "Đang mô tả…";
 "The canvas picture goes to the chat model the slot names." = "Ảnh trên canvas sẽ được gửi tới mô hình chat mà slot chỉ định.";
 "There's nothing on the canvas to describe." = "Không có gì trên canvas để mô tả.";
+"Suggest Settings" = "Đề xuất thiết đặt";
+"Fill the size, format and quality the purpose's platform likes best, keeping the canvas's proportions" = "Điền kích thước, định dạng và chất lượng mà nền tảng đích ưa dùng, giữ nguyên tỉ lệ khung vẽ";
+"Instagram Post" = "Bài đăng Instagram";
+"X Post" = "Bài đăng X";
+"Xiaohongshu Note" = "Ghi chú Xiaohongshu";
+"Print (300 DPI)" = "In (300 DPI)";
+"Web" = "Web";
+"The subject cutout runs on one layer at a time." = "Tách chủ thể chỉ chạy trên từng lớp một";
+"Run this preset on every pixel layer, one after another." = "Chạy preset này trên mọi lớp điểm ảnh, lần lượt từng lớp";
+"AI Background" = "Nền AI";

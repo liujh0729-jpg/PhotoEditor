@@ -1,3 +1,4 @@
+import CoreImage
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -60,7 +61,10 @@ struct RestoreSheet: View {
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.bottom, 8)
-                        .disabled(isProcessing)
+                        .disabled(isProcessing || preset.subjectCompositing)
+                        .help(preset.subjectCompositing
+                              ? "The subject cutout runs on one layer at a time."
+                              : "Run this preset on every pixel layer, one after another.")
                 }
                 .frame(width: 280)
 
@@ -164,12 +168,13 @@ struct RestoreSheet: View {
     /// mask when one applies, the preset's prompt, and the slot's model unless the field overrides it.
     /// With "Apply to all layers" on, the same preset walks every pixel layer one at a time instead, and the
     /// whole run lands as a single history entry; a layer the gateway lets down is listed and keeps its pixels.
+    /// The subject cutout works on one layer at a time, so it never enters the batch.
     private func run() {
         guard let source = session.activeLayer?.asset?.image else { return }
         isProcessing = true
         errorMessage = nil
         result = nil
-        if allLayers {
+        if allLayers && !preset.subjectCompositing {
             let items = batchItems()
             guard !items.isEmpty else { isProcessing = false; return }
             batchDone = 0
@@ -195,20 +200,63 @@ struct RestoreSheet: View {
             }
             return
         }
-        let mask = editMask()
+        let preset = self.preset
         Task {
             do {
-                let parts = Self.multipartParts(image: source, mask: mask, preset: preset,
+                // The background generation paints behind Vision's subject cutout: the mask that ships
+                // points at everything but the subject, and the answer comes back under the subject.
+                let back = preset.subjectCompositing
+                    ? try await Self.invert(Self.subjectMask(of: source))
+                    : editMask()
+                let parts = Self.multipartParts(image: source, mask: back, preset: preset,
                                                 model: resolvedModel(preset))
                 let response: ImageResponse = try await GatewayClient.shared.uploadMultipart(
                     endpoint: preset.endpointSlot, parts: parts, as: ImageResponse.self)
-                result = try await Self.firstImage(of: response)
+                let edited = try await Self.firstImage(of: response)
+                result = preset.subjectCompositing ? try Self.composite(subject: source, over: edited, back: back) : edited
                 isProcessing = false
             } catch {
                 isProcessing = false
                 errorMessage = error.localizedDescription
             }
         }
+    }
+
+    /// Vision's foreground subjects, cut out on this Mac; nothing but the mask's pixels leaves the sheet.
+    static func subjectMask(of image: CGImage) async throws -> CGImage {
+        try await Task.detached(priority: .userInitiated) {
+            try SemanticSelection.subjectMask(in: image, threshold: 0.5)
+        }.value
+    }
+
+    /// White where the subject isn't, black where it is: the mask the generator repaints.
+    static func invert(_ mask: CGImage) -> CGImage {
+        // CoreImage's own negative: no blend-mode guesswork about what a bitmap context does to a gray image.
+        let inverted = CIImage(cgImage: mask).applyingFilter("CIColorInvert")
+        return CIContext().createCGImage(inverted, from: CGRect(x: 0, y: 0, width: mask.width, height: mask.height))!
+    }
+
+    /// The subject from `source`, laid back over the generated `background`: white in `back` (the area the
+    /// model was asked to paint) lets the answer through, the subject's own pixels stay on top.
+    static func composite(subject source: CGImage, over background: CGImage, back: CGImage?) throws -> CGImage {
+        guard let back else { return source }
+        let bounds = CGRect(x: 0, y: 0, width: source.width, height: source.height)
+        let context = CIContext()
+        // CIBlendWithMask: the image where the mask is white, the background it's black.
+        func masked(_ image: CGImage, _ mask: CGImage) -> CIFilter? {
+            guard let filter = CIFilter(name: "CIBlendWithMask") else { return nil }
+            filter.setValue(CIImage(cgImage: image), forKey: kCIInputImageKey)
+            filter.setValue(CIImage(cgImage: mask), forKey: kCIInputMaskImageKey)
+            filter.setValue(CIImage(cgImage: background), forKey: kCIInputBackgroundImageKey)
+            return filter
+        }
+        // Where the cutout's white says "paint here", keep the answer; where it's black, keep the subject.
+        guard let kept = masked(background, back)?.outputImage,
+              let subject = masked(source, invert(back))?.outputImage,
+              let out = context.createCGImage(subject.composited(over: kept), from: bounds) else {
+            throw GatewayClientError.invalidResponse
+        }
+        return out
     }
 
     private func resolvedModel(_ preset: RestorePreset) -> String {
@@ -224,8 +272,8 @@ struct RestoreSheet: View {
         }
     }
 
-    /// What limits the edit: a live selection wins (white is the area to touch); with no selection, the layer's
-    /// own enabled mask; neither, and the whole picture goes.
+    /// What limits the edit: the background generation's Vision cutout when the preset composites, else a
+    /// live selection (white is the area to touch), else the layer's own enabled mask; none, the whole picture goes.
     private func editMask() -> CGImage? {
         if let selection = session.selection, let layer = session.activeLayer, let canvas = session.document?.size,
            layer.asset != nil {

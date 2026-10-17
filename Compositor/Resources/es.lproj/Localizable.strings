@@ -584,3 +584,13 @@
 "Describing…" = "Describiendo…";
 "The canvas picture goes to the chat model the slot names." = "La imagen del lienzo se envía al modelo de chat asignado a la ranura.";
 "There's nothing on the canvas to describe." = "No hay nada que describir en el lienzo.";
+"Suggest Settings" = "Sugerir ajustes";
+"Fill the size, format and quality the purpose's platform likes best, keeping the canvas's proportions" = "Rellena el tamaño, el formato y la calidad que prefiere la plataforma de destino, manteniendo las proporciones del lienzo";
+"Instagram Post" = "Publicación de Instagram";
+"X Post" = "Publicación de X";
+"Xiaohongshu Note" = "Nota de Xiaohongshu";
+"Print (300 DPI)" = "Impresión (300 PPP)";
+"Web" = "Web";
+"The subject cutout runs on one layer at a time." = "El recorte del sujeto actúa sobre una capa cada vez";
+"Run this preset on every pixel layer, one after another." = "Aplica este preajuste a todas las capas de píxeles, una tras otra";
+"AI Background" = "Fondo con IA";

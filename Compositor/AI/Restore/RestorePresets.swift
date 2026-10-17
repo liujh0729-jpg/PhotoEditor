@@ -12,6 +12,9 @@ nonisolated struct RestorePreset: Identifiable, Sendable {
     /// answers better from the generation slot.
     let endpointSlot: EndpointType
     let symbol: String
+    /// The background generation: Vision cuts the subject on this Mac, the generation slot paints what's
+    /// behind it, and the panel lays the subject back over the answer.
+    var subjectCompositing = false
 }
 
 /// The whole preset table the panel lists: the removal family, the restore family, and the general ones.
@@ -113,5 +116,8 @@ nonisolated enum RestorePresets {
         RestorePreset(id: "general", title: "General Retouch",
                       prompt: "Cleanly retouch this photo: fix blemishes, even the lighting, keep the scene faithful.",
                       endpointSlot: .imageEdits, symbol: "wand.and.stars"),
+        RestorePreset(id: "aiBackground", title: "AI Background",
+                      prompt: "Generate a photorealistic background for this photo, matched to its lighting and perspective.",
+                      endpointSlot: .imageGeneration, symbol: "photo.on.rectangle.angled", subjectCompositing: true),
     ]
 }

@@ -174,6 +174,15 @@ struct ExportAsSheet: View {
                 }
             }
             HStack(spacing: 12) {
+                // Everyday purposes, each one filling the size/format/quality row like hands on the knobs.
+                Menu("Suggest Settings") {
+                    ForEach(SmartExportSuggestions.UseCase.allCases, id: \.self) { useCase in
+                        Button(useCase.rawValue) { apply(SmartExportSuggestions.suggest(useCase, width: width, height: height)) }
+                    }
+                }
+                .fixedSize()
+                .help("Fill the size, format and quality the purpose's platform likes best, keeping the canvas's proportions")
+                Spacer()
                 Text(format == .exr ? "Brighter than white kept · Transparency kept"
                      : takesCMYK && cmyk ? "CMYK – \(profile?.name ?? "No profile")"
                      : format == .png || format == .tiff ? "Transparency kept · sRGB" : "sRGB")
@@ -273,6 +282,15 @@ struct ExportAsSheet: View {
         .menuStyle(.button).fixedSize()
         .help("Other formats: TIFF and PDF\(others.contains(.exr) ? ", and EXR to keep light brighter than white" : "")")
         if chosen { menu.buttonStyle(.borderedProminent) } else { menu.buttonStyle(.bordered) }
+    }
+
+    /// A suggestion, taken on: the same fields the rows set by hand, in one go.
+    private func apply(_ suggestion: SmartExportSuggestions.Suggestion) {
+        format = suggestion.format
+        width = suggestion.width
+        height = suggestion.height
+        options.quality = suggestion.quality
+        cmyk = suggestion.cmyk
     }
 
     private func sizeField(_ value: Int, set: @escaping (Int) -> Void) -> some View {

@@ -584,3 +584,13 @@
 "Describing…" = "جارٍ الوصف…";
 "The canvas picture goes to the chat model the slot names." = "تُرْسَل صورة اللوحة إلى نموذج المحادثة المحدد للفتحة.";
 "There's nothing on the canvas to describe." = "لا يوجد شيء على اللوحة لوصفه.";
+"Suggest Settings" = "اقتراح الإعدادات";
+"Fill the size, format and quality the purpose's platform likes best, keeping the canvas's proportions" = "يملأ الحجم والصيغة والجودة الأنسب للمنصة المستهدفة مع الحفاظ على نسب اللوحة";
+"Instagram Post" = "منشور Instagram";
+"X Post" = "منشور X";
+"Xiaohongshu Note" = "ملاحظة Xiaohongshu";
+"Print (300 DPI)" = "طباعة (300 نقطة/بوصة)";
+"Web" = "ويب";
+"The subject cutout runs on one layer at a time." = "يعمل قصّ الموضوع على طبقة واحدة في كل مرة";
+"Run this preset on every pixel layer, one after another." = "يشغّل هذا الإعداد المسبق على كل طبقة بكسل تباعًا";
+"AI Background" = "خلفية بالذكاء الاصطناعي";

@@ -669,3 +669,13 @@
 "Describing…" = "正在描述…";
 "The canvas picture goes to the chat model the slot names." = "画布图像会发送至该槽位指定的对话模型。";
 "There's nothing on the canvas to describe." = "画布上没有可描述的图像。";
+"Suggest Settings" = "智能导出建议";
+"Fill the size, format and quality the purpose's platform likes best, keeping the canvas's proportions" = "按目标平台最常用的尺寸、格式和质量填写，同时保持画布比例";
+"Instagram Post" = "Instagram 帖子";
+"X Post" = "X 帖子";
+"Xiaohongshu Note" = "小红书笔记";
+"Print (300 DPI)" = "打印（300 DPI）";
+"Web" = "网页";
+"The subject cutout runs on one layer at a time." = "主体抠像每次只处理一个图层";
+"Run this preset on every pixel layer, one after another." = "在一个接一个的所有像素图层上运行此预设";
+"AI Background" = "AI 背景";

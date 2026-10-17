@@ -584,3 +584,13 @@
 "Describing…" = "説明を生成中…";
 "The canvas picture goes to the chat model the slot names." = "キャンバスの画像はスロットに指定されたチャットモデルに送信されます。";
 "There's nothing on the canvas to describe." = "キャンバスに説明できる画像がありません。";
+"Suggest Settings" = "書き出し設定の提案";
+"Fill the size, format and quality the purpose's platform likes best, keeping the canvas's proportions" = "使い先のプラットフォームに適したサイズ・形式・品質を、キャンバスの比率を保ったまま入力します";
+"Instagram Post" = "Instagram 投稿";
+"X Post" = "X 投稿";
+"Xiaohongshu Note" = "小紅書ノート";
+"Print (300 DPI)" = "プリント（300 DPI）";
+"Web" = "Web";
+"The subject cutout runs on one layer at a time." = "被写体の切り抜きは一度に1つのレイヤーに対して実行されます";
+"Run this preset on every pixel layer, one after another." = "このプリセットをすべてのピクセルレイヤーに順番に適用します";
+"AI Background" = "AI背景";

@@ -584,3 +584,13 @@
 "Describing…" = "Описание…";
 "The canvas picture goes to the chat model the slot names." = "Изображение с холста отправляется чат-модели, назначенной слоту.";
 "There's nothing on the canvas to describe." = "На холсте нет ничего, что можно описать.";
+"Suggest Settings" = "Предложить настройки";
+"Fill the size, format and quality the purpose's platform likes best, keeping the canvas's proportions" = "Подставляет размер, формат и качество, которые предпочитает целевая платформа, сохраняя пропорции холста";
+"Instagram Post" = "Пост в Instagram";
+"X Post" = "Пост в X";
+"Xiaohongshu Note" = "Заметка Xiaohongshu";
+"Print (300 DPI)" = "Печать (300 tpi)";
+"Web" = "Веб";
+"The subject cutout runs on one layer at a time." = "Вырезание объекта применяется по одному слою за раз";
+"Run this preset on every pixel layer, one after another." = "Применяет этот пресет ко всем пиксельным слоям по очереди";
+"AI Background" = "Фон с ИИ";
