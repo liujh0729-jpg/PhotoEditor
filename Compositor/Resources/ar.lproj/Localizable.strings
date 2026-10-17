@@ -497,3 +497,6 @@
 "Loading models…" = "جارٍ تحميل النماذج…";
 "No models loaded — configure a channel with an API key first." = "لا توجد نماذج — اضبط قناة تحتوي على مفتاح API أولاً.";
 "AI Model Settings…" = "إعدادات نماذج الذكاء الاصطناعي…";
+
+/* Semantic selection */
+"The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "يُنشئ Vision القناع على هذا الجهاز، لذا يعمل دون اتصال بالإنترنت. يقتصر دور نصّك على تسمية التعديل.";

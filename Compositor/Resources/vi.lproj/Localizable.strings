@@ -497,3 +497,6 @@
 "Loading models…" = "Đang tải mô hình…";
 "No models loaded — configure a channel with an API key first." = "Chưa có mô hình — hãy cấu hình kênh có khóa API trước.";
 "AI Model Settings…" = "Cài đặt mô hình AI…";
+
+/* Semantic selection */
+"The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "Mặt nạ do Vision tạo trên chính máy Mac này nên hoạt động ngoại tuyến. Câu nhắc của bạn chỉ dùng để đặt tên thao tác sửa đổi.";

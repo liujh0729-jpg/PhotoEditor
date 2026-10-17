@@ -582,3 +582,6 @@
 "Loading models…" = "正在加载模型…";
 "No models loaded — configure a channel with an API key first." = "暂无模型，请先配置带 API 密钥的通道。";
 "AI Model Settings…" = "AI 模型设置…";
+
+/* Semantic selection */
+"The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "蒙版由本机的 Vision 生成，可离线使用。你的提示词只用于命名此次编辑。";

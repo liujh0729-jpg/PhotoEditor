@@ -44,14 +44,15 @@ extension EditorSession {
     }
 
     /// Puts a semantic-selection mask on the active layer as a layer mask, white revealing — as if the mask had been
-    /// painted in by hand. Returns false when there's no eligible active layer or the mask can't be read.
+    /// painted in by hand. `name` is what the history entry reads, the prompt the user typed. Returns false when
+    /// there's no eligible active layer or the mask can't be read.
     @discardableResult
-    func applySemanticMask(_ mask: CGImage) -> Bool {
+    func applySemanticMask(_ mask: CGImage, name: String? = nil) -> Bool {
         guard canEditMask, let document,
               let index = document.layers.firstIndex(where: { $0.id == activeLayerID }),
               document.layers[index].isGroup != true,
               let gray = normalizedMask(mask), let asset = try? LayerMask.asset(from: gray) else { return false }
-        beginEdit("AI Mask")
+        beginEdit(name ?? "AI Mask")
         self.document?.layers[index].mask = LayerMask(asset: asset)
         endEdit()
         return true
@@ -60,12 +61,12 @@ extension EditorSession {
     /// Turns a semantic-selection mask into a live selection on the canvas: the mask's white area is traced along
     /// exact pixel edges and placed where the active layer sits, so it lines up with what the model saw.
     @discardableResult
-    func applySemanticSelection(_ mask: CGImage) -> Bool {
+    func applySemanticSelection(_ mask: CGImage, name: String? = nil) -> Bool {
         guard canEditSelection, let layer = activeLayer, layer.isGroup != true,
               let gray = normalizedMask(mask), let traced = MaskTracing.whitePixels(in: gray) else { return false }
         var toDocument = BrushRaster.pixelToDocument(layer.transform, width: gray.width, height: gray.height)
         guard let outline = traced.copy(using: &toDocument) else { return false }
-        applySelection(outline, mode: .replace, name: "AI Selection")
+        applySelection(outline, mode: .replace, name: name ?? "AI Selection")
         return selection != nil
     }
 

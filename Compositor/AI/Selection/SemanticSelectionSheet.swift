@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Sheet for semantic selection (text-to-mask).
+/// Sheet for semantic selection: Vision cuts the subject mask on this Mac, and the prompt names the edit it becomes.
 struct SemanticSelectionSheet: View {
     let session: EditorSession
     @Environment(\.dismiss) private var dismiss
@@ -42,6 +42,9 @@ struct SemanticSelectionSheet: View {
                                 .font(.body)
                             
                             Text("Describe what you want to select, e.g., 'the cat', 'the sky', 'the person on the left'")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text("The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit.")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -133,7 +136,7 @@ struct SemanticSelectionSheet: View {
                     generate()
                 }
                 .keyboardShortcut(.defaultAction)
-                .disabled(prompt.isEmpty || isProcessing)
+                .disabled(isProcessing)
             }
             .padding()
         }
@@ -145,20 +148,21 @@ struct SemanticSelectionSheet: View {
         isProcessing = true
         errorMessage = nil
         maskPreview = nil
-        
+        // The mask is read off what the canvas shows, the same sample the Object Selection tool works from.
+        guard let document = session.document,
+              let sample = session.selectionSample(document, sampleAllLayers: true) else {
+            isProcessing = false
+            errorMessage = "There's nothing on the canvas to read."
+            return
+        }
+        let cutoff = threshold
         Task {
             do {
-                // TODO: Implement actual semantic selection API call
-                // This would typically use a SAM-like model or segmentation API
-                // For now, this is a placeholder
-                
-                try await Task.sleep(nanoseconds: 2_000_000_000)  // Simulate processing
-                
-                // Placeholder: create a dummy mask
-                // In reality, this would come from the gateway
-                
+                let mask = try await Task.detached(priority: .userInitiated) {
+                    try SemanticSelection.subjectMask(in: sample, threshold: cutoff)
+                }.value
                 isProcessing = false
-                errorMessage = "Semantic selection not yet implemented. Requires SAM or similar model."
+                maskPreview = mask
             } catch {
                 isProcessing = false
                 errorMessage = error.localizedDescription
@@ -166,9 +170,15 @@ struct SemanticSelectionSheet: View {
         }
     }
     
+    /// The prompt names the edit in History; the subject itself is Vision's call.
+    private var subjectName: String? {
+        let name = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        return name.isEmpty ? nil : name
+    }
+    
     private func applyAsMask() {
         guard let mask = maskPreview else { return }
-        guard session.applySemanticMask(mask) else {
+        guard session.applySemanticMask(mask, name: subjectName) else {
             errorMessage = "Can't add a mask here — select one layer first."
             return
         }
@@ -177,7 +187,7 @@ struct SemanticSelectionSheet: View {
     
     private func applyAsSelection() {
         guard let mask = maskPreview else { return }
-        guard session.applySemanticSelection(mask) else {
+        guard session.applySemanticSelection(mask, name: subjectName) else {
             errorMessage = "The mask didn't enclose anything to select."
             return
         }

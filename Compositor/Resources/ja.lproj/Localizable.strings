@@ -497,3 +497,6 @@
 "Loading models…" = "モデルを読み込み中…";
 "No models loaded — configure a channel with an API key first." = "モデルが読み込まれていません。まず API キーを設定したチャネルを作成してください。";
 "AI Model Settings…" = "AI モデル設定…";
+
+/* Semantic selection */
+"The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "マスクはこのMac上のVisionが作成するためオフラインで動作します。プロンプトは編集の命名に使われます。";

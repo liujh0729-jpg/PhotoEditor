@@ -497,3 +497,6 @@
 "Loading models…" = "Cargando modelos…";
 "No models loaded — configure a channel with an API key first." = "No hay modelos cargados: configura primero un canal con clave API.";
 "AI Model Settings…" = "Ajustes de modelos de IA…";
+
+/* Semantic selection */
+"The mask is made on this Mac by Vision, so it works offline. Your prompt names the edit." = "La máscara la crea Vision en este Mac, así que funciona sin conexión. Tu indicación nombra la edición.";

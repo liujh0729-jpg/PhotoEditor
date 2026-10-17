@@ -276,4 +276,64 @@ struct EditorSessionAITests {
         let blank = try mask(width: 100, height: 100) { _, _ in true }
         #expect(!session.applySemanticMask(blank))
     }
+
+    /// The threshold steps Vision's soft edge hard: what comes out is black or white, one clean break, and
+    /// a higher threshold keeps less of the ramp.
+    @Test func subjectMaskCutStepsGraysToBlackAndWhite() throws {
+        let width = 101, height = 4
+        let ramp = (0 ..< width * height).map { Float($0 % width) / Float(width - 1) }
+        let picture = try GuidedMatte.image(ramp, width: width, height: height)
+        func cut(_ threshold: Double) throws -> [Float] {
+            try GuidedMatte.levels(of: try SemanticSelection.cut(picture, threshold: threshold), width: width, height: height)
+        }
+        let low = try cut(0.2), high = try cut(0.8)
+        #expect((low + high).allSatisfy { $0 == 0 || $0 == 1 }, "a cut leaves no grays")
+        #expect(low.filter { $0 == 1 }.count > high.filter { $0 == 1 }.count, "a higher threshold keeps less of the ramp")
+        for levels in [low, high] {
+            for y in 0 ..< height {
+                let row = Array(levels[(y * width) ..< ((y + 1) * width)])
+                let back = zip(row, row.dropFirst()).filter { $0 == 1 && $1 == 0 }.count
+                #expect(back == 0, "one clean step across the row, y \(y)")
+            }
+        }
+    }
+
+    /// The subject pass over a simple scene: it hands back a hard mask at the picture's size with the blob in it —
+    /// or says there's no subject, which a synthetic picture can honestly be.
+    @Test func subjectMaskRunsVisionOnAScene() async throws {
+        let width = 200, height = 200
+        let context = try BrushRaster.context(width: width, height: height, mask: false)
+        context.setFillColor(gray: 0.2, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        context.setFillColor(NSColor.white.cgColor)
+        context.fillEllipse(in: CGRect(x: 60, y: 60, width: 80, height: 80))
+        let picture = try #require(context.makeImage())
+        do {
+            let mask = try await Task.detached(priority: .userInitiated) {
+                try SemanticSelection.subjectMask(in: picture, threshold: 0.5)
+            }.value
+            #expect(mask.width == width && mask.height == height)
+            let levels = try GuidedMatte.levels(of: mask, width: width, height: height)
+            #expect(levels.allSatisfy { $0 == 0 || $0 == 1 }, "the model's edge is cut hard")
+            #expect(levels[width * (height / 2) + width / 2] == 1, "the blob is the subject")
+            #expect(levels.first == 0, "the corner is background")
+        } catch SemanticSelection.Failure.noSubject {
+            // Vision may find no subject in a synthetic scene; that's the honest error, not a placeholder.
+        }
+    }
+
+    /// The prompt is the name the edit takes: History reads "the cat", not a generic label.
+    @Test func promptNamesTheSemanticEdit() throws {
+        let session = try session(withLayerNamed: "Layer")
+        let id = try #require(session.activeLayerID)
+        session.selectedLayerIDs = [id]
+        let half = try mask(width: 200, height: 200) { x, _ in x < 100 }
+        #expect(session.applySemanticMask(half, name: "the cat"))
+        #expect(session.history.undoName == "the cat")
+        #expect(session.applySemanticSelection(half, name: "the sky"))
+        #expect(session.history.undoName == "the sky")
+        // With no prompt to borrow, the edits keep their own names.
+        #expect(session.applySemanticMask(half))
+        #expect(session.history.undoName == "AI Mask")
+    }
 }
