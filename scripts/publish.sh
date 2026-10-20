@@ -3,6 +3,7 @@
 # update feed (appcast.xml, committed to main) pointing at it.
 #
 # Run release.sh first. Needs the Sparkle signing key in the login keychain and `gh` signed in.
+# The release and the feed land on the repo the built app's SUFeedURL points at; override with PUBLISH_REPO=owner/name.
 # Release notes, a change a line: RELEASE_NOTES=$'First change\nSecond change' ./scripts/publish.sh
 # They're listed on the GitHub Release and in the update alert (the feed item's <changes>).
 set -euo pipefail
@@ -10,9 +11,10 @@ set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP=Compositor
 PRODUCT=PhotoCompositor
-REPO=robbietilton/Compositor
 WORK="$HOME/Library/Caches/CompositorRelease"
 SIGN_UPDATE="$WORK/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update"
+GENERATE_KEYS="${SIGN_UPDATE%/*}/generate_keys"
+APP_PLIST="$WORK/export/$PRODUCT.app/Contents/Info.plist"
 
 settings=$(xcodebuild -project "$PROJECT_DIR/$APP.xcodeproj" -scheme "$APP" -configuration Release -showBuildSettings 2>/dev/null)
 VERSION=$(print -r -- "$settings" | awk -F' = ' '/ MARKETING_VERSION = /{print $2; exit}')
@@ -25,7 +27,23 @@ SOURCE="$PROJECT_DIR/dist/$PRODUCT-$VERSION.dmg"
 # that forgot it yields a valid-looking local DMG that Gatekeeper blocks on other Macs. Refuse here.
 xcrun stapler validate "$SOURCE" >/dev/null 2>&1 \
   || { echo "$SOURCE isn't notarized/stapled — rerun with NOTARIZE=1 ./scripts/release.sh before publishing."; exit 1; }
+# Publish wherever the built updater actually reads from: pull the owner/name out of the SUFeedURL release.sh
+# baked into the exported app, so the release and the feed land exactly where clients will look. PUBLISH_REPO
+# overrides that when you build from a different fork than the one the feed points at.
+[[ -r "$APP_PLIST" ]] || { echo "$APP_PLIST is missing — run scripts/release.sh first."; exit 1; }
 [[ -x "$SIGN_UPDATE" ]] || { echo "Sparkle's sign_update isn't built — run scripts/release.sh first."; exit 1; }
+feed="$(plutil -extract SUFeedURL raw "$APP_PLIST" 2>/dev/null || true)"
+feed_repo="$(print -r -- "$feed" | sed -nE 's#^[a-z]+://(raw\.)?github(usercontent)?\.com/([^/]+/[^/]+)(/|$).*#\3#p' || true)"
+REPO="${PUBLISH_REPO:-$feed_repo}"
+[[ -n "$REPO" ]] || { echo "Can't tell which repo to publish to (SUFeedURL was '$feed'). Set PUBLISH_REPO=owner/name."; exit 1; }
+# Refuse to publish a feed the app can't trust: an update signed with the keychain private key only verifies if
+# the built app embeds the matching public key. generate_keys -p reads that key back from the keychain, so the
+# two are compared before anything is uploaded.
+expected="$(plutil -extract SUPublicEDKey raw "$APP_PLIST" 2>/dev/null || true)"
+actual=""
+[[ -x "$GENERATE_KEYS" ]] && actual="$("$GENERATE_KEYS" -p 2>/dev/null | tail -1 || true)"
+[[ -z "$expected" || -z "$actual" || "$expected" == "$actual" ]] \
+  || { echo "The app's SUPublicEDKey ($expected) isn't the public key that would sign this update ($actual) — clients would reject it. Fix Info.plist or the keychain key."; exit 1; }
 if gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1; then
   echo "Release $TAG already exists. Raise the version (and build number) first."
   exit 1
@@ -72,5 +90,12 @@ cat > "$PROJECT_DIR/appcast.xml" <<XML
 XML
 git -C "$PROJECT_DIR" add appcast.xml
 git -C "$PROJECT_DIR" commit -q -m "Publish update feed for $PRODUCT $VERSION"
-git -C "$PROJECT_DIR" push -q
+# Push the feed to the remote that mirrors the repo the updater reads — the branch's default tracking remote is
+# usually the upstream, and a fork's feed shouldn't land there.
+remote=""
+for r in $(git -C "$PROJECT_DIR" remote); do
+  [[ "$(git -C "$PROJECT_DIR" remote get-url "$r")" == *"$REPO"* ]] && { remote="$r"; break; }
+done
+[[ -n "$remote" ]] || { echo "No git remote mirrors $REPO; add one so the feed lands where the updater reads it."; exit 1; }
+git -C "$PROJECT_DIR" push -q "$remote" "HEAD:refs/heads/main"
 echo "==> Done: https://github.com/$REPO/releases/tag/$TAG"
