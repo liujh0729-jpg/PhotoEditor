@@ -21,6 +21,10 @@ MINIMUM=$(print -r -- "$settings" | awk -F' = ' '/ MACOSX_DEPLOYMENT_TARGET = /{
 TAG="v$VERSION"
 SOURCE="$PROJECT_DIR/dist/$PRODUCT-$VERSION.dmg"
 [[ -f "$SOURCE" ]] || { echo "No $SOURCE — run scripts/release.sh first."; exit 1; }
+# Never publish an unstapled DMG: release.sh's notarization is opt-in (NOTARIZE defaults off), so a run
+# that forgot it yields a valid-looking local DMG that Gatekeeper blocks on other Macs. Refuse here.
+xcrun stapler validate "$SOURCE" >/dev/null 2>&1 \
+  || { echo "$SOURCE isn't notarized/stapled — rerun with NOTARIZE=1 ./scripts/release.sh before publishing."; exit 1; }
 [[ -x "$SIGN_UPDATE" ]] || { echo "Sparkle's sign_update isn't built — run scripts/release.sh first."; exit 1; }
 if gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1; then
   echo "Release $TAG already exists. Raise the version (and build number) first."

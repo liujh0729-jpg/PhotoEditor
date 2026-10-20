@@ -16,6 +16,9 @@ PRODUCT=PhotoCompositor
 TEAM=3W42B7G26D
 IDENTITY="Developer ID Application"
 NOTARY_PROFILE=compositor-notary
+# ⚠️ 公证开关：默认关闭，跑脚本不会向 Apple 提交公证（避免误触发历史堆积）。
+#    需要真正出对外分发包时显式开启：NOTARIZE=1 ./scripts/release.sh
+NOTARIZE="${NOTARIZE:-0}"
 # Built outside Dropbox: the extended attributes it adds to files make code signing fail.
 WORK="$HOME/Library/Caches/CompositorRelease"
 DIST="$PROJECT_DIR/dist"
@@ -47,10 +50,30 @@ codesign --verify --deep --strict -vvv "$APP_PATH"
 # rejection here flags packaging trouble, not a reason to stop the release; the post-staple checks below decide.
 spctl --assess --type execute -vv "$APP_PATH" || echo "note: pre-notarization assessment; the real verdict is checked after stapling"
 
-echo "==> Notarizing the app"
-ditto -c -k --keepParent "$APP_PATH" "$WORK/$PRODUCT.zip"
-xcrun notarytool submit "$WORK/$PRODUCT.zip" --keychain-profile "$NOTARY_PROFILE" --verbose --wait
-xcrun stapler staple "$APP_PATH"
+if [[ "$NOTARIZE" == "1" ]]; then
+  echo "==> Notarizing the app"
+  ditto -c -k --keepParent "$APP_PATH" "$WORK/$PRODUCT.zip"
+  xcrun notarytool submit "$WORK/$PRODUCT.zip" --keychain-profile "$NOTARY_PROFILE" --verbose --wait
+  xcrun stapler staple "$APP_PATH"
+  # The ticket is written into Contents/CodeResources, a plain file inside the bundle, so the DMG copy
+  # later on can't drop it — but a staple that silently no-ops would ship an unstapled app and nobody
+  # would notice until a user hit Gatekeeper. Confirm it actually landed before packaging: --wait can
+  # return Accepted a beat before the ticket is fetchable from Apple, so retry a handful of times.
+  for attempt in {1..5}; do
+    if xcrun stapler validate "$APP_PATH" >/dev/null 2>&1; then
+      echo "    app ticket stapled and validated"
+      break
+    fi
+    if (( attempt == 5 )); then
+      echo "!! app staple did not take after 5 tries; refusing to ship an unstapled app" >&2
+      exit 1
+    fi
+    echo "    ticket not fetchable yet (try $attempt), waiting…"
+    sleep 15
+  done
+else
+  echo "==> Skipping app notarization (NOTARIZE!=1); artifact is local-only"
+fi
 
 echo "==> Building the DMG window"
 STAGE="$WORK/dmg"
@@ -95,10 +118,35 @@ codesign --sign "$IDENTITY" --timestamp --options runtime "$DMG"
 # even for a correctly packaged DMG — so it must not stop the run; the post-staple checks below decide.
 codesign --verify --strict -vvv "$DMG"
 spctl --assess --type open --context context:primary-signature -vv "$DMG" || echo "note: pre-notarization assessment; the real verdict is checked after stapling"
-xcrun notarytool submit "$DMG" --keychain-profile "$NOTARY_PROFILE" --verbose --wait
-xcrun stapler staple "$DMG"
+if [[ "$NOTARIZE" == "1" ]]; then
+  xcrun notarytool submit "$DMG" --keychain-profile "$NOTARY_PROFILE" --verbose --wait
+  xcrun stapler staple "$DMG"
+else
+  echo "==> Skipping DMG notarization (NOTARIZE!=1); DMG is Developer ID signed but not stapled"
+fi
 
-echo "==> What Gatekeeper will say on another Mac"
-spctl --assess --type open --context context:primary-signature --verbose=2 "$DMG"
-spctl --assess --type execute --verbose=2 "$APP_PATH"
+if [[ "$NOTARIZE" == "1" ]]; then
+  echo "==> Verifying the app inside the finished DMG is stapled too"
+  # The outer ticket says nothing about the app the user drags out of the image, which is exactly how
+  # 1.5.3 shipped unstapled. Mount the sealed DMG read-only and check the bundle itself, so a packaging
+  # regression can't pass the outer DMG while leaving an unstapled app behind. The mount is torn down on
+  # every exit path: a leftover read-only volume would wedge the next run's rm -rf of $WORK, and a
+  # "Resource busy" detach on a freshly-indexed volume must not fail an otherwise-valid release.
+  MOUNT=$(mktemp -d "$WORK/mnt.XXXXXX")
+  detach_mount() { [[ -n "${MOUNT:-}" ]] && hdiutil detach "$MOUNT" -force >/dev/null 2>&1 || true; }
+  trap detach_mount EXIT
+  hdiutil attach -readonly -nobrowse -mountpoint "$MOUNT" "$DMG" >/dev/null
+  xcrun stapler validate "$MOUNT/$PRODUCT.app"
+  codesign --verify --deep --strict "$MOUNT/$PRODUCT.app"
+  detach_mount
+  trap - EXIT
+fi
+
+if [[ "$NOTARIZE" == "1" ]]; then
+  echo "==> What Gatekeeper will say on another Mac"
+  spctl --assess --type open --context context:primary-signature --verbose=2 "$DMG"
+  spctl --assess --type execute --verbose=2 "$APP_PATH"
+else
+  echo "==> Unnotarized build; skipping Gatekeeper distribution checks (rerun with NOTARIZE=1 to verify)"
+fi
 echo "==> Done: $DMG"
