@@ -264,7 +264,7 @@ struct ChannelEditorView: View {
         testResult = nil
         
         Task {
-            guard let url = URL(string: baseURL) else {
+            guard let url = validatedBaseURL else {
                 testResult = false
                 testing = false
                 return
@@ -294,8 +294,21 @@ struct ChannelEditorView: View {
         }
     }
     
+    /// A pasted "api.example.com" parses as a relative URL — no scheme, no host — yet URL(string:) still
+    /// succeeds, so a channel saved with it fails every request later with an "unsupported URL" that never
+    /// points back at this field. Require an absolute http(s) URL with a host before it can be used or saved.
+    private var validatedBaseURL: URL? {
+        guard let url = URL(string: baseURL.trimmingCharacters(in: .whitespaces)),
+              let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https",
+              url.host != nil else { return nil }
+        return url
+    }
+
     private func save() {
-        guard let url = URL(string: baseURL) else { return }
+        guard let url = validatedBaseURL else {
+            saveError = "Enter a full base URL, like https://api.example.com/v1."
+            return
+        }
         
         if let channel = channel {
             // Update existing
@@ -332,9 +345,8 @@ struct ChannelEditorView: View {
                 proxy: proxy.isEmpty ? nil : URL(string: proxy)
             )
             
-            store.addChannel(newChannel)
-            
-            // Store API key
+            // Write the key before the channel is persisted: if the keychain store fails we bail without
+            // having saved, so a corrected retry doesn't leave an orphan duplicate channel behind.
             if !apiKey.isEmpty {
                 do {
                     try KeychainStore.shared.store(key: apiKey, for: newChannel.id)
@@ -343,6 +355,8 @@ struct ChannelEditorView: View {
                     return
                 }
             }
+            
+            store.addChannel(newChannel)
         }
         
         dismiss()

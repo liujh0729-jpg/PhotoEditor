@@ -39,7 +39,11 @@ final class GatewayClient {
     /// carries it (e.g. `https://api.x/v1` + `/v1/chat/completions`).
     private func makeURL(base: URL, path: String) -> URL {
         var path = path
-        if base.path.hasSuffix("/v1"), path.hasPrefix("/v1") {
+        // A pasted base like "https://api.x/v1/" keeps a trailing slash, so hasSuffix("/v1") misses it and
+        // the /v1 gets doubled into /v1/v1/… — the one input variant this dedup exists to stop. Trim one
+        // trailing slash off the base path before comparing.
+        let basePath = base.path.hasSuffix("/") ? String(base.path.dropLast()) : base.path
+        if basePath.hasSuffix("/v1"), path.hasPrefix("/v1") {
             path.removeFirst(3)
         }
         return base.appendingPathComponent(path)
@@ -286,19 +290,22 @@ final class GatewayClient {
     
     /// Tests connectivity to a channel by making a simple request.
     func testConnection(channel: ProviderChannel, apiKey: String) async throws -> Bool {
+        // The privacy promise is absolute — "nothing is sent while Privacy Mode is on" — and a test hit
+        // still carries the API key to the base URL, so it must respect the gate like every other egress.
+        try Self.guardPrivacy()
         var request = URLRequest(url: makeURL(base: channel.baseURL, path: "/v1/models"))
         request.httpMethod = "GET"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.timeoutInterval = 10
-        
-        var cache: [String: URLSession] = [:]
-        let urlSession = Self.configuredSession(base: session, proxy: channel.proxy, timeout: 10, cache: &cache)
-        let (_, response) = try await urlSession.data(for: request)
-        
+
+        // Reuse the shared proxy-session cache rather than a throwaway local one: a fresh URLSession per
+        // click leaks its delegate, connections and run loop, since URLSession only frees them on invalidate.
+        let (_, response) = try await Self.configuredSession(base: session, proxy: channel.proxy, timeout: 10, cache: &proxySessions).data(for: request)
+
         guard let httpResponse = response as? HTTPURLResponse else {
             return false
         }
-        
+
         return (200...299).contains(httpResponse.statusCode)
     }
 }

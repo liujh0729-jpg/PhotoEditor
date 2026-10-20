@@ -174,14 +174,18 @@ final class TaskQueue: ObservableObject {
     /// Polls a task status through the gateway client, so the HTTP status is checked and the channel's proxy and
     /// credentials are applied the same way as every other request.
     private func pollTask(taskID: String, endpoint: EndpointType) async throws -> TaskStatusResponse {
+        // The id is a server-supplied string dropped into one path segment; encode anything that would
+        // otherwise read as a separator or query and rewrite the poll address out from under us.
+        let allowed = CharacterSet.urlPathAllowed.subtracting(CharacterSet(charactersIn: "/?#"))
+        let id = taskID.addingPercentEncoding(withAllowedCharacters: allowed) ?? taskID
         let pollPath: String
         switch endpoint {
         case .video:
-            pollPath = "/v1/videos/\(taskID)"
+            pollPath = "/v1/videos/\(id)"
         case .imageGeneration:
-            pollPath = "/v1/images/generations/\(taskID)"
+            pollPath = "/v1/images/generations/\(id)"
         default:
-            pollPath = "/v1/tasks/\(taskID)"
+            pollPath = "/v1/tasks/\(id)"
         }
         return try await GatewayClient.shared.get(endpoint: endpoint, path: pollPath, as: TaskStatusResponse.self)
     }

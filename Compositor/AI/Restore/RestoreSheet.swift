@@ -230,10 +230,15 @@ struct RestoreSheet: View {
     }
 
     /// White where the subject isn't, black where it is: the mask the generator repaints.
-    static func invert(_ mask: CGImage) -> CGImage {
+    static func invert(_ mask: CGImage) throws -> CGImage {
         // CoreImage's own negative: no blend-mode guesswork about what a bitmap context does to a gray image.
         let inverted = CIImage(cgImage: mask).applyingFilter("CIColorInvert")
-        return CIContext().createCGImage(inverted, from: CGRect(x: 0, y: 0, width: mask.width, height: mask.height))!
+        // createCGImage returns nil when the render fails (memory pressure, an empty-extent mask). Throw the
+        // same way composite() does below rather than force-unwrapping and crashing the sheet on a bad mask.
+        guard let out = CIContext().createCGImage(inverted, from: CGRect(x: 0, y: 0, width: mask.width, height: mask.height)) else {
+            throw GatewayClientError.invalidResponse
+        }
+        return out
     }
 
     /// The subject from `source`, laid back over the generated `background`: white in `back` (the area the
@@ -252,7 +257,7 @@ struct RestoreSheet: View {
         }
         // Where the cutout's white says "paint here", keep the answer; where it's black, keep the subject.
         guard let kept = masked(background, back)?.outputImage,
-              let subject = masked(source, invert(back))?.outputImage,
+              let subject = masked(source, try invert(back))?.outputImage,
               let out = context.createCGImage(subject.composited(over: kept), from: bounds) else {
             throw GatewayClientError.invalidResponse
         }

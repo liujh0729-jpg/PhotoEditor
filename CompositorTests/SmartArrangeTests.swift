@@ -115,7 +115,7 @@ struct SmartArrangeTests {
 
     // MARK: The run on a document
 
-    @Test func aRunMovesTheSelectedLayersInOneHistoryEntry() throws {
+    @Test func aRunMovesTheSelectedLayersInOneHistoryEntry() async throws {
         let session = EditorSession()
         session.createDocument(width: 200, height: 200)
         session.insert(ImportedImage(image: fullSwatch(100, 50), thumbnail: fullSwatch(20, 10), name: "Wide"))
@@ -124,7 +124,7 @@ struct SmartArrangeTests {
         #expect(ids.count == 2)
         session.selectedLayerIDs = Set(ids)
         // Both were inserted centered: the wide one sits at x 50, the small at x 90.
-        let moved = session.applySmartArrange(.alignLeft)
+        let moved = await session.applySmartArrange(.alignLeft)
         #expect(moved == 2)
         #expect(session.document?.layers[0].transform.origin.x == 0)
         #expect(session.document?.layers[1].transform.origin.x == 0)
@@ -133,13 +133,13 @@ struct SmartArrangeTests {
         #expect(session.document?.layers[0].transform.origin.x == 50, "one undo takes the whole run back")
     }
 
-    @Test func aLoneLayerIsNotASet() throws {
+    @Test func aLoneLayerIsNotASet() async throws {
         let session = EditorSession()
         session.createDocument(width: 200, height: 200)
         session.insert(ImportedImage(image: fullSwatch(100, 50), thumbnail: fullSwatch(20, 10), name: "Only"))
         session.selectedLayerIDs = []
         #expect(!session.canSmartArrange, "the menu waits for a set")
-        #expect(session.applySmartArrange(.alignLeft) == 0)
+        #expect(await session.applySmartArrange(.alignLeft) == 0)
         #expect(session.history.undoName != "Smart Arrange")
     }
 }

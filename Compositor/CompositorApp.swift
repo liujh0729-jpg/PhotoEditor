@@ -376,20 +376,21 @@ struct CompositorApp: App {
                     Button("Move Out of Folder") { session.moveActiveLayerOutOfGroup() }
                         .disabled(!session.canEditLayers || session.activeLayer?.parentID == nil)
                     // Smart Arrange reads each layer's own pixels (or mask) and lines those up, not the frames.
+                    // The pixel scan runs off the main actor, so each command fires from a Task.
                     Menu("Smart Arrange") {
-                        Button("Align Left") { session.applySmartArrange(.alignLeft) }
+                        Button("Align Left") { Task { await session.applySmartArrange(.alignLeft) } }
                             .configuredKeyboardShortcut("l", modifiers: [.command, .option])
-                        Button("Align Centers") { session.applySmartArrange(.alignCenters) }
-                        Button("Align Right") { session.applySmartArrange(.alignRight) }
+                        Button("Align Centers") { Task { await session.applySmartArrange(.alignCenters) } }
+                        Button("Align Right") { Task { await session.applySmartArrange(.alignRight) } }
                             .configuredKeyboardShortcut("r", modifiers: [.command, .option])
-                        Button("Align Top") { session.applySmartArrange(.alignTop) }
+                        Button("Align Top") { Task { await session.applySmartArrange(.alignTop) } }
                             .configuredKeyboardShortcut("t", modifiers: [.command, .option])
-                        Button("Align Bottom") { session.applySmartArrange(.alignBottom) }
+                        Button("Align Bottom") { Task { await session.applySmartArrange(.alignBottom) } }
                             .configuredKeyboardShortcut("b", modifiers: [.command, .option])
                         Divider()
-                        Button("Distribute Horizontally") { session.applySmartArrange(.distributeHorizontally) }
+                        Button("Distribute Horizontally") { Task { await session.applySmartArrange(.distributeHorizontally) } }
                             .configuredKeyboardShortcut("e", modifiers: [.command, .option])
-                        Button("Distribute Vertically") { session.applySmartArrange(.distributeVertically) }
+                        Button("Distribute Vertically") { Task { await session.applySmartArrange(.distributeVertically) } }
                             .configuredKeyboardShortcut("v", modifiers: [.command, .option])
                     }.disabled(!session.canSmartArrange)
                     Button("New Blank Layer") { session.addBlankLayer() }

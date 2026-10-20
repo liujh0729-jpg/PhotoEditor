@@ -112,6 +112,10 @@ final class EditorSession {
     var effectsEditingOriginal: LayerEffects?
     var effectSelection: LayerEffectSelection?
     @ObservationIgnored var effectsPreviews = EffectsPreviewCache()
+    /// Guards Smart Arrange against a second run while the first is still scanning pixels off the main actor.
+    /// The async scan lets the menu fire again mid-flight, and a second run would offset from the layout the
+    /// first hasn't applied yet — double-moving the layers. Toggled only inside applySmartArrange.
+    @ObservationIgnored var smartArrangeInFlight = false
     var projectURL: URL?
     /// Blocks overlapping edits immediately. Not observed by the UI: controls only dim via
     /// `showsBusy`, after an operation has run long enough to be worth showing, so quick

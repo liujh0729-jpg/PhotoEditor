@@ -135,7 +135,7 @@ struct NaturalLanguageSheet: View {
                 )
                 history.append(entry)
                 
-                if intent.requiresConfirmation {
+                if intent.requiresConfirmation || intent.isDestructive {
                     pendingIntent = intent
                     showingConfirmation = true
                 } else {

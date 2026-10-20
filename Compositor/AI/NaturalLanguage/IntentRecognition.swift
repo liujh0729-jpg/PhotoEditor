@@ -74,6 +74,19 @@ struct EditingIntent: Codable {
         requiresConfirmation = (try? container.decode(Bool.self, forKey: .requiresConfirmation)) ?? false
         description = (try? container.decode(String.self, forKey: .description)) ?? ""
     }
+
+    /// Actions that discard pixels or layers, so they must be confirmed no matter what the model says.
+    /// The model's `requiresConfirmation` is untrusted input and defaults to false when omitted or
+    /// malformed (see the lenient decoder above); a destructive action must never slip through by that
+    /// accident, so the client hard-codes the lossy set and ORs it into the confirmation gate.
+    nonisolated var isDestructive: Bool {
+        switch action {
+        case .deleteLayer, .removeMask, .removeAdjustmentLayer, .ungroupLayers, .cropCanvas:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 /// Recognizes editing intents from natural language input. Runs on the main actor: it reads the

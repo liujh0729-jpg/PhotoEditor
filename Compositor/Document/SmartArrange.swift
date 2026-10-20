@@ -88,24 +88,39 @@ extension EditorSession {
         guard canEditLayers, let document else { return false }
         let ids = selectedLayerIDs.isEmpty ? Set(activeLayerID.map { [$0] } ?? []) : selectedLayerIDs
         return document.layers.filter { ids.contains($0.id) && $0.isGroup != true && $0.asset != nil }.count >= 2
+            && !smartArrangeInFlight
     }
 
     /// Runs a Smart Arrange command over the layers in play — `ids`, or the selected ones (the active layer
     /// counts as a selection of one) — as a single history entry. The command needs a set: fewer than two
     /// content-carrying pixel layers, and nothing moves. Returns how many layers did.
     @discardableResult
-    func applySmartArrange(_ command: SmartArrangeCommand, layerIDs: Set<UUID>? = nil) -> Int {
+    func applySmartArrange(_ command: SmartArrangeCommand, layerIDs: Set<UUID>? = nil) async -> Int {
+        // Refuse a second run while one is mid-flight: the pixel scan suspends the main actor for a beat, and
+        // a re-entrant run would compute its moves from a layout the first run hasn't applied yet.
+        guard !smartArrangeInFlight else { return 0 }
         guard canEditLayers, let document else { return 0 }
+        smartArrangeInFlight = true
+        defer { smartArrangeInFlight = false }
         let ids = layerIDs ?? (selectedLayerIDs.isEmpty ? Set(activeLayerID.map { [$0] } ?? []) : selectedLayerIDs)
         let live = document.layers.filter { ids.contains($0.id) && $0.isGroup != true && $0.adjustment == nil }
-        let rows = live.compactMap { layer -> SmartArrange.Row? in
+        // Snapshot the pixels and transforms here, then scan each layer's opaque bounds off the main actor:
+        // a full-resolution RGBA buffer per layer is enough to freeze the menu for seconds on a big canvas,
+        // and the scan is pure (nothing main-actor-isolated), so it runs cleanly detached.
+        let inputs = live.compactMap { layer -> (id: UUID, transform: LayerTransform, image: CGImage, mask: CGImage?)? in
             guard let image = layer.asset?.image else { return nil }
             let mask = layer.mask.flatMap { $0.isEnabled ? $0.asset.image : nil }
-            return SmartArrange.Row(id: layer.id, transform: layer.transform,
-                                    content: Self.contentBounds(of: image, mask: mask))
+            return (layer.id, layer.transform, image, mask)
         }
+        let canvas = document.size
+        let rows: [SmartArrange.Row] = await Task.detached(priority: .userInitiated) {
+            inputs.map {
+                SmartArrange.Row(id: $0.id, transform: $0.transform,
+                                 content: EditorSession.contentBounds(of: $0.image, mask: $0.mask))
+            }
+        }.value
         guard rows.count >= 2 else { return 0 }
-        let moves = SmartArrange.shifts(for: command, rows: rows, canvas: document.size)
+        let moves = SmartArrange.shifts(for: command, rows: rows, canvas: canvas)
         guard !moves.isEmpty else { return 0 }
         beginEdit("Smart Arrange")
         var moved = 0
@@ -125,7 +140,7 @@ extension EditorSession {
     /// Where a layer's picture actually is inside its box, in unit terms: the smallest rect around the opaque
     /// pixels, or around a mask's white when the layer wears an enabled one. An empty reading gives the whole
     /// box, so such a layer at least aligns with itself.
-    static func contentBounds(of image: CGImage, mask: CGImage?) -> CGRect {
+    nonisolated static func contentBounds(of image: CGImage, mask: CGImage?) -> CGRect {
         let width = image.width, height = image.height
         guard width > 0, height > 0 else { return CGRect(x: 0, y: 0, width: 1, height: 1) }
         let bytesPerRow = width * 4
