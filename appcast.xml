@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Compositor</title>
+    <title>PhotoCompositor</title>
+    <link>https://github.com/liujh0729-jpg/PhotoEditor/releases</link>
+    <description>PhotoCompositor updates for macOS</description>
+    <language>en</language>
     <item>
-      <title>Version 1.5.2</title>
-      <pubDate>Tue, 13 Oct 2026 21:00:59 +0000</pubDate>
-      <sparkle:version>48</sparkle:version>
-      <sparkle:shortVersionString>1.5.2</sparkle:shortVersionString>
+      <title>Version 1.5.4</title>
+      <pubDate>Tue, 20 Oct 2026 01:13:42 +0000</pubDate>
+      <sparkle:version>52</sparkle:version>
+      <sparkle:shortVersionString>1.5.4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-      <link>https://github.com/robbietilton/Compositor/releases/tag/v1.5.2</link>
-      <changes><![CDATA[Camera Raw Shadows now matches Photoshop: dark areas lift the way they do there
-Open a RAW file straight into the Camera Raw Filter from the import dialog
-Reset any Camera Raw section from its header
-Clear any keyboard shortcut, or give one to CMYK Proof Colors and Gamut Warning
-Shortcuts on the Delete key can now be changed
-Custom keyboard shortcuts are kept when the app updates
-Update notices always show at full width]]></changes>
-      <enclosure url="https://github.com/robbietilton/Compositor/releases/download/v1.5.2/Compositor.dmg" sparkle:edSignature="9qU8ou0bNdyOFDBLRq4Pi0gTvxn45YhedlprVlswjDVVjQpxpzLNAVZRX2G9/Fu6qg8ykTrrk0QtuqqsAaDoDw==" length="8225504" type="application/octet-stream"/>
+      <enclosure url="https://github.com/liujh0729-jpg/PhotoEditor/releases/download/v1.5.4/PhotoCompositor-1.5.4.dmg" sparkle:edSignature="wCW5h6X36wzglRGsCAGdpSa2R5/b4nnGq3UXX5i3jeclpDRveNR4Ax0iwKh7Psdpe62lMWaGaMn2iJomGpEtCQ==" length="8783116" type="application/octet-stream"/>
+      <changes><![CDATA[Fixes a crash when inverting an AI restore mask.
+Destructive natural-language actions (delete layer, remove mask, ungroup, crop canvas) now always ask for confirmation.
+Privacy Mode is honored by the connection test; the test no longer leaks a network session per click.
+The gateway requires a full http(s) base URL, no longer doubles the /v1 prefix, and won't leave a duplicate channel when the key write fails.
+Smart Arrange keeps the canvas responsive on large documents and can't be re-triggered mid-scan.
+Signed with Developer ID, hardened runtime, notarized and stapled.]]></changes>
     </item>
   </channel>
 </rss>
