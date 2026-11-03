@@ -1,6 +1,6 @@
 # AIPDD PhotoEditor（base PhotoCompositor）
 
-[English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · **Tiếng Việt** · [Español](README.es.md) · [Русский](README.ru.md)
+[简体中文](README.md) · [English](README.en.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · **Tiếng Việt** · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
@@ -12,14 +12,11 @@ Vì mã nguồn mở, bạn có thể tải dự án Xcode về và thêm, xóa 
 
 ## Cài đặt
 
+Bản dựng PhotoCompositor này được phát hành bởi [liujh0729-jpg/PhotoEditor](https://github.com/liujh0729-jpg/PhotoEditor), và kho lưu trữ đó là nguồn **duy nhất** để cài đặt và cập nhật. Các bản phát hành và feed từ bất kỳ kho nào khác — kể cả `robbietilton/Compositor` mà dự án này fork từ đó — sẽ bị ứng dụng bỏ qua, và không có cask Homebrew cho bản dựng này.
+
 ### Tải về
-Tải PhotoCompositor từ [robbietilton.com/compositor](https://robbietilton.com/compositor), hoặc tải bản phát hành mới nhất trực tiếp từ [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
 
-### Homebrew
-
-```sh
-brew install --cask robbietilton-compositor
-```
+Lấy file DMG mới nhất từ [GitHub Releases](https://github.com/liujh0729-jpg/PhotoEditor/releases/latest): mở nó và kéo PhotoCompositor vào Ứng dụng.
 
 ## Tính năng
 

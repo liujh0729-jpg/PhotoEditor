@@ -1,6 +1,6 @@
 # AIPDD PhotoEditor（base PhotoCompositor）
 
-[English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · **日本語** · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
+[简体中文](README.md) · [English](README.en.md) · [Français](README.fr.md) · **日本語** · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
@@ -12,14 +12,11 @@ Adobe Photoshop は高すぎるし、GIMP のようなツールは馴染めな�
 
 ## インストール
 
+この PhotoCompositor ビルドは [liujh0729-jpg/PhotoEditor](https://github.com/liujh0729-jpg/PhotoEditor) が公開しており、このリポジトリがインストールとアップデートの唯一のソースです。他のリポジトリ（フォーク元の `robbietilton/Compositor` を含む）のリリースやフィードはアプリ側で無視されます。このビルド用の Homebrew cask もありません。
+
 ### ダウンロード
-[robbietilton.com/compositor](https://robbietilton.com/compositor) から、または [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest) の最新リリースから直接ダウンロードしてください。
 
-### Homebrew
-
-```sh
-brew install --cask robbietilton-compositor
-```
+[GitHub Releases](https://github.com/liujh0729-jpg/PhotoEditor/releases/latest) から最新の DMG を開き、PhotoCompositor を「アプリケーション」にドラッグしてください。
 
 ## 機能
 

@@ -1,6 +1,6 @@
 # AIPDD PhotoEditor（base PhotoCompositor）
 
-[English](README.md) · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · **العربية** · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
+[简体中文](README.md) · [English](README.en.md) · [Français](README.fr.md) · [日本語](README.ja.md) · **العربية** · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
@@ -12,14 +12,11 @@ Adobe Photoshop باهظ الثمن، وأدوات مثل GIMP ليست مألو
 
 ## التثبيت
 
+يُنشر هذا الإصدار من PhotoCompositor من [liujh0729-jpg/PhotoEditor](https://github.com/liujh0729-jpg/PhotoEditor)، وهذا المستودع هو المصدر **الوحيد** للتثبيت والتحديث. تتجاهل التطبيق إصدارات وتغذيات أي مستودع آخر — بما في ذلك `robbietilton/Compositor` الذي نُسخ منه — ولا يوجد صيغة Homebrew لهذا الإصدار.
+
 ### التنزيل
-احصل على PhotoCompositor من [robbietilton.com/compositor](https://robbietilton.com/compositor)، أو نزّل أحدث إصدار مباشرة من [إصدارات GitHub](https://github.com/robbietilton/Compositor/releases/latest).
 
-### Homebrew
-
-```sh
-brew install --cask robbietilton-compositor
-```
+خذ أحدث ملف DMG من [إصدارات GitHub](https://github.com/liujh0729-jpg/PhotoEditor/releases/latest): افتحه واسحب PhotoCompositor إلى التطبيقات.
 
 ## المزايا
 

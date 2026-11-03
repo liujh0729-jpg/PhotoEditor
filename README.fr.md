@@ -1,6 +1,6 @@
 # AIPDD PhotoEditor（base PhotoCompositor）
 
-[English](README.md) · [简体中文](README.zh-Hans.md) · **Français** · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
+[简体中文](README.md) · [English](README.en.md) · **Français** · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
@@ -12,14 +12,11 @@ Comme il est open source, vous pouvez télécharger le projet Xcode et ajouter, 
 
 ## Installation
 
+Cette version de PhotoCompositor est publiée par [liujh0729-jpg/PhotoEditor](https://github.com/liujh0729-jpg/PhotoEditor), et ce dépôt est l'**unique** source d'installation et de mise à jour. Les versions et flux d'un autre dépôt — y compris `robbietilton/Compositor`, dont ce projet est un fork — sont ignorés par l'app, et il n'existe pas de cask Homebrew pour cette version.
+
 ### Téléchargement
-Téléchargez PhotoCompositor depuis [robbietilton.com/compositor](https://robbietilton.com/compositor), ou directement depuis la dernière version sur [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
 
-### Homebrew
-
-```sh
-brew install --cask robbietilton-compositor
-```
+Prenez le dernier DMG sur [GitHub Releases](https://github.com/liujh0729-jpg/PhotoEditor/releases/latest) : ouvrez-le et glissez PhotoCompositor dans Applications.
 
 ## Fonctionnalités
 

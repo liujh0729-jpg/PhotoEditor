@@ -1,138 +1,135 @@
 # AIPDD PhotoEditor（base PhotoCompositor）
 
-**English** · [简体中文](README.zh-Hans.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
+**简体中文** · [English](README.en.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Tiếng Việt](README.vi.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 ![AIPDD PhotoEditor — canvas with Layers panel and Hue/Saturation, Levels, Color Picker adjustment panels](docs/screenshots/hero.jpg)
 
-Adobe Photoshop costs too much and tools like GIMP don’t feel familiar enough for me to stay in flow. That’s why I built PhotoCompositor.
+Photoshop 太贵，GIMP 之类的工具又不够顺手，我没法在上面长时间专注，于是自己写了 PhotoCompositor。
 
-The goal was to create a full-featured image editor that is completely free and open source. I used to use Photoshop for compositing and post-processing, so PhotoCompositor is built around that workflow - with the tools needed to create a pixel-perfect final image.
+目标是一个功能完整、完全免费开源的图像编辑器。过去我用 Photoshop 做合成和后期，PhotoCompositor 就是围绕这套工作流构建的——做出一张像素级到位的成图所需的所有工具。
 
-Because it’s open source, you can download the Xcode project and add, remove, or modify any feature to fit your workflow.
+因为开源，你可以直接把 Xcode 工程下下来，按自己的流程加、删、改任何功能。
 
-## Installation
+## 安装
 
-### Download
-Get PhotoCompositor from [robbietilton.com/compositor](https://robbietilton.com/compositor), or download the latest release directly from [GitHub Releases](https://github.com/robbietilton/Compositor/releases/latest).
+这个 PhotoCompositor 构建版本由 [liujh0729-jpg/PhotoEditor](https://github.com/liujh0729-jpg/PhotoEditor) 发布，该仓库是它安装和更新的唯一来源。来自其他任何仓库（包括它 fork 自的 `robbietilton/Compositor`）的发布版和更新源都会被应用忽略，这个构建版本也没有 Homebrew cask。
 
-### Homebrew
+### 下载
 
-```sh
-brew install --cask robbietilton-compositor
-```
+从 [GitHub Releases](https://github.com/liujh0729-jpg/PhotoEditor/releases/latest) 获取最新的 DMG，打开后把 PhotoCompositor 拖进“应用程序”。
 
-## Features
+## 特性
 
-### Layers
-- Layers and folders, with opacity and Photoshop's full set of blend modes in its order — a folder's opacity dims everything inside it
-- Layer masks: paint, fill, invert, blur and feather them anywhere on the canvas, past the layer's own pixels; link or unlink them to transform a mask on its own
-- Clipping masks and folder masks
-- Adjustment layers: Hue/Saturation, Levels, Curves, Exposure, Gradient Map, Grain, Black & White, Color Balance, Invert, Gaussian Blur, Motion Blur and Noise
-- Layer effects: Stroke, Drop Shadow, Color Overlay, Inner Shadow, Outer Glow and Inner Glow, rendered on the GPU and editable at any time
-- Merge Down, Merge Layers and Merge Group (⌘E)
-- Duplicate, rename inline, reorder and nest by drag and drop; Option-drag to duplicate; a right-click menu in the Layers panel
-- Copy and paste whole layers and folders (⌘C/⌘V with no selection), within a project or between projects, or drag them between projects
+### 图层
+- 图层与文件夹，不透明度、Photoshop 的全套混合模式并保持其顺序；文件夹的不透明度会压暗其内部所有内容
+- 图层蒙版：可以在画布任何位置绘制、填充、反相、模糊、羽化，甚至可以超出图层自身像素范围；可链接/解除链接，独立变换蒙版
+- 剪切蒙版与文件夹蒙版
+- 调整图层：色相/饱和度、色阶、曲线、曝光、渐变映射、颗粒、黑白、色彩平衡、反相、高斯模糊、动态模糊、噪点
+- 图层样式：描边、投影、颜色叠加、内阴影、外发光、内发光，全部走 GPU 渲染，随时可编辑
+- 向下合并、合并图层、合并组（⌘E）
+- 复制、行内重命名、拖拽排序与嵌套；Option 拖拽复制；图层面板右键菜单
+- 整层与文件夹复制粘贴（无选区时 ⌘C/⌘V），可在项目内也可跨项目，或直接把图层拖到另一个项目
 
-### Transform
-- Non-destructive move, scale, rotate and flip — images keep their full resolution however small you make them
-- Free distort (⌘-drag a handle), with Shift to lock to an axis
-- Transform several layers, or a whole folder, together
-- Snapping to canvas and layer edges and centers, with guides
-- Exact values for position, size, scale and angle, stepped with the arrow keys
-- Flip Layer and Flip Canvas, horizontal and vertical
+### 变换
+- 非破坏性移动、缩放、旋转与翻转——图像始终保留完整分辨率，缩得再小也不掉像素
+- 自由扭曲（⌘ 拖拽手柄），Shift 锁定到轴
+- 多图层或整个文件夹一起变换
+- 吸附到画布与图层边缘/中心，支持参考线
+- 位置、尺寸、缩放、角度的精确数值，方向键步进
+- 水平/垂直翻转图层与翻转画布
 
-### Selections
-- Rectangle and Ellipse Marquee, Freehand and Polygonal Lasso, and the Magic tool — Wand selects by color, Object traces whatever you click (Tab switches)
-- Select Subject, and Expand, Contract and Feather on any selection
-- Add to and subtract from selections, move the outline, or move and duplicate the pixels inside
-- Load a layer's pixels or a mask as a selection
-- Content-Aware Fill, which can also extend an image past its edges
+### 选区
+- 矩形/椭圆选框、自由套索、多边形套索，以及智能工具——魔棒按颜色选，对象工具点哪选哪（Tab 切换）
+- 主体选择，任何选区可扩展、收缩、羽化
+- 加选、减选，移动选区轮廓，或移动并复制选区内的像素
+- 将图层像素或蒙版作为选区载入
+- 内容识别填充，也能把图像向边缘外延展
 
-### Painting and retouching
-- Brush with size, hardness, opacity and smoothing, in Paint or Erase mode (B and E), and Shift for straight lines
-- Spot Healing Brush (content-aware)
-- Clone Stamp, aligned or not, sampling one layer or all of them
-- Blur tool, on pixels or masks
-- Gradient tool and Shape tool (rectangles, rounded rectangles, ellipses and lines), which stay editable rather than being rasterized
-- Type tool (T): inline multiline editing in draggable, resizable paragraph boxes; font, size, color, alignment and spacing in the tool header; transform text and use it as a clipping mask
-- Eyedropper and a full color picker
+### 绘画与修图
+- 画笔：大小、硬度、不透明度、平滑，绘制或擦除（B 与 E），Shift 画直线
+- 污点修复画笔（内容识别）
+- 图章工具：可对齐、可仅采样某一层或所有层
+- 模糊工具：作用在像素或蒙版上
+- 渐变工具与形状工具（矩形、圆角矩形、椭圆、直线），保持矢量可编辑，不会栅格化
+- 文字工具（T）：行内多段编辑，段落框可拖、可缩放；字体、字号、颜色、对齐、行距在工具栏头部；文字可变换，也可作为剪切蒙版
+- 吸管与完整的拾色器
 
-### Adjustments and filters
-- Camera Raw filter: light, color, curves, color mixer, color grading, detail, optics and geometry, in a panel beside the canvas; each section resets to its defaults from its header
-- Levels (with Auto), Curves, Hue/Saturation, Exposure, Gradient Map, Grain, Black & White, Color Balance and Invert
-- Gaussian Blur and Motion Blur that spread past a layer's edges
-- Add Noise, Vignette, Bloom / Glow, Dither, Scanlines, Tonal Contrast, Lens Correction and Remove Background
-- Live previews, limited to the selection when there is one
-- Last Filter (⌃⌘F) runs the last filter again with the same settings
+### 调整与滤镜
+- Camera Raw 滤镜：光线、颜色、曲线、颜色混合器、颜色分级、细节、光学、几何，位于画布旁；每个分区可以从自己的标题一键重置
+- 色阶（含自动色阶）、曲线、色相/饱和度、曝光、渐变映射、颗粒、黑白、色彩平衡、反相
+- 高斯模糊、动态模糊可以越过图层边缘扩散
+- 添加噪点、暗角、辉光/发光、抖动、扫描线、色调对比、镜头校正、移除背景
+- 实时预览；如果存在选区则只作用于选区
+- 上次滤镜（⌃⌘F）按同样的参数再次运行最近一次的滤镜
 
-### Canvas and files
-- Multiple projects in tabs
-- Search Commands (⌘F): find every menu command and tool by name, as in Raycast or Obsidian, and run it with Return
-- Toggle Fullscreen (F): the canvas alone on black over the whole screen, with every panel put away; F or Esc brings them back
-- Rulers (⌘R), guides dragged from them, a layout grid with adjustable spacing and subdivisions, and Snap To for guides, grid, layers and document bounds
-- Crop with snapping, ratios including 3:4 and 9:16, and Option for symmetric cropping; with a selection, the crop starts at it
-- Canvas Size, Image Size and Trim
-- A Navigator minimap in the canvas's corner from 300% zoom: the whole document in small with a box around the view; click or drag to move there (View › Navigator)
-- Sharp high-quality downsampling when zoomed out, and a pixel grid when zoomed in
-- Import JPEG, PNG, HEIC, TIFF, WebP, SVG, camera RAW (with a develop step first) and Photoshop PSD and PSB (8-bit RGB; not CMYK). Photoshop folders, masks, blend modes, fill rectangles/ellipses, and simple horizontal text stay editable; other vectors and vertical text become pixels. A conversion report is shown before anything is applied.
-- Large documents: the memory budget scales with your Mac, and a Photoshop file too big to open has its layers cropped to the canvas instead
-- Export PNG (⇧⌘E), Export JPEG (⇧⌥⌘S), and Export As (⇧⌥⌘W) for PNG, JPEG or a one-page PDF at the print size, scaled if you like, with a live preview, JPEG quality and file size; Copy Merged
-- Keep working while a project saves
-- Photoshop-style keyboard shortcuts throughout, remappable in Edit > Keyboard Shortcuts
-- Drag a number's label to scrub its value, as in Photoshop
-- Automatic updates, signed and notarized
+### 画布与文件
+- 多标签项目
+- 搜索命令（⌘F）：像 Raycast 或 Obsidian 一样按名称找到每一条菜单命令与工具，回车执行
+- 全屏切换（F）：整屏黑底只剩画布，收起所有面板；F 或 Esc 恢复
+- 标尺（⌘R）、从标尺拖出参考线、可调整间距与细分的版式网格，Snap To 支持参考线、网格、图层与文档边界
+- 裁剪带吸附，含 3:4、9:16 等比例，Option 对称裁剪；有选区时裁剪以选区起
+- 画布大小、图像大小、裁切
+- 300% 以下缩放时，画布角落会显示导航器缩略图：整幅文档缩小显示，用方框标出当前视图，点击或拖拽可跳转（视图 › 导航器）
+- 缩小时高质量下采样，放大时显示像素网格
+- 导入 JPEG、PNG、HEIC、TIFF、WebP、SVG、相机 RAW（先做一步显影）以及 Photoshop PSD/PSB（8 位 RGB，不支持 CMYK）。Photoshop 的文件夹、蒙版、混合模式、填充矩形/椭圆、简单横排文字保持可编辑；其他矢量与竖排文字会被栅格化。应用之前会展示一份转换报告
+- 大文档：内存预算随你的 Mac 变化；打开不了的超大 Photoshop 文件会按画布范围裁掉图层
+- 导出 PNG（⇧⌘E）、导出 JPEG（⇧⌥⌘S），导出为（⇧⌥⌘W）支持 PNG、JPEG 或按打印尺寸（可选缩放）的单页 PDF，实时预览，含 JPEG 质量与文件大小；拷贝合并
+- 项目保存时可以继续工作
+- 全套 Photoshop 风格快捷键，可在 编辑 › 键盘快捷键 自定义
+- 拖拽数字标签即可调节数值，和 Photoshop 一样
+- 自动更新，签名并公证
 
-### AI (bring your own gateway)
-- The AI Gateway (⌘,) points every AI feature at any OpenAI-compatible server you trust — a hosted one, a corporate proxy, or a local runner. Channels have priority, weight, timeout, optional HTTP/HTTPS/SOCKS proxy, and per-capability overrides for model, path and channel; API keys live in the macOS Keychain, never in a preferences file. A built-in AIPDD channel is pre-configured so you can start with just a key. Test Connection verifies a channel before you save it
-- Capabilities are slots, not hard-coded endpoints: Text Chat, Image Generation, Image Editing, Video, Text-to-Speech, Speech-to-Text, Embeddings and Decision Model each pick their own channel and model, so you can, for example, route image work to one provider and chat to another
-- Every AI action is a menu command, so it shows up in Search Commands (⌘F) and can be rebound in Edit › Keyboard Shortcuts
-- Generate Image: text-to-image with size, quality, style, count and negative prompt; drop results onto the canvas as new layers, or save to disk
-- Image Editing and Inpainting (image-to-image): pass the active layer's pixels to the gateway with a prompt, and either replace the layer in place (undoable, mask preserved) or add the result as a new layer; with a live selection or a layer mask, that mask is sent too, so the model edits only what you marked
-- Style Transfer: hand the gateway a reference image and a strength (0–100%), match its tone onto the active layer
-- Natural Language Editing: describe an edit in plain English — "boost the saturation", "rename to sky", "deselect the subject", "group these layers" — the chat model returns a structured intent and the editor performs it through the same code paths as clicking a menu, with a keyword parser as an offline fallback. Destructive intents (delete, replace pixels) ask before acting
-- Semantic Selection: the mask-to-canvas pipeline is wired up — a segmentation mask off the gateway becomes either a layer mask (white reveals) or a live marching-ants selection traced along exact pixel edges, placed under the layer's own transform. The text-to-mask model itself is still a placeholder; the endpoints are ready for a SAM-compatible service
-- Video, Voice and Transcription run through the async task queue: submit → poll with exponential backoff → download. Polling has a deadline and honors cancellation, so a stuck gateway can't wedge the panel; a Cancel button drops a task in place
-- Nothing leaves your Mac except to the channel you configured; the app does not phone home, does not bundle an API key, and does not meter usage
+### AI（自带网关）
+- AI 网关（⌘,）把所有 AI 功能指向任何你信任的 OpenAI 兼容服务器：托管的、公司代理的、或者本机跑的。通道支持优先级、权重、超时、可选的 HTTP/HTTPS/SOCKS 代理，以及每个能力槽独立的模型/路径/通道覆盖；API 密钥保存在 macOS 钥匙串，绝不写入偏好文件。内置一个 AIPDD 通道，只要填密钥就能开跑。保存前可以用测试连接先验一遍
+- 能力是槽位，不是硬编码端点：文本对话、图像生成、图像编辑、视频、文字转语音、语音转文字、嵌入与决策模型，每个都可以选自己的通道和模型，比如把图像任务给一家、对话给另一家
+- 每一条 AI 操作都是菜单命令，都会出现在搜索命令（⌘F）里，可以在 编辑 › 键盘快捷键 里重绑
+- 生成图像：文生图，含尺寸、质量、风格、数量与反向提示词；结果可以作为新图层丢到画布上，或者保存到磁盘
+- 图像编辑与局部重绘（图生图）：把当前图层的像素连提示词一起送给网关，可以选择原地替换图层（可撤销，蒙版保留），或者作为新图层加入；如果当前图层有已启用的蒙版，蒙版会一并下发，模型只会修改你标记出的区域
+- 风格迁移：把参考图像和强度（0–100%）交给网关，把它匹配到的色调套到当前图层
+- 自然语言编辑：用普通话说出你想要的编辑——"提高饱和度""改名为 sky""取消选择主体""这几个图层编组"——对话模型返回结构化意图，编辑器用与点击菜单同样的代码路径执行；离线时会退回关键词解析。破坏性意图（删除、替换像素）会先请求确认
+- 语义选择：从蒙版到画布的管线已经打通——网关返回的分割掩膜既可以作为图层蒙版（白显），也可以沿着精确像素边缘描成行军蚁选区，置于图层自身变换之下。文本转掩膜这一步仍是占位；端点已经为兼容 SAM 的服务预留
+- 视频、语音与转录走异步任务队列：提交 → 指数退避轮询 → 下载。轮询有截止时间并尊重取消，网关卡住不会锁死面板；一个取消按钮可以在原位丢任务
+- 除了你配置的通道以外，没有任何数据会离开你的 Mac；App 不打电话回家、不打包任何 API 密钥、不做用量计量
 
-### Works with AI agents
-- AI agents and scripts can build and edit projects directly: a `.comp` is a folder of PNG layers and a manifest, and an open project updates live as it's written. See [Writing PhotoCompositor projects](docs/writing-comp-files.md)
+### 与 AI 协作
+- AI 智能体和脚本可以直接构造、修改工程：`.comp` 就是一堆 PNG 图层加一份 manifest；打开着的项目被写入时，画布会实时刷新。参见 [编写 PhotoCompositor 工程](docs/writing-comp-files.md)
 
-## Requirements
+## 系统要求
 
-- macOS 26.0 or later on a Mac with Apple silicon
-- Xcode 26 or later (to build from source)
+- macOS 26.0 或更高，Apple silicon 机型
+- Xcode 26 或更高（从源码构建时）
 
-## Translations
+## 翻译
 
-PhotoCompositor ships with eight UI languages — English, Simplified Chinese, French, Japanese, Arabic, Vietnamese, Spanish and Russian — and you can pick one explicitly in AI Gateway Settings › General (or leave it on Follow System to track the language order in System Settings). The interface mirrors the locale: Arabic switches to a right-to-left layout on the next launch.
+PhotoCompositor 内置 8 种界面语言——英语、简体中文、法语、日语、阿拉伯语、越南语、西班牙语、俄语——可以在 AI 网关设置 › 通用 中手动指定（也可以保持"跟随系统"，按系统设置里的语言顺序走）。界面会跟随所选语言：阿拉伯语在下次启动时切换到从右到左布局。
 
-The string catalog lives in `Compositor/Resources/*.lproj/Localizable.strings`, one file per locale, English literal as the key. Missing keys fall back to the English source, so a half-translated locale is still usable. Native-speaker PRs that fill the gaps or improve existing wording are welcome; if you’re picking up a locale for the first time, start with the visible surfaces (menus, AI sheets, tool headers) before the deeper tooltips.
+字符串目录在 `Compositor/Resources/*.lproj/Localizable.strings`，一种语言一个文件，键就是英文原字符串。缺失的键会回落到英文源，所以半翻译状态也照样能用。欢迎母语者 PR 补齐空缺或润色已有文案；如果你要接管一门新语言，建议先把最可见的表面（菜单、AI 面板、工具栏头部）翻完，再深入提示气泡。
 
-## Building
+## 构建
 
-Open `Compositor.xcodeproj` and run the **Compositor** scheme.
+打开 `Compositor.xcodeproj`，运行 **Compositor** scheme。
 
-## Releasing
+## 发布
 
-`scripts/release.sh` builds a Release version, signs it with Developer ID, notarizes and staples it, and packages it into `dist/PhotoCompositor-<version>.dmg`.
+`scripts/release.sh` 会构建 Release 版本，用 Developer ID 签名、公证并装订，最后打包为 `dist/PhotoCompositor-<version>.dmg`。
 
-It needs, all kept outside this repository:
+需要以下三项，均不存放在本仓库：
 
-- a **Developer ID Application** certificate in the login keychain
-- notarization credentials saved with `xcrun notarytool store-credentials "compositor-notary" …`
-- [`create-dmg`](https://github.com/create-dmg/create-dmg) (`brew install create-dmg`)
+- 登录钥匙串中的 **Developer ID Application** 证书
+- 通过 `xcrun notarytool store-credentials "compositor-notary" …` 保存的公证凭据
+- [`create-dmg`](https://github.com/create-dmg/create-dmg)（`brew install create-dmg`）
 
-## Community
+## 社区
 
-AIPDD PhotoEditor (base PhotoCompositor) is developed in the open, and the fastest way to participate is to join the discussion. I keep a small WeChat group (ID: **raikkonenlxx**) for users and developers to trade prompts, report bugs, share `.comp` files, and talk about gateway setups and AI workflows. To join, add me on WeChat at **raikkonenlxx** with the note "AIPDD". Please include "PhotoCompositor" in your friend request so I know you're not a bot.
+AIPDD PhotoEditor PhotoCompositor 开源开发，最快的参与方式就是加入讨论。我在微信上维护了一个小群（微信号：**raikkonenlxx**），面向用户与开发者，用来交流提示词、报 bug、分享 `.comp` 文件，讨论网关配置与 AI 玩法。想一起研究的朋友，加微信 **raikkonenlxx** 备注 AIPDD。请通过好友申请时写明 PhotoCompositor，让我知道你不是机器人。
 
 <div align="center">
-  <img src="./docs/references/canvas-group-qr.png" width="260" alt="WeChat QR code — join the AIPDD-Agent-Claw canvas discussion group"/>
+  <img src="./docs/references/canvas-group-qr.png" width="260" alt="微信二维码 — 加入 AIPDD-Agent-Claw 画布讨论群"/>
 </div>
 <br>
 
-For issues that should live in the record — reproducible bugs, feature requests, PRs — please still open them on GitHub so the discussion is searchable.
+需要留痕的问题——可复现 bug、功能请求、PR——还是请开在 GitHub，方便检索。
 
-## License
+## 许可
 
-MIT — see [LICENSE](LICENSE).
+MIT — 见 [LICENSE](LICENSE)。

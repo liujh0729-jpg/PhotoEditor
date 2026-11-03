@@ -7,7 +7,7 @@ A PhotoCompositor project (`.comp`) is a folder of PNG layer images plus a `mani
 1. Open a project in PhotoCompositor 1.3 or later (save a new canvas somewhere, e.g. `~/Desktop/demo.comp`), and keep it open.
 2. Ask an AI agent that can edit files on your Mac (Claude Code, Codex and the like):
 
-   > Read docs/writing-comp-files.md in github.com/robbietilton/Compositor, then design a moody night scene in ~/Desktop/demo.comp. Work in steps, one or two layers at a time.
+   > Read docs/writing-comp-files.md in github.com/liujh0729-jpg/PhotoEditor, then design a moody night scene in ~/Desktop/demo.comp. Work in steps, one or two layers at a time.
 
 3. Watch the canvas. Each time the agent writes the project, PhotoCompositor reloads it, usually within half a second.
 
