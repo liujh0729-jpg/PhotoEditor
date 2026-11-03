@@ -172,13 +172,48 @@ import Sparkle
     func dismissUpdateInstallation() { standard.dismissUpdateInstallation() }
 }
 
-/// In a debug build, `-UpdateFeedURL <url>` on the command line checks that feed instead, to try an update locally.
+/// Updates come from one place and no other: the self-hosted Sparkle feed in liujh0729-jpg/PhotoEditor on GitHub.
+/// `feedURLString` ignores whatever feed an installed copy would otherwise read — its `Info.plist`, or a feed saved
+/// in defaults by an earlier build or by `-UpdateFeedURL` — so an app shipped from here can't be turned to another
+/// source; `Info.plist`'s `SUFeedURL` agrees with it, and `UpdateSourceTests` keeps them that way.
+/// An update from anywhere else is refused on two counts before anything is downloaded: it would be signed with a
+/// key this app's `SUPublicEDKey` doesn't vouch for, and its archive wouldn't be this repo's release asset.
 final class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
-    func feedURLString(for updater: SPUUpdater) -> String? {
-        #if DEBUG
-        return UserDefaults.standard.string(forKey: "UpdateFeedURL")
-        #else
-        return nil
-        #endif
+    static let feedURL = "https://raw.githubusercontent.com/liujh0729-jpg/PhotoEditor/main/appcast.xml"
+    /// The one repository an update, or a pointer to one, may live in.
+    static let updateSource = "liujh0729-jpg/PhotoEditor"
+
+    func feedURLString(for updater: SPUUpdater) -> String? { Self.feedURL }
+
+    /// An update whose archive isn't in the source repo's releases is no update at all: it's turned down before
+    /// anything is offered or downloaded, and the user is told where updates come from instead.
+    @objc(updater:shouldProceedWithUpdate:updateCheck:error:)
+    func updater(_ updater: SPUUpdater, shouldProceedWith updateItem: SUAppcastItem,
+                 updateCheck: SPUUpdateCheck) throws {
+        let ours = [updateItem.fileURL, updateItem.infoURL].compactMap { $0 }
+        guard ours.isEmpty || ours.allSatisfy({ Self.isFromUpdateSource(host: $0.host, path: $0.path) }) else {
+            throw NSError(domain: "Compositor", code: 1, userInfo: [
+                NSLocalizedDescriptionKey: "Updates are only available from \(Self.updateSource) on GitHub, and this one isn't.",
+            ])
+        }
+    }
+
+    /// Whether an item's own URLs belong to the source repo. A missing one (an informational item with no pointer)
+    /// doesn't take anything from anywhere else, so it passes.
+    static func isFromUpdateSource(_ item: SUAppcastItem) -> Bool {
+        [item.fileURL, item.infoURL].allSatisfy { url in
+            guard let url else { return true }
+            return isFromUpdateSource(host: url.host, path: url.path)
+        }
+    }
+
+    /// The same, for a host and path, so a feed read off another site is turned away whatever it calls itself.
+    static func isFromUpdateSource(host: String?, path: String) -> Bool {
+        guard let host, ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"].contains(host.lowercased())
+        else { return false }
+        // github.com and raw.githubusercontent.com serve from the repo's path exactly; objects.githubusercontent.com
+        // (the CDN behind release downloads) nests it under a prefix, so a contains is right for that one.
+        if host.lowercased() == "objects.githubusercontent.com" { return path.contains("/\(updateSource)/") }
+        return path.hasPrefix("/\(updateSource)/")
     }
 }

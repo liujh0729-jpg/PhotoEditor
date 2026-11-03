@@ -10,7 +10,7 @@ These stay **Compositor** on purpose, so existing installs, file associations an
 
 - The Xcode project and scheme (`Compositor.xcodeproj`, scheme `Compositor`) and the `Compositor/` source folder.
 - The bundle id `com.wonderassembly.compositor` and the type identifiers `com.compositor.*`.
-- The GitHub repo path (`robbietilton/Compositor`) and the `SUFeedURL` that points at it.
+- The GitHub repo path (`liujh0729-jpg/PhotoEditor`) — the **only** place updates come from. `SUFeedURL`, `UpdaterDelegate.feedURL`, every release asset and the `appcast.xml` all live there; nothing else is accepted, so never point any of them at another repo (not the `robbietilton/Compositor` this was forked from, not a mirror).
 
 ## Designing or editing a Compositor project
 

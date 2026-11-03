@@ -231,10 +231,10 @@ struct RestorePanelTests {
         return (Int(bytes[i]), Int(bytes[i + 1]), Int(bytes[i + 2]), Int(bytes[i + 3]))
     }
 
-    @Test func invertFlipsTheCutout() {
-        let white = RestoreSheet.invert(graySwatch(1))
+    @Test func invertFlipsTheCutout() throws {
+        let white = try RestoreSheet.invert(graySwatch(1))
         #expect(pixel(white, 0, 0).r < 8, "white in, black out")
-        let black = RestoreSheet.invert(graySwatch(0))
+        let black = try RestoreSheet.invert(graySwatch(0))
         #expect(pixel(black, 0, 0).r > 247, "black in, white out")
     }
 

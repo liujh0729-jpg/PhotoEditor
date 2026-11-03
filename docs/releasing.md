@@ -62,10 +62,23 @@ If it reports `Release v<version> already exists`, raise the version and build n
 
 ## Update feed (self-hosted Sparkle)
 
+**One source, and nothing else:** `https://github.com/liujh0729-jpg/PhotoEditor`. Both halves of the release have to stay
+inside it — the `appcast.xml` pushed to `main`, and every DMG uploaded to a Release tag — because a build shipped from
+here refuses anything outside it, by design.
+
 `Config/Info.plist` carries the keys that decide where updates come from and what vouches for them:
 
 - `SUFeedURL` — the appcast this fork serves.
 - `SUPublicEDKey` — the public half of the EdDSA pair that must match the key `publish.sh` signs with.
+
+The feed an installed app reads is the one baked into `UpdaterDelegate.feedURL`, which overrides `SUFeedURL` and any
+feed saved in defaults (by an older build, or `-UpdateFeedURL`), and `UpdaterDelegate` turns down an item whose archive
+or pointer lives anywhere else before it's offered or downloaded. So:
+
+- never point `SUFeedURL`, a Release asset or the appcast at another repo, host or mirror — the app won't take it, and
+  users get "Updates are only available from liujh0729-jpg/PhotoEditor on GitHub";
+- keep `Config/Info.plist`'s `SUFeedURL` equal to `UpdaterDelegate.feedURL`, and both with the repo: `UpdateSourceTests`
+  fails the build otherwise.
 
 The private key lives in your login keychain (the "Private key for signing Sparkle updates" item, service
 `https://sparkle-project.org`, default account `ed25519`). The `generate_keys` binary that manages it ships in the
@@ -82,7 +95,8 @@ Lose this key and you can no longer sign updates anyone's installed app will acc
 
 **Scope:** only builds installed from this fork — with the fork's `SUPublicEDKey` and `SUFeedURL` baked in — can see or
 accept these updates. Installs carrying an earlier publisher's key never will; they must be reinstalled once to move
-onto this track.
+onto this track, and an install handed a DMG from anywhere else can't be moved by a feed at all — it has to be
+replaced by hand with this fork's build.
 
 ## Checklist
 
@@ -91,3 +105,5 @@ onto this track.
 3. `RELEASE_NOTES=$'…' ./scripts/publish.sh`.
 4. Download the release asset, check its SHA-256 against the DMG you built, and confirm the raw `appcast.xml` now lists
    the new version.
+5. Install that DMG on a clean account, run it, and check for updates: it should report up to date, and never fetch from
+   a host outside the repo.
