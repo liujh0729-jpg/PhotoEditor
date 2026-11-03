@@ -8,12 +8,17 @@ nonisolated enum FilterKind: String, CaseIterable, Sendable {
     case gaussianBlur = "Gaussian Blur"
     case motionBlur = "Motion Blur"
     case progressiveBlur = "Progressive Blur"
+    case sharpen = "Sharpen"
     case addNoise = "Add Noise"
     case vignette = "Vignette"
     case bloomGlow = "Bloom / Glow"
     case dither = "Dither"
     case scanlines = "Scanlines"
+    case rgbSplit = "RGB Split"
+    case lensEffects = "Lens Effects"
     case tonalContrast = "Tonal Contrast"
+    case volumetricLight = "Volumetric Light"
+    case rimLight = "Rim Light"
     case lensCorrection = "Lens Correction"
     case cameraRaw = "Camera Raw Filter"
     case removeBackground = "Remove Background"
@@ -29,7 +34,10 @@ nonisolated enum FilterKind: String, CaseIterable, Sendable {
     var repeatsAsLastFilter: Bool { self != .contentAwareFill && !isImageAdjustment }
     /// Filters made wholly in Core Image, which works at 16 bits as readily as at 8: a 16-bit layer runs them once, on its
     /// 16-bit pixels, rather than three times through `DeepLayer.run`.
-    var runsAtSixteenBits: Bool { self == .gaussianBlur || self == .motionBlur || self == .progressiveBlur || self == .bloomGlow }
+    var runsAtSixteenBits: Bool {
+        self == .gaussianBlur || self == .motionBlur || self == .progressiveBlur || self == .bloomGlow || self == .lensEffects
+            || self == .sharpen || self == .rimLight || self == .volumetricLight
+    }
     /// Filters whose output channels each depend on all three input channels (Camera Raw's color, and the ones that work
     /// from brightness), which a 16-bit layer runs the slower, channel-by-channel way (`DeepLayer.run`).
     var mixesChannels: Bool { self == .cameraRaw || self == .tonalContrast || self == .scanlines }
@@ -98,15 +106,33 @@ nonisolated struct FilterSettings: Equatable, Sendable {
     /// Bloom / Glow: strength and blur radius in layer pixels.
     var bloomAmount: Double = 40
     var bloomRadius: Double = 24
+    /// Sharpen: how much of the detail to add back, 0–300%, and how fine it is, 0.1–20 layer pixels.
+    var sharpenAmount: Double = 100
+    var sharpenRadius: Double = 1
     /// Tonal Contrast: one local-detail radius and separate tonal strengths.
     var tonalAmount: Double = 50
     var tonalRadius: Double = 16
     var tonalShadows: Double = 40
     var tonalMidtones: Double = 60
     var tonalHighlights: Double = 30
+    /// RGB Split: how far the spectrum spreads (red one way, blue the other, green staying), and how far it smears into
+    /// streaks, in layer pixels; for Radial, at `rgbSplitReach` from the center, less nearer it and more beyond.
+    var rgbSplitDistance: Double = 10
+    var rgbSplitBlur: Double = 0
+    /// Linear's direction, in degrees counterclockwise from horizontal.
+    var rgbSplitAngle: Double = 0
+    /// Radial: outwards from `rgbSplitCenter` (document coordinates, set by clicking the canvas) instead of along the
+    /// angle. Reach is how far from the center the full distance applies, in document pixels: half the layer's
+    /// visible diagonal when the filter opens.
+    var rgbSplitRadial = false
+    var rgbSplitCenter: CGPoint?
+    var rgbSplitReach: Double = 1000
     /// Lens Correction's Remove Distortion, −100–100: positive straightens barrel distortion
     /// (lines bowing outward), negative straightens pincushion (lines bowing inward).
     var distortion: Double = 0
+    var lens = LensEffectSettings()
+    var rimLight = RimLightSettings()
+    var volumetric = VolumetricLightSettings()
     var curves = CurvesSettings()
     var exposure = ExposureSettings()
     var gradientMap = GradientMapSettings()
@@ -142,6 +168,8 @@ nonisolated struct FilterSettings: Equatable, Sendable {
         result.vignetteFeather = clamp(vignetteFeather, 0...100, 60)
         result.vignetteHighlights = clamp(vignetteHighlights, 0...100, 25)
         result.bloomAmount = clamp(bloomAmount, 0...100, 40)
+        result.sharpenAmount = clamp(sharpenAmount, 0...300, 100)
+        result.sharpenRadius = clamp(sharpenRadius, 0.1...20, 1)
         result.bloomRadius = clamp(bloomRadius, 1...150, 24)
         result.tonalAmount = clamp(tonalAmount, 0...100, 50)
         result.tonalRadius = clamp(tonalRadius, 1...100, 16)
@@ -149,6 +177,10 @@ nonisolated struct FilterSettings: Equatable, Sendable {
         result.tonalMidtones = clamp(tonalMidtones, -100...100, 60)
         result.tonalHighlights = clamp(tonalHighlights, -100...100, 30)
         result.distortion = clamp(distortion, -100...100, 0)
+        result.rgbSplitDistance = clamp(rgbSplitDistance, 0...200, 10)
+        result.rgbSplitBlur = clamp(rgbSplitBlur, 0...400, 0)
+        result.rgbSplitAngle = clamp(rgbSplitAngle, -180...180, 0)
+        result.rgbSplitReach = clamp(rgbSplitReach, 1...100_000, 1000)
         result.refineEdges = clamp(refineEdges, 0...40, 12)
         result.matteContrast = clamp(matteContrast, 0...100, 25)
         result.shiftEdge = clamp(shiftEdge, -10...10, 0)
@@ -157,6 +189,9 @@ nonisolated struct FilterSettings: Equatable, Sendable {
         result.grain = grain.normalized
         result.dither = dither.normalized
         result.scanlines = scanlines.normalized
+        result.lens = lens.normalized
+        result.rimLight = rimLight.normalized
+        result.volumetric = volumetric.normalized
         result.cameraRaw = cameraRaw.normalized
         return result
     }
@@ -178,6 +213,9 @@ nonisolated struct FilterJob: @unchecked Sendable {
     let mapping: CGAffineTransform
     /// Add Noise's random pattern: the same seed gives the same grain.
     var seed: UInt32 = 0
+    /// Lens Effects' measure, in this image's pixels: the whole document's longer side, when the image is only part of
+    /// it. Nil: the image's own.
+    var lensSide: CGFloat?
     /// Vignette on an empty layer: the canvas, in the document, which it frames and fills. Otherwise the vignette
     /// frames the layer's own pixels and recolors only those.
     var canvas: CGRect? = nil
@@ -194,6 +232,8 @@ nonisolated struct FilterJob: @unchecked Sendable {
     var showsHighlightClipping = false
     /// What Camera Raw's adaptive sliders read from `image`, when known already: measured once for a session's previews.
     var cameraRawBrightness: CameraRawTables.Brightness? = nil
+    /// Preview only: the CPU remains the reference for OK, export, and unsupported GPU paths.
+    var cameraRawUsesGPU = false
     /// Point-color range preview. −1 leaves the grade alone.
     var visualizesPointColor = -1
     /// Option-drag on Sharpening Masking. Preview only.
@@ -252,6 +292,35 @@ nonisolated enum PixelFilter {
         return image.clampedToExtent().cropped(to: region)
     }
 
+    /// RGB Split: the layer dispersed on the GPU (see `MetalDispersion`), in the job's pixels.
+    static func rgbSplit(_ job: FilterJob, settings: FilterSettings) throws -> CGImage {
+        let width = job.image.width, height = job.image.height
+        let context = try BrushRaster.context(width: width, height: height, mask: false)
+        BrushRaster.draw(job.image, in: CGRect(x: 0, y: 0, width: width, height: height), mask: false, context: context)
+        let distance = settings.rgbSplitDistance * job.scale, blur = settings.rgbSplitBlur * job.scale
+        guard distance > 0 || blur > 0 else { return job.image }
+        guard let gpu = MetalDispersion.shared else { throw ExportError.render }
+        // The center and reach, from the document into this image's pixels (rows top-down).
+        let toPixels = job.mapping.inverted()
+        let center = settings.rgbSplitCenter?.applying(toPixels) ?? CGPoint(x: Double(width) / 2, y: Double(height) / 2)
+        let reach = settings.rgbSplitReach * hypot(toPixels.a, toPixels.b)
+        let angle = settings.rgbSplitAngle * .pi / 180
+        let sides = job.canvasSides
+        // Enough samples that neighbors sit a pixel or two apart, within what the GPU does at once.
+        let spread = settings.rgbSplitRadial ? distance * 2 : distance, smear = settings.rgbSplitRadial ? blur * 2 : blur
+        try gpu.run(context, MetalDispersion.Parameters(
+            center: SIMD2(Float(center.x), Float(center.y)),
+            // Rows run top-down here, so up on screen is a smaller row.
+            direction: SIMD2(Float(cos(angle)), Float(-sin(angle))),
+            distance: Float(distance), blur: Float(blur), reach: Float(reach), radial: settings.rgbSplitRadial ? 1 : 0,
+            sides: (sides.contains(.left) ? 1 : 0) | (sides.contains(.right) ? 2 : 0) | (sides.contains(.top) ? 4 : 0)
+                | (sides.contains(.bottom) ? 8 : 0),
+            spectral: distance > 0 ? UInt32(min(32, max(3, Int(spread)))) : 1,
+            smear: blur > 0 ? UInt32(min(24, max(2, Int(smear / 2)))) : 1))
+        guard let image = context.makeImage() else { throw ExportError.render }
+        return image
+    }
+
     static func run(_ job: FilterJob) throws -> CGImage {
         let settings = job.settings.normalized
         let width = job.image.width, height = job.image.height
@@ -268,7 +337,7 @@ nonisolated enum PixelFilter {
         case .colorBalance: image = try settings.colorBalance.apply(job.image)
         case .cameraRaw: image = try settings.cameraRaw.apply(job.image, clipping: job.cameraRawClipping, scale: job.scale, seed: job.seed,
                                                                 visualizePointColor: job.visualizesPointColor, sharpenMask: job.showsSharpenMask,
-                                                                brightness: job.cameraRawBrightness)
+                                                                brightness: job.cameraRawBrightness, usesGPU: job.cameraRawUsesGPU)
         // Grain sits in layer pixels; the job's seed gives each application its own pattern.
         case .grain: image = try settings.grain.apply(job.image, unitsPerPixel: 1 / job.scale, seed: job.seed)
         case .dither: image = try settings.dither.apply(job.image)
@@ -292,6 +361,18 @@ nonisolated enum PixelFilter {
             image = try render(blurred.cropped(to: extent), job: job)
         case .progressiveBlur:
             image = try render(progressivelyBlurred(edges, job: job, settings: settings, extent: extent).cropped(to: extent), job: job)
+        case .rgbSplit: image = try rgbSplit(job, settings: settings)
+        case .lensEffects:
+            let side = job.lensSide ?? CGFloat(max(job.image.width, job.image.height))
+            image = try render(settings.lens.apply(to: CIImage(cgImage: job.image), side: side), job: job)
+        case .rimLight:
+            image = try render(RimLighting.apply(to: CIImage(cgImage: job.image), source: job.image, settings: settings.rimLight), job: job)
+        case .volumetricLight:
+            // The light from the document into this image's pixels (rows top-down), then Core Image's (y up).
+            let pixel = settings.volumetric.center?.applying(job.mapping.inverted())
+                ?? VolumetricLighting.brightestPoint(in: job.image)
+            image = try render(VolumetricLighting.apply(to: CIImage(cgImage: job.image), source: job.image, settings: settings.volumetric,
+                                                        light: CGPoint(x: pixel.x, y: Double(height) - pixel.y)), job: job)
         case .motionBlur:
             // Core Image's y axis points up, so its counterclockwise angle matches Photoshop's.
             let streaked = extending(edges, past: job.canvasSides, of: extent).applyingFilter("CIMotionBlur", parameters: [
@@ -322,6 +403,14 @@ nonisolated enum PixelFilter {
                                     settings.vignetteColor.red, settings.vignetteColor.green, settings.vignetteColor.blue)
             guard let result = context.makeImage() else { throw ExportError.render }
             image = result
+        case .sharpen:
+            // An unsharp mask: the difference from a blur of `sharpenRadius` added back, `sharpenAmount` percent of it.
+            // Edge pixels carry on past the canvas's sides, so the picture's border doesn't darken.
+            let sharpened = extending(edges, past: job.canvasSides, of: extent).applyingFilter("CIUnsharpMask", parameters: [
+                kCIInputRadiusKey: settings.sharpenRadius * job.scale,
+                kCIInputIntensityKey: settings.sharpenAmount / 100,
+            ])
+            image = try render(sharpened.cropped(to: extent), job: job)
         case .bloomGlow:
             let bloomed = edges.applyingFilter("CIBloom", parameters: [
                 kCIInputRadiusKey: settings.bloomRadius * job.scale,
@@ -515,16 +604,19 @@ final class FilterEdit {
     /// Camera Raw's adaptive sliders read the picture before any change, which stays the same while the panel is open:
     /// measured once from the preview's source, again only when that changes.
     @ObservationIgnored private var cameraRawBrightness: (version: UInt64, value: CameraRawTables.Brightness)?
-    var previewBrightness: CameraRawTables.Brightness {
-        if let cached = cameraRawBrightness, cached.version == previewSourceVersion { return cached.value }
-        let value = CameraRawTables.brightness(of: previewSource)
+    var previewBrightness: CameraRawTables.Brightness? {
+        guard let cached = cameraRawBrightness, cached.version == previewSourceVersion else { return nil }
+        return cached.value
+    }
+    func cachePreviewBrightness(_ value: CameraRawTables.Brightness) {
         cameraRawBrightness = (previewSourceVersion, value)
-        return value
     }
     /// The settings `preparedPreview` was made with, for the automatic filters that have settings of their own.
     @ObservationIgnored var preparedSettings: FilterSettings?
     @ObservationIgnored var pending: FilterJob?
     @ObservationIgnored var previewTask: Task<Void, Never>?
+    /// Volumetric Light's first preview, held for the depth model (`beginFilter`).
+    @ObservationIgnored var waitsForDepth = false
     /// Previews render from a copy no larger than this on its longest side.
     static let previewLimit: CGFloat = 2048
 
@@ -563,6 +655,8 @@ final class FilterEdit {
         switch kind {
         case .gaussianBlur: return settings.preserveTransparency ? 0 : CGFloat(settings.radius * 3 + 2)
         case .motionBlur: return CGFloat(settings.distance / 2 + 2)
+        // Radial reaches farther than its distance past `rgbSplitReach` from the center.
+        case .rgbSplit: return CGFloat((settings.rgbSplitDistance + settings.rgbSplitBlur) * (settings.rgbSplitRadial ? 2 : 1) + 2)
         case .progressiveBlur: return CGFloat(max(settings.progressiveFrom, settings.progressiveTo) * 3 + 2)
         case .bloomGlow: return CGFloat(settings.bloomRadius * 3 + 2)
         default: return 0
@@ -616,9 +710,9 @@ final class FilterEdit {
     private static func prepared(kind: FilterKind, from source: CGImage, placed: LayerTransform) throws
         -> (mapping: CGAffineTransform, previewSource: CGImage, previewScale: CGFloat, previewMapping: CGAffineTransform) {
         let mapping = BrushRaster.pixelToDocument(placed, width: source.width, height: source.height)
-        // Noise, grain, dither and scanlines preview at full size: made on a smaller copy they would look coarser once
-        // enlarged.
-        let factor = [.addNoise, .grain, .dither, .scanlines, .contentAwareFill, .removeBackground].contains(kind)
+        // Camera Raw keeps native detail throughout slider drags. Noise, grain, dither and scanlines also need
+        // full-size pixels: made on a smaller copy they would look coarser once enlarged.
+        let factor = [.cameraRaw, .addNoise, .grain, .dither, .scanlines, .contentAwareFill, .removeBackground].contains(kind)
             ? 1 : min(1, previewLimit / CGFloat(max(source.width, source.height)))
         guard factor < 1 else { return (mapping, source, 1, mapping) }
         let w = max(1, Int(CGFloat(source.width) * factor)), h = max(1, Int(CGFloat(source.height) * factor))
@@ -675,7 +769,10 @@ final class FilterEdit {
         job.showsHighlightClipping = showsHighlightClipping
         job.visualizesPointColor = pointColorVisualizeIndex
         job.showsSharpenMask = cameraRawSharpenMask
-        if kind == .cameraRaw { job.cameraRawBrightness = previewBrightness }
+        if kind == .cameraRaw {
+            job.cameraRawBrightness = previewBrightness
+            job.cameraRawUsesGPU = previewSource.width * previewSource.height >= MetalCameraRawLookup.minimumPixels
+        }
         return job
     }
 }
@@ -694,6 +791,8 @@ extension EditorSession {
         }
         commitTransform(); cancelCrop(); cancelLasso()
         guard var layer = activeLayer, let document else { return }
+        pauseGIFForEditing(for: layer.id)
+        layer = pixelEditingLayer(for: layer)
         do {
             // An empty layer has no pixels until something is put on it; Vignette starts it with clear ones.
             let startedEmpty = layer.asset == nil
@@ -712,6 +811,19 @@ extension EditorSession {
                 settings.progressiveStart = CGPoint(x: area.midX, y: area.minY + area.height * 0.35)
                 settings.progressiveEnd = CGPoint(x: area.midX, y: area.maxY)
             }
+            // RGB Split's center starts in the middle of the layer's visible part, reaching to its corners.
+            if kind == .rgbSplit, !repeating {
+                let shown = CGRect(origin: layer.transform.origin, size: layer.transform.size)
+                    .intersection(CGRect(origin: .zero, size: document.size))
+                let area = shown.isNull || shown.isEmpty ? CGRect(origin: .zero, size: document.size) : shown
+                settings.rgbSplitCenter = CGPoint(x: area.midX, y: area.midY)
+                settings.rgbSplitReach = max(1, hypot(area.width, area.height) / 2)
+            }
+            // Volumetric Light starts on the layer's brightest spot: a window, the sky, a lamp.
+            if kind == .volumetricLight, !repeating, let image = layer.asset?.image {
+                settings.volumetric.center = VolumetricLighting.brightestPoint(in: image)
+                    .applying(BrushRaster.pixelToDocument(layer.transform, width: image.width, height: image.height))
+            }
             // Gradient Map starts from the foreground and background colors, as in Photoshop.
             if kind == .gradientMap {
                 settings.gradientMap = GradientMapSettings(shadows: AdjustmentColor(foregroundColor), highlights: AdjustmentColor(backgroundColor))
@@ -729,8 +841,38 @@ extension EditorSession {
             edit.startedEmpty = startedEmpty
             edit.repeating = repeating
             filterEdit = edit
+            // Volumetric Light's depth model, downloaded the first time: the first preview waits for it, so the fog
+            // doesn't draw from its own guess and then jump to the depth. Fetching and compiling it takes about 3 seconds;
+            // a slow connection holds it only 5: then the fog guesses until the model is here, and redraws.
+            // Without a connection it fails at once, and the fog guesses straight away.
+            let waitsForDepth = kind == .volumetricLight && !repeating && !DepthModel.isReady
+            if waitsForDepth {
+                preparingDepth = true
+                edit.waitsForDepth = true
+                let guess = Task<Bool, Never> { [weak self, weak edit] in
+                    try? await Task.sleep(for: .seconds(5))
+                    guard !Task.isCancelled, let self, let edit, self.filterEdit === edit, !edit.committing else { return false }
+                    edit.waitsForDepth = false
+                    self.updateFilter(edit.settings, preview: edit.preview)
+                    return true
+                }
+                Task { [weak self, weak edit] in
+                    let ready = await DepthModel.prepare()
+                    guess.cancel()
+                    let guessed = await guess.value
+                    guard let self else { return }
+                    self.preparingDepth = false
+                    edit?.waitsForDepth = false
+                    if ready || !guessed, let edit, self.filterEdit === edit, !edit.committing {
+                        self.updateFilter(edit.settings, preview: edit.preview)
+                    }
+                }
+            }
+            if kind == .cameraRaw, edit.previewSource.width * edit.previewSource.height >= MetalCameraRawLookup.minimumPixels {
+                Task.detached(priority: .utility) { _ = MetalCameraRawLookup.shared }
+            }
             // An automatic filter commits what its preview made, so it still needs one.
-            updateFilter(edit.settings, preview: !repeating || kind.isAutomatic)
+            if !waitsForDepth { updateFilter(edit.settings, preview: !repeating || kind.isAutomatic) }
         } catch { brushError = error.localizedDescription }
     }
 
@@ -749,6 +891,22 @@ extension EditorSession {
         if filterEdit === edit { cancelFilter() }
     }
 
+    /// RGB Split's Radial center, clicked or dragged on the canvas (document coordinates).
+    func moveRGBSplitCenter(to point: CGPoint) {
+        guard let edit = filterEdit, edit.kind == .rgbSplit, edit.settings.rgbSplitRadial, !edit.committing else { return }
+        var settings = edit.settings
+        settings.rgbSplitCenter = point
+        updateFilter(settings, preview: edit.preview)
+    }
+
+    /// Volumetric Light's light, clicked or dragged on the canvas (document coordinates).
+    func moveVolumetricLight(to point: CGPoint) {
+        guard let edit = filterEdit, edit.kind == .volumetricLight, !edit.committing else { return }
+        var settings = edit.settings
+        settings.volumetric.center = point
+        updateFilter(settings, preview: edit.preview)
+    }
+
     /// Progressive Blur's line, dragged on the canvas: either end moved (document coordinates).
     func moveProgressiveBlur(start: CGPoint? = nil, end: CGPoint? = nil) {
         guard let edit = filterEdit, edit.kind == .progressiveBlur, !edit.committing else { return }
@@ -760,6 +918,9 @@ extension EditorSession {
 
     func updateFilter(_ settings: FilterSettings, preview: Bool) {
         guard let edit = filterEdit, !edit.committing else { return }
+        // The panel's sliders write their values back as it opens; while the first preview waits for the depth model,
+        // that isn't a change to draw (only one that changes something is).
+        if edit.waitsForDepth, settings.normalized == edit.settings, preview == edit.preview { return }
         edit.settings = settings.normalized
         edit.preview = preview
         // A bigger blur needs more room around the layer than it was given.
@@ -781,7 +942,8 @@ extension EditorSession {
     /// Renders the newest settings; changes that arrive mid-render wait for it rather than
     /// cancelling it, so dragging a slider keeps the canvas updating.
     private func renderFilterPreview(_ edit: FilterEdit) {
-        guard filterEdit === edit, edit.previewTask == nil, let job = edit.pending else { return }
+        guard filterEdit === edit, edit.previewTask == nil, var job = edit.pending else { return }
+        if job.kind == .cameraRaw { job.cameraRawBrightness = edit.previewBrightness }
         edit.pending = nil
         let placement = edit.pendingTransform
         let sourceVersion = edit.previewSourceVersion
@@ -789,29 +951,38 @@ extension EditorSession {
         edit.preparing = true
         edit.previewError = nil
         edit.previewTask = Task { @MainActor [weak self, weak edit] in
-            let result = await Task.detached(priority: .userInitiated) { () -> (CGImage?, CameraRawScope?, String?) in
+            let result = await Task.detached(priority: .userInitiated) { () -> (CGImage?, CameraRawScope?, String?, CameraRawTables.Brightness?) in
+                var run = job
+                // Measure once on the worker, then reuse it for every slider update in this session.
+                if run.kind == .cameraRaw, run.cameraRawBrightness == nil {
+                    run.cameraRawBrightness = CameraRawTables.brightness(of: run.image)
+                }
                 do {
                     // An HDR layer previews from its HDR pixels, as OK makes it, shown clipped to white.
                     if let hdrSource {
-                        let made = try PixelFilter.previewHDR(job, from: hdrSource)
-                        let scope = job.kind == .cameraRaw ? try CameraRawScope.preview(job).scope : nil
-                        return (try DeepLayer.dithered(made), scope, nil)
+                        let made = try PixelFilter.previewHDR(run, from: hdrSource)
+                        let scope = run.kind == .cameraRaw ? try CameraRawScope.preview(run).scope : nil
+                        return (try DeepLayer.dithered(made), scope, nil, run.cameraRawBrightness)
                     }
-                    if job.kind == .cameraRaw {
-                        let made = try CameraRawScope.preview(job)
-                        return (made.image, made.scope, nil)
+                    if run.kind == .cameraRaw {
+                        let made = try CameraRawScope.preview(run)
+                        return (made.image, made.scope, nil, run.cameraRawBrightness)
                     }
-                    return (try PixelFilter.run(job), nil, nil)
+                    return (try PixelFilter.run(run), nil, nil, run.cameraRawBrightness)
                 } catch {
-                    return (nil, nil, error.localizedDescription)
+                    return (nil, nil, error.localizedDescription, run.cameraRawBrightness)
                 }
             }.value
-            guard let self, let edit, self.filterEdit === edit, !Task.isCancelled else { return }
+            guard let self, let edit, self.filterEdit === edit, !Task.isCancelled else {
+                if job.cameraRawUsesGPU { Task.detached(priority: .utility) { MetalCameraRawLookup.shared?.discardBuffers() } }
+                return
+            }
             edit.previewTask = nil
             edit.preparing = false
             // Made before the layer grew for a bigger blur: it still shows, in the place it was made for, until the
             // render from the grown layer replaces it.
             let current = sourceVersion == edit.previewSourceVersion
+            if current, let brightness = result.3 { edit.cachePreviewBrightness(brightness) }
             edit.previewError = result.2
             if let scope = result.1 { edit.cameraRawScope = scope }
             if (edit.preview || edit.kind.isAutomatic), current || !edit.kind.isAutomatic {
@@ -828,10 +999,15 @@ extension EditorSession {
         // A filter color still being picked goes with the panel.
         if case .gradientMap = colorPicker?.target { closeColorPicker(commit: false) }
         if case .vignette = colorPicker?.target { closeColorPicker(commit: false) }
+        if case .rimLight = colorPicker?.target { closeColorPicker(commit: false) }
+        if case .volumetricLight = colorPicker?.target { closeColorPicker(commit: false) }
         if case .dither = colorPicker?.target { closeColorPicker(commit: false) }
         if finishAdjustmentEditing(commit: false) { return }
         guard let edit = filterEdit, !edit.committing else { return }
         edit.previewTask?.cancel()
+        if edit.kind == .cameraRaw, edit.previewJob.cameraRawUsesGPU {
+            Task.detached(priority: .utility) { MetalCameraRawLookup.shared?.discardBuffers() }
+        }
         filterEdit = nil
         brushRevision += 1
     }
@@ -839,6 +1015,7 @@ extension EditorSession {
     func commitFilter() async {
         if case .gradientMap = colorPicker?.target { closeColorPicker(commit: true) }
         if case .vignette = colorPicker?.target { closeColorPicker(commit: true) }
+        if case .rimLight = colorPicker?.target { closeColorPicker(commit: true) }
         if case .dither = colorPicker?.target { closeColorPicker(commit: true) }
         if finishAdjustmentEditing(commit: true) { return }
         guard let edit = filterEdit, !edit.committing else { return }
@@ -855,6 +1032,10 @@ extension EditorSession {
         if (edit.kind == .lensCorrection && edit.settings.distortion == 0)
             || (edit.kind == .vignette && edit.settings.vignetteAmount == 0)
             || (edit.kind == .bloomGlow && edit.settings.bloomAmount == 0)
+            || (edit.kind == .sharpen && edit.settings.sharpenAmount == 0)
+            || (edit.kind == .lensEffects && edit.settings.lens.isIdentity)
+            || (edit.kind == .rimLight && edit.settings.rimLight.isIdentity)
+            || (edit.kind == .volumetricLight && edit.settings.volumetric.isIdentity)
             || (edit.kind == .tonalContrast && (edit.settings.tonalAmount == 0 ||
                 (edit.settings.tonalShadows == 0 && edit.settings.tonalMidtones == 0 && edit.settings.tonalHighlights == 0)))
             || (edit.kind == .exposure && edit.settings.exposure == ExposureSettings())
@@ -866,7 +1047,12 @@ extension EditorSession {
         if edit.kind.repeatsAsLastFilter { lastFilter = edit.kind }
         isProjectBusy = true
         // The preview stays up until the result is on the layer, so the canvas never flashes the original.
-        defer { filterEdit = nil; isProjectBusy = false; brushRevision += 1 }
+        defer {
+            filterEdit = nil; isProjectBusy = false; brushRevision += 1
+            if edit.kind == .cameraRaw, edit.previewJob.cameraRawUsesGPU {
+                Task.detached(priority: .utility) { MetalCameraRawLookup.shared?.discardBuffers() }
+            }
+        }
         // Remove Background masks the background out rather than erasing it, so it can be brought back at any time
         // by painting the mask, disabling it, or deleting it.
         if edit.kind == .removeBackground { await commitBackgroundMask(edit); return }
@@ -885,9 +1071,9 @@ extension EditorSession {
             let grown = keepsOutline ? nil : edit.grownTransform
             let spreads = edit.kind == .gaussianBlur || edit.kind == .motionBlur || edit.kind == .progressiveBlur || edit.kind == .bloomGlow
             // A 16-bit layer runs the filter on its 16-bit pixels, padded as the 8-bit ones were (`DeepLayer.run`).
-            // These rasterize the layer to 8-bit instead: Content-Aware Fill makes new pixels from scratch; Dither's
-            // result is a few levels by design (three runs read between would mix its patterns into colors); Remove
-            // Background would find the subject three times over.
+            // These work on the 8-bit pixels instead, and the layer is made 16-bit again after (`keepLayerDepths`):
+            // Content-Aware Fill makes new pixels from scratch; Dither's result is a few levels by design (three runs read
+            // between would mix its patterns into colors); Remove Background would find the subject three times over.
             let rasterizes = edit.kind == .contentAwareFill || edit.kind == .dither || edit.kind == .removeBackground
             let deep = rasterizes ? nil : try DeepLayer.flattened(edit.original)
             let deepGrid = keepsOutline ? nil : edit.grownImage.flatMap { grownImage in
@@ -947,11 +1133,11 @@ extension EditorSession {
             let asset = made.asset
             guard let index = document?.layers.firstIndex(where: { $0.id == edit.layerID }),
                   let current = document?.layers[index],
-                  current.asset?.image === edit.original.image || (edit.startedEmpty && current.asset == nil),
-                  current.transform == edit.transform else { return }
+                  displayedAsset(for: current)?.image === edit.original.image || (edit.startedEmpty && current.asset == nil),
+                  pixelEditTransformMatches(current, transform: edit.transform) else { return }
             // A grown layer's mask (covering the old grid) is carried onto the new one, its edge tone past the old edge.
             var mask = current.mask
-            if let grown, let owned = current.mask, owned.placement == nil,
+            if current.gifAnimation == nil, let grown, let owned = current.mask, owned.placement == nil,
                owned.asset.image.width > 1 || owned.asset.image.height > 1 {
                 var enabled = owned
                 enabled.isEnabled = true
@@ -959,11 +1145,9 @@ extension EditorSession {
                                                       width: asset.image.width, height: asset.image.height) else { throw ExportError.render }
                 mask = owned.replacing(try LayerMask.asset(from: carried))
             }
+            let edited = try layerByEditingPixels(current, asset: asset, transform: made.transform ?? current.transform, mask: mask)
             beginEdit(edit.kind.rawValue)
-            document?.layers[index] = ImageLayer(id: current.id, asset: asset, name: current.name, isVisible: current.isVisible,
-                transform: made.transform ?? current.transform, parentID: current.parentID, isGroup: false,
-                opacity: current.opacity, blendMode: current.blendMode, mask: mask, maskSourceID: current.maskSourceID,
-                effects: current.effects)
+            document?.layers[index] = edited
             endEdit()
         } catch { brushError = error.localizedDescription }
     }
@@ -994,8 +1178,8 @@ extension EditorSession {
                 return mask
             }.value
             guard let index = document?.layers.firstIndex(where: { $0.id == edit.layerID }),
-                  let layer = document?.layers[index], layer.asset?.image === edit.original.image,
-                  layer.transform == edit.transform else { return }
+                  let layer = document?.layers[index], displayedAsset(for: layer)?.image === edit.original.image,
+                  pixelEditTransformMatches(layer, transform: edit.transform) else { return }
             let asset = try LayerMask.asset(from: made)
             beginEdit(edit.kind.rawValue)
             document?.layers[index].mask = layer.mask.map { $0.replacing(asset) } ?? LayerMask(asset: asset)
