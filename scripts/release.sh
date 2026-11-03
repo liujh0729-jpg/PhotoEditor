@@ -31,11 +31,12 @@ echo "==> $PRODUCT $VERSION ($BUILD)"
 rm -rf "$WORK"
 mkdir -p "$WORK" "$DIST"
 
-echo "==> Archiving a Release build"
+echo "==> Archiving a Release build (universal: arm64 + x86_64)"
 xcodebuild archive -quiet \
   -project "$PROJECT_DIR/$APP.xcodeproj" -scheme "$APP" -configuration Release \
   -destination "generic/platform=macOS" \
   -archivePath "$WORK/$APP.xcarchive" -derivedDataPath "$WORK/DerivedData" \
+  ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO \
   CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$IDENTITY" DEVELOPMENT_TEAM="$TEAM"
 
 echo "==> Exporting, signed with Developer ID"
@@ -44,6 +45,12 @@ xcodebuild -exportArchive -quiet \
   -exportOptionsPlist "$PROJECT_DIR/scripts/ExportOptions.plist" \
   -exportPath "$WORK/export"
 APP_PATH="$WORK/export/$PRODUCT.app"
+echo "==> Checking the app binary carries both architectures"
+ARCHS_BUILT=$(lipo -archs "$APP_PATH/Contents/MacOS/$PRODUCT")
+echo "    slices: $ARCHS_BUILT"
+for want in arm64 x86_64; do
+  [[ " $ARCHS_BUILT " == *" $want "* ]] || { echo "missing $want slice in the universal binary" >&2; exit 1; }
+done
 echo "==> Local preflight: strict signature checks"
 codesign --verify --deep --strict -vvv "$APP_PATH"
 # Run the Gatekeeper assessment for visibility only: the notarization ticket isn't stapled yet, so a
