@@ -67,6 +67,9 @@ struct ToolRailStack: View {
                 else if tool == .cloneStamp { CloneStampToolIcon().frame(width: 18, height: 18) }
                 else if tool == .lasso, session.lassoKind == .polygonal { PolygonalLassoToolIcon().frame(width: 18, height: 18) }
                 else if tool == .wand, session.wandMode == .object { ObjectSelectionToolIcon().frame(width: 18, height: 18) }
+                // The Type tool's SF Symbol (`textformat`) localizes to a CJK glyph in Chinese, but this is an
+                // icon, not a word: it always reads "Aa".
+                else if tool == .type { TypeToolIcon().frame(width: 18, height: 18) }
                 // The Marquee's icon follows its shape: a dashed circle in Ellipse mode.
                 else {
                     Image(systemName: tool == .marquee && session.marqueeKind == .ellipse ? "circle.dashed" : session.symbol(for: tool))
@@ -83,7 +86,9 @@ struct ToolRailStack: View {
             }
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain).help(tool.label).accessibilityLabel(tool.label)
+        // The rail's tooltip goes through the catalog like every other string: Chinese hosts read
+        // Chinese labels. The icon above it is different: "Aa" is a mark, not a word, and stays.
+        .buttonStyle(.plain).help(LocalizedStringKey(tool.label)).accessibilityLabel(Text(LocalizedStringKey(tool.label)))
         .foregroundStyle(.primary)
         .accessibilityAddTraits(session.tool == tool ? .isSelected : [])
     }
